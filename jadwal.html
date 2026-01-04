@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Trans | Search Schedule</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #065084;
+            --bg-darker: #043a60;
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--bg-darker) 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .premium-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        .btn-wa {
+            background: #25d366;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-wa:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+        }
+    </style>
+</head>
+<body class="py-12 px-6">
+
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-extrabold italic tracking-tighter mb-2 italic uppercase">Cek Jadwal Bus</h2>
+            <p class="text-sky-300 font-semibold tracking-widest text-xs uppercase">Mahika Trans Real-Time Database</p>
+        </div>
+
+        <div class="relative max-w-xl mx-auto mb-10">
+            <input type="text" id="search-input" placeholder="Mau ke mana hari ini? (Contoh: Jambi)" 
+                   class="w-full bg-white text-[#065084] p-5 pl-14 rounded-2xl shadow-2xl focus:ring-4 focus:ring-sky-400 outline-none transition font-bold text-lg">
+            <i class="fa-solid fa-magnifying-glass absolute left-5 top-6 text-gray-400 text-xl"></i>
+        </div>
+
+        <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)]">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="p-6 text-[#065084] text-[10px] font-black uppercase tracking-[0.2em]">Rute / Kota Tujuan</th>
+                        <th class="p-6 text-[#065084] text-[10px] font-black uppercase tracking-[0.2em]">Armada</th>
+                        <th class="p-6 text-[#065084] text-[10px] font-black uppercase tracking-[0.2em] text-right">Berangkat</th>
+                    </tr>
+                </thead>
+                <tbody id="bus-table" class="text-gray-700 divide-y divide-gray-100">
+                    </tbody>
+            </table>
+            
+            <div id="empty-state" class="hidden p-20 text-center">
+                <i class="fa-solid fa-bus-slash text-5xl text-gray-200 mb-4"></i>
+                <h4 class="text-xl font-bold text-[#065084] mb-2">Rute Belum Tersedia</h4>
+                <p class="text-gray-400 mb-8 text-sm">Maaf bro, jadwal rute tersebut belum ada di database hari ini.</p>
+                <a href="https://wa.me/your-number" class="btn-wa inline-flex items-center gap-2 px-8 py-3 rounded-xl font-black italic text-xs tracking-widest">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> TANYA ADMIN CS
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulasi URL GAS Kamu
+        const scriptURL = 'MASUKKAN_URL_GAS_KAMU_DISINI';
+        let allBusData = [];
+
+        async function fetchJadwal() {
+            const tbody = document.getElementById('bus-table');
+            tbody.innerHTML = '<tr><td colspan="3" class="p-20 text-center animate-pulse font-bold text-gray-300 italic uppercase tracking-widest text-xs">Mengkoneksikan ke Satelit...</td></tr>';
+            
+            try {
+                const response = await fetch(scriptURL);
+                allBusData = await response.json();
+                renderTable(allBusData);
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="3" class="p-20 text-center text-red-400 font-bold uppercase text-xs tracking-widest">Gagal mengambil data dari Google Sheets</td></tr>';
+            }
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('bus-table');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            tbody.innerHTML = data.map(bus => `
+                <tr class="hover:bg-blue-50 transition group cursor-default">
+                    <td class="p-6">
+                        <div class="font-bold text-[#065084] text-lg leading-tight uppercase italic group-hover:translate-x-2 transition-transform duration-300">
+                            ${bus.tujuan}
+                        </div>
+                    </td>
+                    <td class="p-6">
+                        <span class="bg-blue-100 text-[#065084] px-3 py-1 rounded-lg font-black text-[9px] uppercase tracking-widest italic">
+                            ${bus.armada}
+                        </span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <div class="font-mono text-2xl font-black tracking-tighter text-[#065084]">
+                            ${bus.jam}
+                        </div>
+                        <div class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">WIB</div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // FUNGSI SEARCH UTAMA
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const key = e.target.value.toLowerCase().trim();
+            
+            const filtered = allBusData.filter(bus => {
+                // Mencari di kolom Tujuan (bisa Jambi, Lampung, dll)
+                const matchTujuan = bus.tujuan.toLowerCase().includes(key);
+                // Mencari di kolom Nama Bus (biar fleksibel)
+                const matchArmada = bus.armada.toLowerCase().includes(key);
+                
+                return matchTujuan || matchArmada;
+            });
+
+            renderTable(filtered);
+        });
+
+        // Load data pas buka halaman
+        fetchJadwal();
+    </script>
+</body>
+</html>
