@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Trans | Intelligence Fleet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --primary-blue: #065084; --sky: #38bdf8; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: radial-gradient(circle at 50% -20%, #065084 0%, #021a2b 100%);
+            color: white; min-height: 100vh; overflow-x: hidden;
+        }
+
+        /* 1. BACKGROUND STARS (Ultra Light) */
+        #stars {
+            width: 1px; height: 1px; background: transparent;
+            box-shadow: 10vw 20vh #fff, 50vw 40vh #fff, 80vw 10vh #fff, 30vw 70vh #fff, 90vw 80vh #fff, 15vw 45vh #fff, 65vw 85vh #fff;
+            position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.3;
+        }
+
+        /* 2. GLASS EFFECT */
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            position: relative; overflow: hidden; 
+        }
+
+        /* 3. BUS ANIMATION TRACK */
+        #bus-track { height: 2px; background: rgba(56, 189, 248, 0.1); width: 0; transition: width 1s ease; margin-bottom: 15px; }
+        #bus-icon { opacity: 0; transition: all 1s ease; color: var(--sky); font-size: 14px; }
+
+        /* 4. FLOATING WA ACTION */
+        .fab-wa {
+            position: fixed; bottom: 30px; right: 30px;
+            background: white; color: var(--primary-blue);
+            padding: 12px 20px; border-radius: 50px;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-weight: 800; font-size: 10px; letter-spacing: 1px;
+            animation: float 3s ease-in-out infinite; z-index: 100;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* 5. SYSTEM STATUS PULSE */
+        .pulse { display: inline-block; width: 6px; height: 6px; background: #4ade80; border-radius: 50%; margin-right: 6px; box-shadow: 0 0 10px #4ade80; animation: pulse-g 2s infinite; }
+        @keyframes pulse-g { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* ANIMATIONS */
+        .item-animate { animation: slideUp 0.4s ease forwards; opacity: 0; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* COMPANY PROFILE PANEL */
+        #company-profile { z-index: 110; }
+    </style>
+</head>
+<body class="flex flex-col items-center py-10 px-6">
+
+    <div id="stars"></div>
+
+    <div class="w-full max-w-lg flex justify-between items-center mb-8 px-2">
+        <div class="text-[7px] font-black tracking-[0.3em] text-white/30 uppercase">
+            <span class="pulse"></span> Status: <span class="text-sky-400">Sync Active</span>
+        </div>
+        <div id="session-id" class="text-[7px] font-black tracking-[0.3em] text-white/30 uppercase">MTX-SCAN-LOAD</div>
+    </div>
+
+    <div class="w-full max-w-lg">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-extrabold italic tracking-tighter text-white mb-2 uppercase">
+                MAHIKA<span class="text-sky-400 font-black">SEARCH</span>
+            </h1>
+            <p class="text-[8px] font-bold text-white/20 tracking-[0.5em] uppercase">Enterprise Fleet Intelligence</p>
+        </div>
+
+        <div class="search-container glass rounded-2xl p-1.5 flex items-center mb-4 transition-all duration-300">
+            <div class="pl-4 text-sky-400/50"><i class="fa-solid fa-satellite-dish"></i></div>
+            <input type="text" id="search-input" placeholder="Scanning destination..." class="bg-transparent w-full p-3 outline-none text-white font-semibold text-sm placeholder:text-white/10 uppercase tracking-widest">
+            <button onclick="runSystemSearch()" class="bg-sky-500 hover:bg-white hover:text-[#065084] text-white font-black py-2.5 px-6 rounded-xl text-[9px] tracking-widest uppercase transition-all">CARI</button>
+        </div>
+
+        <div class="flex flex-col items-start px-2">
+            <i class="fa-solid fa-bus-alt" id="bus-icon"></i>
+            <div id="bus-track"></div>
+        </div>
+
+        <div id="result-container" class="hidden">
+            <div id="bus-list" class="space-y-3 mb-10"></div>
+        </div>
+
+        <div id="empty-state" class="hidden text-center py-10">
+            <p class="text-[9px] font-bold text-sky-400/40 uppercase tracking-[0.4em]">Signal Lost: Data Not Found</p>
+        </div>
+
+        <div class="mt-10 flex justify-center">
+            <button onclick="toggleProfile()" class="text-[9px] font-black tracking-[0.4em] text-white/20 hover:text-sky-400 transition-all uppercase flex items-center gap-2">
+                Explore Mahika Ecosystem <i class="fa-solid fa-chevron-up"></i>
+            </button>
+        </div>
+
+        <div class="mt-20 text-center opacity-40">
+            <p class="text-[8px] font-bold text-sky-300 uppercase tracking-[0.6em] mb-1">Ping: <span id="ping-val">14ms</span> // JKT-NODE</p>
+            <p class="text-[7px] font-medium text-white/50 uppercase tracking-[0.3em]">&copy; 2026 Mahika Engineering</p>
+        </div>
+    </div>
+
+    <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full transition-transform duration-700 ease-in-out">
+        <div class="max-w-xl mx-auto glass rounded-t-[2.5rem] p-10 border-t border-sky-500/30 shadow-[0_-20px_50px_rgba(2,26,43,0.9)]">
+            <div class="w-10 h-1 bg-white/10 mx-auto mb-8 rounded-full" onclick="toggleProfile()"></div>
+            
+            <h2 class="text-xl font-black italic tracking-tighter mb-6 uppercase text-center text-white">
+                MAHIKA <span class="text-sky-400">CORPORATION</span>
+            </h2>
+            
+            <div class="grid grid-cols-2 gap-3 mb-8">
+                <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
+                    <p class="text-[7px] font-bold text-sky-400 uppercase tracking-widest mb-1">Fleet Strength</p>
+                    <p class="text-lg font-black italic">150+ <span class="text-[8px] opacity-30">UNITS</span></p>
+                </div>
+                <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
+                    <p class="text-[7px] font-bold text-sky-400 uppercase tracking-widest mb-1">Total Routes</p>
+                    <p class="text-lg font-black italic">45 <span class="text-[8px] opacity-30">CITIES</span></p>
+                </div>
+            </div>
+
+            <p class="text-[9px] leading-relaxed text-white/50 text-justify mb-8 italic uppercase tracking-wider">
+                "Menghubungkan Nusantara dengan teknologi navigasi mutakhir dan kenyamanan kabin kelas satu. Mahika Trans bukan sekadar transportasi, melainkan ekosistem digital perjalanan masa depan."
+            </p>
+
+            <button onclick="toggleProfile()" class="w-full py-4 bg-white text-[#065084] font-black text-[9px] tracking-[0.3em] rounded-xl uppercase transition-all active:scale-95">
+                CLOSE INTERFACE
+            </button>
+        </div>
+    </div>
+
+    <a href="https://wa.me/628123456789" class="fab-wa uppercase">
+        <i class="fa-brands fa-whatsapp text-lg"></i>
+        <span>Chat Admin</span>
+    </a>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwfulIjftKvtjSoovdF3iHt_GeOiRNiSg76FIi7KzmhreEHsQFYWS34Rbw9r-Q_IR2lvQ/exec';
+        let allBusData = [];
+        let isProfileOpen = false;
+
+        // GIMMICK LOGIC
+        document.getElementById('session-id').innerText = 'AUTH-ID: ' + Math.floor(1000 + Math.random() * 9000);
+        setInterval(() => { document.getElementById('ping-val').innerText = Math.floor(10 + Math.random() * 10) + 'ms'; }, 3000);
+
+        async function loadInitialData() {
+            try {
+                const response = await fetch(scriptURL);
+                allBusData = await response.json();
+            } catch (error) { console.error("Sync Error:", error); }
+        }
+
+        function toggleProfile() {
+            const panel = document.getElementById('company-profile');
+            isProfileOpen = !isProfileOpen;
+            panel.style.transform = isProfileOpen ? 'translateY(0)' : 'translateY(100%)';
+        }
+
+        function runSystemSearch() {
+            const input = document.getElementById('search-input').value;
+            if(!input) return;
+
+            // Bus Scanning Animation
+            const track = document.getElementById('bus-track');
+            const icon = document.getElementById('bus-icon');
+            track.style.width = '100%';
+            icon.style.opacity = '1';
+            icon.style.marginLeft = '90%';
+
+            setTimeout(() => {
+                executeSearch();
+                // Reset Animation for next search
+                track.style.width = '0';
+                icon.style.opacity = '0';
+                icon.style.marginLeft = '0';
+            }, 1100);
+        }
+
+        function executeSearch() {
+            const key = document.getElementById('search-input').value.toLowerCase().trim();
+            const resultContainer = document.getElementById('result-container');
+            const filtered = allBusData.filter(bus => 
+                bus.tujuan.toLowerCase().includes(key) || 
+                bus.armada.toLowerCase().includes(key)
+            );
+            renderResults(filtered);
+            resultContainer.classList.remove('hidden');
+        }
+
+        function renderResults(data) {
+            const container = document.getElementById('bus-list');
+            const emptyState = document.getElementById('empty-state');
+            container.innerHTML = '';
+            
+            if (data.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            data.forEach((bus, index) => {
+                let jamData = bus.jam.toString().toUpperCase().replace('WIB', '').trim();
+                container.innerHTML += `
+                    <div class="glass flex items-center justify-between p-5 rounded-2xl item-animate" style="animation-delay: ${index * 0.1}s">
+                        <div class="flex flex-col">
+                            <p class="text-xs font-black text-white uppercase tracking-tight mb-0.5">${bus.armada}</p>
+                            <p class="text-[9px] font-bold text-sky-400/70 uppercase tracking-[0.05em] italic">${bus.tujuan}</p>
+                        </div>
+                        <div class="text-right border-l border-white/5 pl-5">
+                            <p class="text-base font-black font-mono tracking-tighter text-white leading-none">
+                                ${jamData}<span class="text-[7px] font-bold text-white/30 ml-1">WIB</span>
+                            </p>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        document.getElementById('search-input').addEventListener('keypress', (e) => { 
+            if (e.key === 'Enter') runSystemSearch(); 
+        });
+
+        loadInitialData();
+    </script>
+</body>
+              </html>
+                      
