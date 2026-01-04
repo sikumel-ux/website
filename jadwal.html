@@ -45,7 +45,7 @@
         </div>
 
         <div class="relative max-w-xl mx-auto mb-10">
-            <input type="text" id="search-input" placeholder="Mau ke mana hari ini? (Contoh: Jambi)" 
+            <input type="text" id="search-input" placeholder="Mau ke mana? (Contoh: Jambi)" 
                    class="w-full bg-white text-[#065084] p-5 pl-14 rounded-2xl shadow-2xl focus:ring-4 focus:ring-sky-400 outline-none transition font-bold text-lg">
             <i class="fa-solid fa-magnifying-glass absolute left-5 top-6 text-gray-400 text-xl"></i>
         </div>
@@ -54,7 +54,7 @@
             <table class="w-full text-left border-collapse">
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
-                        <th class="p-6 text-[#065084] text-[10px] font-black uppercase tracking-[0.2em]">Rute / Kota Tujuan</th>
+                        <th class="p-6 text-[#065084] text-[10px] font-black uppercase tracking-[0.2em]">Tujuan</th>
                         <th class="p-6 text-[#065084] text-[10px] font-black uppercase tracking-[0.2em]">Armada</th>
                         <th class="p-6 text-[#065084] text-[10px] font-black uppercase tracking-[0.2em] text-right">Berangkat</th>
                     </tr>
@@ -67,7 +67,7 @@
                 <i class="fa-solid fa-bus-slash text-5xl text-gray-200 mb-4"></i>
                 <h4 class="text-xl font-bold text-[#065084] mb-2">Rute Belum Tersedia</h4>
                 <p class="text-gray-400 mb-8 text-sm">Maaf bro, jadwal rute tersebut belum ada di database hari ini.</p>
-                <a href="https://wa.me/your-number" class="btn-wa inline-flex items-center gap-2 px-8 py-3 rounded-xl font-black italic text-xs tracking-widest">
+                <a href="https://wa.me/6281211407667" class="btn-wa inline-flex items-center gap-2 px-8 py-3 rounded-xl font-black italic text-xs tracking-widest">
                     <i class="fa-brands fa-whatsapp text-lg"></i> TANYA ADMIN CS
                 </a>
             </div>
@@ -88,7 +88,7 @@
                 allBusData = await response.json();
                 renderTable(allBusData);
             } catch (error) {
-                tbody.innerHTML = '<tr><td colspan="3" class="p-20 text-center text-red-400 font-bold uppercase text-xs tracking-widest">Gagal mengambil data dari Google Sheets</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" class="p-20 text-center text-red-400 font-bold uppercase text-xs tracking-widest">Gagal mengambil data</td></tr>';
             }
         }
 
