@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika Trans | Solusi Perjalanan Terpercaya</title>
+    <title>Mahika Trans | Premium Travel Solution</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -13,8 +13,6 @@
             --primary-blue: #065084;
             --bg-darker: #043a60;
             --white: #ffffff;
-            --glass: rgba(255, 255, 255, 0.1);
-            --text-dim: rgba(255, 255, 255, 0.7);
         }
 
         body { 
@@ -29,38 +27,41 @@
         }
 
         .glass-nav {
-            background: rgba(6, 80, 132, 0.8);
+            background: rgba(6, 80, 132, 0.9);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .glass-card {
-            background: var(--glass);
+        /* Shadow Mewah untuk Card */
+        .premium-card {
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .premium-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-action {
+            background: var(--white);
+            color: var(--primary-blue);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
 
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-5px);
+        .btn-action:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 20px -3px rgba(0, 0, 0, 0.4);
         }
 
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
         .accordion-item.active .accordion-content { max-height: 200px; padding-top: 1rem; }
         .accordion-item.active svg { transform: rotate(180deg); }
-
-        .btn-white {
-            background: var(--white);
-            color: var(--primary-blue);
-            font-weight: 700;
-            transition: all 0.3s ease;
-        }
-
-        .btn-white:hover {
-            background: #e2e8f0;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-        }
     </style>
 </head>
 <body class="bg-gradient-custom">
@@ -68,175 +69,169 @@
     <nav class="fixed w-full z-[100] top-0 glass-nav px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="text-2xl font-extrabold tracking-tighter flex items-center gap-2">
-                <span class="bg-white text-[#065084] px-2 py-1 rounded">M</span> MAHIKA TRANS
+                <span class="bg-white text-[#065084] px-2 py-0.5 rounded italic">M</span> MAHIKA TRANS
             </div>
-            <div class="hidden md:flex space-x-8 text-xs font-bold uppercase tracking-[0.15em]">
-                <a href="#about" class="hover:text-blue-200 transition">Profil</a>
-                <a href="#services" class="hover:text-blue-200 transition">Layanan</a>
-                <a href="#jadwal" class="hover:text-blue-200 transition">Jadwal</a>
-                <a href="#faq" class="hover:text-blue-200 transition">FAQ</a>
+            <div class="hidden md:flex space-x-8 text-xs font-bold uppercase tracking-[0.2em]">
+                <a href="#about" class="hover:text-sky-300 transition">Profil</a>
+                <a href="#services" class="hover:text-sky-300 transition">Layanan</a>
+                <a href="#jadwal" class="hover:text-sky-300 transition">Jadwal</a>
+                <a href="#faq" class="hover:text-sky-300 transition">FAQ</a>
             </div>
-            <a href="https://wa.me/your-number" class="btn-white px-6 py-2 rounded-full text-sm">HUBUNGI KAMI</a>
+            <a href="https://wa.me/your-number" class="btn-action px-6 py-2 rounded-full text-xs font-black italic">BOOKING NOW</a>
         </div>
     </nav>
 
-    <div class="swiper mySwiper h-[75vh] mt-16">
+    <div class="swiper heroSwiper h-[75vh] mt-16 shadow-2xl">
         <div class="swiper-wrapper">
             <div class="swiper-slide relative flex items-center justify-center">
-                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2000" class="absolute w-full h-full object-cover brightness-[0.5]">
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2000" class="absolute w-full h-full object-cover brightness-[0.4]">
                 <div class="relative z-10 text-center px-6">
-                    <h2 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">Perjalanan Aman,<br>Hati Pun <span class="underline decoration-sky-400">Tenang</span></h2>
-                    <p class="text-lg text-blue-100 max-w-2xl mx-auto opacity-80">Layanan transportasi eksekutif dengan standar kenyamanan bintang lima.</p>
+                    <h2 class="text-5xl md:text-7xl font-extrabold mb-4 italic tracking-tighter">PREMIUM <span class="text-sky-400">VOYAGE</span></h2>
+                    <p class="text-lg text-blue-100 max-w-2xl mx-auto opacity-80">Menghadirkan standar baru dalam perjalanan darat lintas Nusantara.</p>
                 </div>
             </div>
             <div class="swiper-slide relative flex items-center justify-center">
-                <img src="https://images.unsplash.com/photo-1436491865332-7a61a109c0f3?q=80&w=2000" class="absolute w-full h-full object-cover brightness-[0.5]">
+                <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=2000" class="absolute w-full h-full object-cover brightness-[0.4]">
                 <div class="relative z-10 text-center px-6">
-                    <h2 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">Terbang & Berlayar<br>Tanpa <span class="underline decoration-sky-400">Ribet</span></h2>
-                    <p class="text-lg text-blue-100 max-w-2xl mx-auto opacity-80">Booking tiket pesawat dan kapal laut dengan harga kompetitif.</p>
+                    <h2 class="text-5xl md:text-7xl font-extrabold mb-4 italic tracking-tighter">FAST <span class="text-sky-400">DELIVERY</span></h2>
+                    <p class="text-lg text-blue-100 max-w-2xl mx-auto opacity-80">Paket kilat satu malam sampai, solusi bisnis masa kini.</p>
                 </div>
             </div>
         </div>
         <div class="swiper-pagination"></div>
     </div>
 
-    <section id="jadwal" class="relative z-20 max-w-6xl mx-auto -mt-16 px-6 pb-20">
-        <div class="bg-white/95 backdrop-blur shadow-2xl rounded-[2rem] p-8 text-[#065084]">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+    <section id="jadwal" class="relative z-20 max-w-6xl mx-auto -mt-20 px-6 pb-24">
+        <div class="bg-white/95 backdrop-blur shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)] rounded-[2.5rem] p-10 text-[#065084]">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
                 <div>
-                    <h3 class="text-2xl font-black uppercase italic">Live Schedule</h3>
-                    <p class="text-gray-500 text-sm">Cari rute keberangkatan Mahika Trans hari ini</p>
+                    <h3 class="text-3xl font-black uppercase italic tracking-tighter">Live Schedule</h3>
+                    <p class="text-gray-500 font-medium">Data real-time keberangkatan armada kami</p>
                 </div>
                 <div class="w-full md:w-96 relative">
-                    <input type="text" id="search-input" placeholder="Ketik tujuan (contoh: Jakarta)..." 
-                           class="w-full bg-gray-100 border-none p-4 pl-12 rounded-2xl focus:ring-2 focus:ring-[#065084] outline-none transition">
-                    <svg class="w-6 h-6 absolute left-4 top-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" id="search-input" placeholder="Cari rute atau kota tujuan..." 
+                           class="w-full bg-gray-100 border-none p-5 pl-14 rounded-2xl focus:ring-2 focus:ring-[#065084] outline-none transition font-semibold">
+                    <svg class="w-6 h-6 absolute left-5 top-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </div>
             </div>
 
-            <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <div class="overflow-x-auto rounded-2xl border border-gray-100">
                 <table class="w-full text-left">
-                    <thead class="bg-gray-50 text-[#065084] text-xs uppercase tracking-widest font-bold">
+                    <thead class="bg-gray-50 text-[#065084] text-xs uppercase tracking-[0.2em] font-black">
                         <tr>
-                            <th class="p-5">Tujuan</th>
-                            <th class="p-5">Armada</th>
-                            <th class="p-5 text-right">Jam</th>
+                            <th class="p-6">Rute Tujuan</th>
+                            <th class="p-6">Jenis Armada</th>
+                            <th class="p-6 text-right">Waktu</th>
                         </tr>
                     </thead>
                     <tbody id="bus-table" class="divide-y divide-gray-100 text-gray-700">
-                        <tr><td colspan="3" class="p-10 text-center">Memuat jadwal...</td></tr>
+                        <tr><td colspan="3" class="p-10 text-center animate-pulse">Menghubungkan ke server...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </section>
 
-    <section id="about" class="py-20 px-6 max-w-7xl mx-auto">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-                <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=800" class="rounded-3xl shadow-2xl">
-            </div>
-            <div>
-                <h4 class="font-bold text-sky-400 mb-2 uppercase tracking-widest">Tentang Mahika Trans</h4>
-                <h2 class="text-4xl font-extrabold mb-6 leading-tight">Partner Setia Perjalanan Anda di Seluruh Indonesia</h2>
-                <p class="text-blue-100 opacity-80 text-lg leading-relaxed mb-8">
-                    Mahika Trans hadir untuk memberikan kemudahan mobilitas masyarakat. Dengan jaringan armada yang luas dan sistem yang terintegrasi, kami memastikan setiap titik tujuan Anda tercapai dengan efisien.
-                </p>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="glass-card p-6 rounded-2xl">
-                        <div class="text-3xl font-bold">100%</div>
-                        <p class="text-xs opacity-70">Layanan Terverifikasi</p>
-                    </div>
-                    <div class="glass-card p-6 rounded-2xl">
-                        <div class="text-3xl font-bold">5+</div>
-                        <p class="text-xs opacity-70">Layanan Utama</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="services" class="py-24 bg-white/5">
+    <section id="services" class="py-24 bg-white/5 shadow-inner">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-extrabold mb-4">Layanan Utama</h2>
-                <p class="opacity-70">Kami melayani segala kebutuhan transportasi Anda</p>
+                <h4 class="font-bold text-sky-400 mb-2 uppercase tracking-widest text-sm">Our Expertise</h4>
+                <h2 class="text-4xl md:text-5xl font-extrabold italic tracking-tighter">LAYANAN UTAMA</h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 text-center">
-                <div class="glass-card p-8 rounded-3xl">
-                    <div class="text-4xl mb-4">🚌</div>
-                    <h4 class="font-bold mb-2">Tiket Bus</h4>
-                    <button class="mt-4 text-xs font-bold border-b-2 border-sky-400 pb-1">LIHAT DETAIL</button>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                <div class="premium-card p-10 rounded-[2.5rem] text-center flex flex-col items-center">
+                    <div class="text-5xl mb-6">🚌</div>
+                    <h4 class="font-black text-lg mb-6 tracking-tight uppercase">Tiket Bus</h4>
+                    <button class="btn-action w-full py-3 rounded-xl text-xs font-black italic tracking-widest">DETAILS</button>
                 </div>
-                <div class="glass-card p-8 rounded-3xl">
-                    <div class="text-4xl mb-4">🚐</div>
-                    <h4 class="font-bold mb-2">Travel</h4>
-                    <button class="mt-4 text-xs font-bold border-b-2 border-sky-400 pb-1">LIHAT DETAIL</button>
+                <div class="premium-card p-10 rounded-[2.5rem] text-center flex flex-col items-center">
+                    <div class="text-5xl mb-6">🚐</div>
+                    <h4 class="font-black text-lg mb-6 tracking-tight uppercase">Travel</h4>
+                    <button class="btn-action w-full py-3 rounded-xl text-xs font-black italic tracking-widest">DETAILS</button>
                 </div>
-                <div class="glass-card p-8 rounded-3xl">
-                    <div class="text-4xl mb-4">🚢</div>
-                    <h4 class="font-bold mb-2">Kapal</h4>
-                    <button class="mt-4 text-xs font-bold border-b-2 border-sky-400 pb-1">LIHAT DETAIL</button>
+                <div class="premium-card p-10 rounded-[2.5rem] text-center flex flex-col items-center">
+                    <div class="text-5xl mb-6">🚢</div>
+                    <h4 class="font-black text-lg mb-6 tracking-tight uppercase">Kapal</h4>
+                    <button class="btn-action w-full py-3 rounded-xl text-xs font-black italic tracking-widest">DETAILS</button>
                 </div>
-                <div class="glass-card p-8 rounded-3xl">
-                    <div class="text-4xl mb-4">✈️</div>
-                    <h4 class="font-bold mb-2">Pesawat</h4>
-                    <button class="mt-4 text-xs font-bold border-b-2 border-sky-400 pb-1">LIHAT DETAIL</button>
+                <div class="premium-card p-10 rounded-[2.5rem] text-center flex flex-col items-center">
+                    <div class="text-5xl mb-6">✈️</div>
+                    <h4 class="font-black text-lg mb-6 tracking-tight uppercase">Pesawat</h4>
+                    <button class="btn-action w-full py-3 rounded-xl text-xs font-black italic tracking-widest">DETAILS</button>
                 </div>
-                <div class="glass-card p-8 rounded-3xl">
-                    <div class="text-4xl mb-4">📦</div>
-                    <h4 class="font-bold mb-2">Paket Kilat</h4>
-                    <button class="mt-4 text-xs font-bold border-b-2 border-sky-400 pb-1">LIHAT DETAIL</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="faq" class="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-2 gap-20">
-        <div>
-            <h2 class="text-3xl font-bold mb-8">Apa Kata Mereka?</h2>
-            <div class="space-y-6">
-                <div class="glass-card p-6 rounded-2xl italic">
-                    "Sangat memudahkan! Pelayanan travel Mahika Trans jemput depan rumah tepat waktu."
-                    <div class="mt-4 text-sm font-bold text-sky-400"> — Ibu Ratna, Jakarta</div>
-                </div>
-                <div class="glass-card p-6 rounded-2xl italic">
-                    "Kirim paket kilat beneran besoknya sampai. Harga juga oke."
-                    <div class="mt-4 text-sm font-bold text-sky-400"> — Bpk. Gunawan, Surabaya</div>
-                </div>
-            </div>
-        </div>
-        <div>
-            <h2 class="text-3xl font-bold mb-8">FAQ</h2>
-            <div class="space-y-4 text-sm">
-                <div class="accordion-item glass-card rounded-2xl p-5 cursor-pointer" onclick="toggleFAQ(this)">
-                    <div class="flex justify-between items-center font-bold">
-                        <span>Bagaimana cara booking tiket?</span>
-                        <svg class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="accordion-content opacity-70">Cukup pilih jadwal di tabel atas, lalu hubungi CS kami via WhatsApp untuk konfirmasi pembayaran.</div>
-                </div>
-                <div class="accordion-item glass-card rounded-2xl p-5 cursor-pointer" onclick="toggleFAQ(this)">
-                    <div class="flex justify-between items-center font-bold">
-                        <span>Apakah ada titik jemput khusus?</span>
-                        <svg class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="accordion-content opacity-70">Untuk layanan Travel, kami melayani jemputan sesuai lokasi yang Anda tentukan (Door to Door).</div>
+                <div class="premium-card p-10 rounded-[2.5rem] text-center flex flex-col items-center">
+                    <div class="text-5xl mb-6">📦</div>
+                    <h4 class="font-black text-lg mb-6 tracking-tight uppercase">Paket</h4>
+                    <button class="btn-action w-full py-3 rounded-xl text-xs font-black italic tracking-widest">DETAILS</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-10 text-center border-t border-white/10 opacity-60 text-xs tracking-widest uppercase">
-        © 2024 Mahika Trans - Terhubung Lebih Jauh
+    <section class="py-24 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-black mb-12 text-center italic tracking-tighter uppercase">Happy Travelers</h2>
+            <div class="swiper testimonialSwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide p-4">
+                        <div class="premium-card p-8 rounded-3xl flex flex-col items-center text-center">
+                            <img src="https://i.pravatar.cc/100?u=1" class="w-16 h-16 rounded-full border-2 border-sky-400 mb-6 shadow-lg">
+                            <p class="text-lg italic mb-6 opacity-90 leading-relaxed">"Perjalanan terjauh saya terasa sangat singkat karena kenyamanan armada Mahika Trans yang luar biasa."</p>
+                            <h5 class="font-black text-sky-400">Rizky Ramadhan</h5>
+                        </div>
+                    </div>
+                    <div class="swiper-slide p-4">
+                        <div class="premium-card p-8 rounded-3xl flex flex-col items-center text-center">
+                            <img src="https://i.pravatar.cc/100?u=2" class="w-16 h-16 rounded-full border-2 border-sky-400 mb-6 shadow-lg">
+                            <p class="text-lg italic mb-6 opacity-90 leading-relaxed">"Satu-satunya jasa travel yang menjemput tepat waktu di depan rumah. Sangat profesional!"</p>
+                            <h5 class="font-black text-sky-400">Siska Pratiwi</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination !relative !mt-8"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-24 px-6 max-w-3xl mx-auto">
+        <h2 class="text-3xl font-black mb-12 text-center italic tracking-tighter uppercase font-bold">Frequently Asked</h2>
+        <div class="space-y-5 text-sm">
+            <div class="accordion-item premium-card rounded-2xl p-6 cursor-pointer" onclick="toggleFAQ(this)">
+                <div class="flex justify-between items-center font-black uppercase italic tracking-widest">
+                    <span>Prosedur Booking</span>
+                    <svg class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                </div>
+                <div class="accordion-content opacity-70 leading-relaxed">Pilih jadwal di tabel, hubungi WhatsApp kami, kirim data diri, dan lakukan pembayaran untuk mendapatkan e-ticket.</div>
+            </div>
+            <div class="accordion-item premium-card rounded-2xl p-6 cursor-pointer" onclick="toggleFAQ(this)">
+                <div class="flex justify-between items-center font-black uppercase italic tracking-widest">
+                    <span>Sistem Penjemputan</span>
+                    <svg class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                </div>
+                <div class="accordion-content opacity-70 leading-relaxed">Kami melayani jemputan sesuai titik lokasi yang Anda berikan melalui koordinat Google Maps (Door-to-door).</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 text-center border-t border-white/10 opacity-50 text-[10px] font-black tracking-[0.4em] uppercase">
+        © 2024 Mahika Trans Indonesia - Moving Forward
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        const swiper = new Swiper(".mySwiper", { 
+        // Init Hero Slider
+        new Swiper(".heroSwiper", { 
             pagination: { el: ".swiper-pagination", clickable: true },
-            autoplay: { delay: 4000 },
+            autoplay: { delay: 5000 },
             loop: true 
+        });
+
+        // Init Testimonial Slider
+        new Swiper(".testimonialSwiper", {
+            pagination: { el: ".swiper-pagination", clickable: true },
+            spaceBetween: 30,
+            autoplay: { delay: 4000 },
+            loop: true
         });
 
         function toggleFAQ(el) { el.classList.toggle('active'); }
@@ -250,16 +245,16 @@
                 allBusData = await response.json();
                 renderTable(allBusData);
             } catch (error) {
-                document.getElementById('bus-table').innerHTML = '<tr><td colspan="3" class="p-10 text-center text-red-400">Gagal Memuat Data</td></tr>';
+                document.getElementById('bus-table').innerHTML = '<tr><td colspan="3" class="p-10 text-center text-red-400">Gagal Memuat Jadwal</td></tr>';
             }
         }
 
         function renderTable(data) {
             document.getElementById('bus-table').innerHTML = data.map(bus => `
-                <tr class="hover:bg-gray-50 transition font-medium">
-                    <td class="p-5">${bus.tujuan}</td>
-                    <td class="p-5 text-[#065084] font-bold">${bus.armada}</td>
-                    <td class="p-5 text-right font-mono text-lg font-black tracking-tighter">${bus.jam}</td>
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-6 font-bold text-lg tracking-tight uppercase italic">${bus.tujuan}</td>
+                    <td class="p-6 text-[#065084] font-black italic tracking-widest text-xs">${bus.armada}</td>
+                    <td class="p-6 text-right font-mono text-2xl font-black tracking-tighter">${bus.jam}</td>
                 </tr>
             `).join('');
         }
@@ -273,4 +268,5 @@
         fetchJadwal();
     </script>
 </body>
-</html>
+                            </html>
+                                                    
