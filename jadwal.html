@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cek Jadwal | Mahika Trans</title>
+    <title>Cari Jadwal | Mahika Trans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -13,131 +13,94 @@
             --primary-blue: #065084;
             --bg-darker: #043a60;
         }
-
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--bg-darker) 100%);
             color: white;
             min-height: 100vh;
         }
-
-        /* Shadow Mewah untuk Container */
-        .search-container {
-            background: #ffffff;
-            box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.5);
-            border-radius: 2.5rem;
+        .premium-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-
-        /* Input Custom */
-        .search-input {
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
+        .search-box {
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .table-row {
             transition: all 0.3s ease;
         }
-
-        .search-input:focus {
-            border-color: var(--primary-blue);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(6, 80, 132, 0.1);
-        }
-
-        /* Baris Tabel */
-        .table-row {
-            transition: all 0.2s ease;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
         .table-row:hover {
-            background-color: #f0f7ff;
-            transform: scale(1.005);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
         }
-
-        /* Badge Armada */
-        .badge-armada {
-            background: #e0f2fe;
-            color: #065084;
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 0.25rem 0.75rem;
-            border-radius: 0.5rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        /* Animasi Loading */
         .loader {
-            border-top-color: #065084;
-            animation: spinner 0.6s linear infinite;
+            border-top-color: #38bdf8;
+            animation: spin 1s linear infinite;
         }
-
-        @keyframes spinner {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="py-8 md:py-16 px-4 md:px-6">
+<body class="py-10 px-4 md:py-20 md:px-6">
 
     <div class="max-w-4xl mx-auto">
-        
-        <div class="text-center mb-10">
-            <a href="index.html" class="inline-flex items-center gap-2 text-sky-300 font-bold text-xs uppercase tracking-widest mb-4 hover:text-white transition">
-                <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
-            </a>
-            <h1 class="text-3xl md:text-5xl font-extrabold italic tracking-tighter uppercase">
-                Jadwal <span class="text-sky-400">Keberangkatan</span>
+        <div class="text-center mb-12">
+            <h1 class="text-3xl md:text-5xl font-extrabold italic tracking-tighter uppercase mb-3">
+                Cek <span class="text-sky-400">Jadwal</span> Bus
             </h1>
-            <p class="text-blue-100 opacity-70 mt-2 text-sm md:text-base">Cari kota tujuan Anda untuk melihat daftar armada dan jam berangkat.</p>
+            <p class="text-blue-100 opacity-60 text-xs md:text-sm tracking-widest uppercase font-semibold">
+                Mahika Trans Real-Time Database
+            </p>
         </div>
 
-        <div class="relative mb-8">
+        <div class="relative mb-10 max-w-2xl mx-auto">
             <input type="text" id="search-input" 
-                   placeholder="Ketik tujuan (Misal: Jambi, Lampung, Solo...)" 
-                   class="search-input w-full p-5 pl-14 rounded-2xl text-[#065084] font-bold text-lg md:text-xl outline-none shadow-xl">
+                   placeholder="Mau ke mana? (Contoh: Jambi)" 
+                   class="search-box w-full p-5 pl-14 rounded-2xl text-[#065084] font-bold text-lg outline-none focus:ring-4 focus:ring-sky-400/30 transition-all">
             <i class="fa-solid fa-magnifying-glass absolute left-6 top-6 text-gray-400 text-xl"></i>
         </div>
 
-        <div class="search-container overflow-hidden">
+        <div class="premium-card rounded-[2.5rem] overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
-                    <thead class="bg-gray-50/80">
+                    <thead class="bg-white/5 border-b border-white/10">
                         <tr>
-                            <th class="p-6 text-[#065084] text-[10px] font-black uppercase tracking-[0.2em]">Rute Destinasi</th>
-                            <th class="p-6 text-[#065084] text-[10px] font-black uppercase tracking-[0.2em]">Bus / Travel</th>
-                            <th class="p-6 text-[#065084] text-[10px] font-black uppercase tracking-[0.2em] text-right">Keberangkatan</th>
+                            <th class="p-6 text-sky-400 text-[10px] font-black uppercase tracking-[0.2em]">Rute Destinasi</th>
+                            <th class="p-6 text-sky-400 text-[10px] font-black uppercase tracking-[0.2em]">Bus</th>
+                            <th class="p-6 text-sky-400 text-[10px] font-black uppercase tracking-[0.2em] text-right">Jam</th>
                         </tr>
                     </thead>
-                    <tbody id="bus-table" class="text-gray-700 divide-y divide-gray-100">
+                    <tbody id="bus-table" class="divide-y divide-white/5">
                         <tr>
                             <td colspan="3" class="p-20 text-center">
-                                <div class="loader inline-block w-8 h-8 border-4 border-gray-200 rounded-full mb-4"></div>
-                                <p class="text-gray-400 font-bold text-xs uppercase tracking-widest">Sinkronisasi Jadwal...</p>
+                                <div class="loader inline-block w-8 h-8 border-4 border-white/10 rounded-full"></div>
+                                <p class="mt-4 text-[10px] font-bold uppercase tracking-widest opacity-50">Menghubungkan ke Sheets...</p>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div id="empty-state" class="hidden p-16 text-center">
-                <div class="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fa-solid fa-bus-slash text-3xl text-gray-300"></i>
-                </div>
-                <h3 class="text-xl font-black text-[#065084] uppercase italic">Rute Belum Tersedia</h3>
-                <p class="text-gray-500 text-sm mt-2 mb-8">Jadwal untuk tujuan tersebut belum tersedia hari ini.<br>Silakan tanyakan rute custom ke admin kami.</p>
-                <a href="https://wa.me/628123456789" class="inline-flex items-center gap-3 bg-[#25d366] text-white px-8 py-4 rounded-2xl font-black italic tracking-widest text-xs hover:scale-105 transition shadow-lg">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> CHAT ADMIN MAHIKA
+            <div id="empty-state" class="hidden p-20 text-center">
+                <i class="fa-solid fa-route text-5xl text-white/10 mb-6"></i>
+                <h3 class="text-xl font-bold italic uppercase tracking-tight">Rute Tidak Ditemukan</h3>
+                <p class="text-white/40 text-sm mb-8">Maaf bro, kota tujuan tersebut belum ada di jadwal hari ini.</p>
+                <a href="https://wa.me/628123456789" class="inline-flex items-center gap-2 bg-white text-[#065084] px-8 py-3 rounded-xl font-black italic text-xs tracking-widest hover:bg-sky-400 hover:text-white transition-all">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> TANYA ADMIN CS
                 </a>
             </div>
         </div>
 
-        <p class="text-center mt-10 text-[10px] text-blue-200/50 uppercase tracking-[0.4em] font-bold">
-            Data diperbarui secara real-time via Mahika Cloud
+        <p class="text-center mt-12 text-[9px] font-bold uppercase tracking-[0.5em] opacity-30">
+            © 2024 Mahika Trans Indonesia
         </p>
     </div>
 
     <script>
-        // API URL (PASTIKAN SUDAH PAKAI "jadwal" DI KODE GAS NYA)
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxLrJrkBAPndRfbgH93T0IkaZQH8Q1RS9r301Aau63_j4QWqvEJ0YtmKuEJv0JigYWT/exec';
+        // API KAMU YANG SUDAH JALAN
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwfulIjftKvtjSoovdF3iHt_GeOiRNiSg76FIi7KzmhreEHsQFYWS34Rbw9r-Q_IR2lvQ/exec';
         let allBusData = [];
 
         async function fetchJadwal() {
@@ -147,12 +110,8 @@
                 renderTable(allBusData);
             } catch (error) {
                 document.getElementById('bus-table').innerHTML = `
-                    <tr>
-                        <td colspan="3" class="p-16 text-center">
-                            <i class="fa-solid fa-triangle-exclamation text-red-500 text-2xl mb-4"></i>
-                            <p class="text-red-500 font-bold uppercase text-[10px]">Koneksi Gagal</p>
-                        </td>
-                    </tr>`;
+                    <tr><td colspan="3" class="p-20 text-center text-red-400 font-bold uppercase text-xs">Gagal memuat data API</td></tr>
+                `;
             }
         }
 
@@ -170,35 +129,31 @@
             tbody.innerHTML = data.map(bus => `
                 <tr class="table-row">
                     <td class="p-6">
-                        <div class="font-bold text-[#065084] text-sm md:text-base leading-relaxed uppercase italic">
+                        <div class="font-bold text-white text-sm md:text-base leading-relaxed uppercase italic">
                             ${bus.tujuan}
                         </div>
                     </td>
                     <td class="p-6">
-                        <span class="badge-armada">
+                        <span class="text-sky-400 font-black tracking-widest text-[10px] uppercase italic">
                             ${bus.armada}
                         </span>
                     </td>
                     <td class="p-6 text-right">
-                        <div class="font-mono text-xl md:text-2xl font-black tracking-tighter text-[#065084]">
+                        <div class="font-mono text-xl md:text-3xl font-black tracking-tighter text-white">
                             ${bus.jam}
                         </div>
-                        <div class="text-[8px] text-gray-400 font-black uppercase tracking-widest mt-1">WIB</div>
                     </td>
                 </tr>
             `).join('');
         }
 
-        // LOGIKA PENCARIAN (KHUSUS JAMBI DAN RUTE KOMA)
+        // LOGIKA PENCARIAN
         document.getElementById('search-input').addEventListener('input', (e) => {
             const key = e.target.value.toLowerCase().trim();
-            
-            // Filter hanya rute yang mengandung kata kunci
             const filtered = allBusData.filter(bus => 
                 bus.tujuan.toLowerCase().includes(key) || 
                 bus.armada.toLowerCase().includes(key)
             );
-
             renderTable(filtered);
         });
 
