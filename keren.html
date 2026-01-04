@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Agency | Unified Booking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --primary-blue: #065084; --sky: #38bdf8; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: radial-gradient(circle at 50% -20%, #065084 0%, #021a2b 100%);
+            color: white; min-height: 100vh; overflow-x: hidden;
+        }
+
+        #stars {
+            width: 1px; height: 1px; background: transparent;
+            box-shadow: 10vw 20vh #fff, 50vw 40vh #fff, 80vw 10vh #fff, 30vw 70vh #fff, 90vw 80vh #fff, 15vw 45vh #fff, 65vw 85vh #fff;
+            position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.3;
+        }
+
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        
+        /* SCROLLABLE PANEL */
+        .profile-content {
+            max-height: 75vh;
+            overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
+        }
+        .profile-content::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+        /* FAB WA */
+        .fab-wa {
+            position: fixed; bottom: 30px; right: 30px;
+            background: white; color: var(--primary-blue);
+            padding: 12px 20px; border-radius: 50px;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-weight: 800; font-size: 10px; letter-spacing: 1px;
+            animation: float 3s ease-in-out infinite; z-index: 100;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .pulse { display: inline-block; width: 6px; height: 6px; background: #4ade80; border-radius: 50%; margin-right: 6px; box-shadow: 0 0 10px #4ade80; animation: pulse-g 2s infinite; }
+        @keyframes pulse-g { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        .item-animate { animation: slideUp 0.4s ease forwards; opacity: 0; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* TESTIMONI SLIDER */
+        .testi-card { min-width: 100%; transition: transform 0.5s ease; }
+    </style>
+</head>
+<body class="flex flex-col items-center py-10 px-6">
+
+    <div id="stars"></div>
+
+    <div class="w-full max-w-lg flex justify-between items-center mb-8 px-2">
+        <div class="text-[7px] font-black tracking-[0.3em] text-white/30 uppercase">
+            <span class="pulse"></span> System: <span class="text-sky-400">Multi-Channel Active</span>
+        </div>
+        <div id="session-id" class="text-[7px] font-black tracking-[0.3em] text-white/30 uppercase">MTX-GLOBAL</div>
+    </div>
+
+    <div class="w-full max-w-lg">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-extrabold italic tracking-tighter text-white mb-2 uppercase">
+                MAHIKA<span class="text-sky-400 font-black">SEARCH</span>
+            </h1>
+            <p class="text-[8px] font-bold text-white/20 tracking-[0.5em] uppercase">Integrated Transportation Hub</p>
+        </div>
+
+        <div class="search-container glass rounded-2xl p-1.5 flex items-center mb-10 transition-all duration-300">
+            <div class="pl-4 text-sky-400/50"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <input type="text" id="search-input" placeholder="Mau kemana hari ini?" class="bg-transparent w-full p-3 outline-none text-white font-semibold text-sm placeholder:text-white/10 uppercase tracking-widest">
+            <button onclick="executeSearch()" class="bg-sky-500 hover:bg-white hover:text-[#065084] text-white font-black py-2.5 px-6 rounded-xl text-[9px] tracking-widest uppercase transition-all">CARI</button>
+        </div>
+
+        <div id="result-container" class="hidden">
+            <div id="bus-list" class="space-y-3 mb-10"></div>
+        </div>
+
+        <div id="empty-state" class="hidden text-center py-10">
+            <p class="text-[9px] font-bold text-sky-400/40 uppercase tracking-[0.4em]">Rute Tidak Ditemukan</p>
+        </div>
+
+        <div class="mt-12 flex flex-col items-center gap-4">
+            <p class="text-[7px] font-bold text-white/10 uppercase tracking-[0.5em]">Explore Agency Profile</p>
+            <button onclick="toggleProfile()" class="w-12 h-12 glass rounded-full flex items-center justify-center text-sky-400 animate-bounce">
+                <i class="fa-solid fa-chevron-up"></i>
+            </button>
+        </div>
+
+        <div class="mt-20 text-center opacity-30">
+            <p class="text-[7px] font-medium text-white uppercase tracking-[0.3em]">&copy; 2026 Mahika Agency &bull; Secure Terminal</p>
+        </div>
+    </div>
+
+    <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full transition-transform duration-700 ease-in-out z-[110]">
+        <div class="max-w-xl mx-auto glass rounded-t-[3rem] border-t border-sky-500/30 shadow-[0_-20px_60px_rgba(2,26,43,1)] overflow-hidden">
+            
+            <div class="w-full py-4 flex justify-center cursor-pointer" onclick="toggleProfile()">
+                <div class="w-10 h-1 bg-white/20 rounded-full"></div>
+            </div>
+
+            <div class="profile-content px-8 pb-12">
+                
+                <h2 class="text-2xl font-black italic tracking-tighter mb-2 uppercase text-center text-white">
+                    MAHIKA <span class="text-sky-400">AGENCY</span>
+                </h2>
+                <p class="text-[8px] font-bold text-white/30 tracking-[0.4em] text-center mb-10 uppercase">Official Reservation Partner</p>
+
+                <div class="grid grid-cols-3 gap-4 mb-10">
+                    <div class="flex flex-col items-center p-4 glass rounded-2xl">
+                        <i class="fa-solid fa-bus text-sky-400 mb-2"></i>
+                        <span class="text-[7px] font-black uppercase tracking-widest text-white/60 text-center text-[6px]">Bus & Travel</span>
+                    </div>
+                    <div class="flex flex-col items-center p-4 glass rounded-2xl">
+                        <i class="fa-solid fa-ship text-sky-400 mb-2"></i>
+                        <span class="text-[7px] font-black uppercase tracking-widest text-white/60 text-center text-[6px]">Kapal Laut</span>
+                    </div>
+                    <div class="flex flex-col items-center p-4 glass rounded-2xl">
+                        <i class="fa-solid fa-plane text-sky-400 mb-2"></i>
+                        <span class="text-[7px] font-black uppercase tracking-widest text-white/60 text-center text-[6px]">Pesawat</span>
+                    </div>
+                </div>
+
+                <div class="mb-10">
+                    <h3 class="text-[9px] font-black text-sky-400 uppercase tracking-[0.3em] mb-4 border-l-2 border-sky-400 pl-3">Tentang Kami</h3>
+                    <p class="text-[10px] leading-relaxed text-white/60 text-justify mb-4">
+                        Mahika Agency hadir sebagai solusi modern untuk kebutuhan mobilitas Anda. Berdiri dengan visi untuk menyederhanakan proses perjalanan Nusantara, kami mengintegrasikan berbagai moda transportasi dalam satu layanan terpadu.
+                    </p>
+                    <p class="text-[10px] leading-relaxed text-white/60 text-justify">
+                        Kami bekerja sama dengan ratusan Operator Bus (PO), perusahaan Travel Executive, Pelni, hingga maskapai penerbangan terkemuka. Dengan sistem Mahika, Anda tidak perlu lagi mengunduh banyak aplikasi; cukup satu pintu untuk semua tiket perjalanan Anda.
+                    </p>
+                </div>
+
+                <div class="mb-10 overflow-hidden relative glass p-6 rounded-2xl">
+                    <h3 class="text-[8px] font-black text-sky-400 uppercase tracking-[0.3em] mb-6 text-center">Apa Kata Mereka</h3>
+                    <div id="testi-wrapper" class="flex transition-transform duration-500">
+                        <div class="testi-card flex-shrink-0 text-center">
+                            <p class="text-[10px] italic text-white/80 mb-2">"Pesan tiket travel ke Bandung makin gampang lewat Mahika. Adminnya gercep!"</p>
+                            <p class="text-[7px] font-bold text-sky-400 uppercase">— Andi Saputra</p>
+                        </div>
+                        <div class="testi-card flex-shrink-0 text-center">
+                            <p class="text-[10px] italic text-white/80 mb-2">"Webnya keren, nyari jadwal bus nggak perlu ribet nanya satu-satu lagi."</p>
+                            <p class="text-[7px] font-bold text-sky-400 uppercase">— Maya Kurnia</p>
+                        </div>
+                        <div class="testi-card flex-shrink-0 text-center">
+                            <p class="text-[10px] italic text-white/80 mb-2">"Layanan kapal lautnya mantap, informasi jamnya presisi banget."</p>
+                            <p class="text-[7px] font-bold text-sky-400 uppercase">— Capt. Ruslan</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-10 glass p-5 rounded-2xl flex items-center gap-4">
+                    <i class="fa-solid fa-location-dot text-sky-400 text-xl"></i>
+                    <div class="text-[9px] leading-tight text-white/60 uppercase tracking-widest font-bold">
+                        Pusat Layanan: <br><span class="text-white">Central Hub - Jakarta, Indonesia</span>
+                    </div>
+                </div>
+
+                <button onclick="toggleProfile()" class="w-full py-4 bg-white text-[#065084] font-black text-[9px] tracking-[0.4em] rounded-xl uppercase shadow-lg active:scale-95 transition-all">
+                    EXIT INTERFACE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <a href="https://wa.me/628123456789" class="fab-wa uppercase">
+        <i class="fa-brands fa-whatsapp text-lg"></i>
+        <span>Pesan Tiket</span>
+    </a>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwfulIjftKvtjSoovdF3iHt_GeOiRNiSg76FIi7KzmhreEHsQFYWS34Rbw9r-Q_IR2lvQ/exec';
+        let allBusData = [];
+        let isProfileOpen = false;
+
+        // LOAD DATA
+        async function loadInitialData() {
+            try {
+                const response = await fetch(scriptURL);
+                allBusData = await response.json();
+            } catch (error) { console.error(error); }
+        }
+
+        // TOGGLE PROFILE PANEL
+        function toggleProfile() {
+            const panel = document.getElementById('company-profile');
+            isProfileOpen = !isProfileOpen;
+            panel.style.transform = isProfileOpen ? 'translateY(0)' : 'translateY(100%)';
+        }
+
+        // SEARCH LOGIC
+        function executeSearch() {
+            const key = document.getElementById('search-input').value.toLowerCase().trim();
+            const resultContainer = document.getElementById('result-container');
+            if(!key) return;
+            const filtered = allBusData.filter(bus => bus.tujuan.toLowerCase().includes(key) || bus.armada.toLowerCase().includes(key));
+            renderResults(filtered);
+            resultContainer.classList.remove('hidden');
+        }
+
+        function renderResults(data) {
+            const container = document.getElementById('bus-list');
+            const emptyState = document.getElementById('empty-state');
+            container.innerHTML = '';
+            if (data.length === 0) { emptyState.classList.remove('hidden'); return; }
+            emptyState.classList.add('hidden');
+            data.forEach((bus, index) => {
+                let jam = bus.jam.toString().toUpperCase().replace('WIB', '').trim();
+                container.innerHTML += `
+                    <div class="glass flex items-center justify-between p-5 rounded-2xl item-animate" style="animation-delay: ${index * 0.1}s">
+                        <div class="flex flex-col">
+                            <p class="text-xs font-black text-white uppercase tracking-tight mb-0.5">${bus.armada}</p>
+                            <p class="text-[9px] font-bold text-sky-400/70 uppercase tracking-[0.05em] italic">${bus.tujuan}</p>
+                        </div>
+                        <div class="text-right border-l border-white/5 pl-5">
+                            <p class="text-base font-black font-mono tracking-tighter text-white leading-none">${jam}<span class="text-[7px] font-bold text-white/30 ml-1">WIB</span></p>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        // TESTIMONI SLIDER AUTO
+        let currentTesti = 0;
+        setInterval(() => {
+            const wrapper = document.getElementById('testi-wrapper');
+            currentTesti = (currentTesti + 1) % 3;
+            wrapper.style.transform = `translateX(-${currentTesti * 100}%)`;
+        }, 4000);
+
+        document.getElementById('search-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') executeSearch(); });
+        loadInitialData();
+    </script>
+</body>
+                          </html>
+                          
