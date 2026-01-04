@@ -3,70 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika Agency | Integrated Booking</title>
+    <title>Mahika Agency | Official Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary-dark: #010b13; --sky: #38bdf8; --wa-green: #25D366; }
+        :root { --primary-dark: #010b13; --sky: #38bdf8; }
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background: radial-gradient(circle at 50% -20%, #065084 0%, #010b13 100%);
             color: white; min-height: 100vh; overflow-x: hidden;
         }
 
-        /* LAYERING */
+        /* LAYERING & UI FIX */
         #company-profile { z-index: 1000; background-color: var(--primary-dark); }
         .wa-floating-container { z-index: 500; position: fixed; bottom: 30px; right: 25px; }
-
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
         
-        /* NEW MODERN WA BUTTON */
+        /* MONOCHROME WA BUTTON (Themed) */
         .wa-btn {
-            background: rgba(37, 211, 102, 0.15);
+            background: rgba(56, 189, 248, 0.1);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(37, 211, 102, 0.3);
-            padding: 10px 18px;
-            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 12px 20px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
+            transition: all 0.3s ease;
         }
         .wa-btn:hover {
-            transform: translateY(-5px) scale(1.02);
-            background: rgba(37, 211, 102, 0.25);
-            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.4);
-            border-color: var(--wa-green);
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--sky);
+            transform: translateY(-3px);
         }
-        .wa-icon-box {
-            width: 35px; height: 35px;
-            background: var(--wa-green);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: white;
-            box-shadow: 0 0 15px rgba(37, 211, 102, 0.6);
-        }
-        .online-dot {
-            width: 8px; height: 8px; background: #4ade80;
-            border-radius: 50%; position: absolute;
-            top: -2px; right: -2px; border: 2px solid #010b13;
-            animation: pulse-green 2s infinite;
-        }
-        @keyframes pulse-green {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        .wa-icon-themed {
+            font-size: 20px;
+            color: var(--sky);
+            filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.5));
         }
 
-        /* PROFILE STUFF */
-        .profile-inner { max-height: 80vh; overflow-y: auto; padding-bottom: 50px; scrollbar-width: none; }
-        .testi-item { display: none; animation: fadeIn 0.5s ease-in-out; }
+        /* PROFILE SCROLLING */
+        .profile-inner { max-height: 85vh; overflow-y: auto; padding-bottom: 60px; scrollbar-width: none; }
+        .profile-inner::-webkit-scrollbar { display: none; }
+
+        /* TESTIMONI FADE */
+        .testi-item { display: none; animation: fadeIn 0.6s ease; }
         .testi-item.active { display: flex; flex-direction: column; align-items: center; text-align: center; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="flex flex-col items-center py-10 px-6">
@@ -76,19 +61,19 @@
             <h1 class="text-3xl font-extrabold italic tracking-tighter text-white uppercase">
                 MAHIKA<span class="text-sky-400 font-black">SEARCH</span>
             </h1>
-            <p class="text-[8px] font-bold text-white/30 tracking-[0.5em] uppercase text-center">Integrated Booking Hub</p>
+            <p class="text-[8px] font-bold text-white/30 tracking-[0.5em] uppercase">Integrated Booking Hub</p>
         </div>
 
         <div class="search-container glass rounded-2xl p-1.5 flex items-center mb-10">
             <div class="pl-4 text-sky-400/50"><i class="fa-solid fa-magnifying-glass"></i></div>
-            <input type="text" id="search-input" placeholder="Mau ke mana hari ini?" class="bg-transparent w-full p-3 outline-none text-white text-sm uppercase tracking-widest placeholder:text-white/10">
+            <input type="text" id="search-input" placeholder="Cari rute perjalanan..." class="bg-transparent w-full p-3 outline-none text-white text-sm uppercase tracking-widest placeholder:text-white/10">
             <button onclick="executeSearch()" class="bg-sky-500 hover:bg-white hover:text-[#065084] text-white font-black py-2.5 px-6 rounded-xl text-[9px] tracking-widest uppercase transition-all">CARI</button>
         </div>
 
         <div id="result-container" class="hidden mb-10"><div id="bus-list" class="space-y-3"></div></div>
 
         <div class="flex flex-col items-center gap-3">
-            <div class="bg-sky-400/10 border border-sky-400/20 px-6 py-2 rounded-full">
+            <div class="bg-white/5 border border-white/10 px-6 py-2 rounded-full">
                 <p class="text-[8px] font-black text-sky-400 uppercase tracking-[0.4em]">Explore Agency Profile</p>
             </div>
             <button onclick="toggleProfile()" class="w-12 h-12 glass rounded-full flex items-center justify-center text-sky-400 animate-bounce">
@@ -99,48 +84,65 @@
 
     <div class="wa-floating-container">
         <a href="https://wa.me/628123456789" target="_blank" class="wa-btn">
-            <div class="wa-icon-box">
-                <i class="fa-brands fa-whatsapp"></i>
-                <div class="online-dot"></div>
-            </div>
-            <div class="flex flex-col leading-none">
-                <span class="text-[10px] font-black text-white uppercase tracking-widest mb-1">Reservasi</span>
-                <span class="text-[7px] font-bold text-green-400 uppercase tracking-tighter italic">Online Sekarang</span>
-            </div>
+            <i class="fa-brands fa-whatsapp wa-icon-themed"></i>
+            <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Hubungi Kami</span>
         </a>
     </div>
 
-    <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full transition-transform duration-500 ease-out border-t border-sky-500/30 shadow-[0_-20px_80px_rgba(0,0,0,1)] rounded-t-[3rem]">
+    <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full transition-transform duration-500 ease-out border-t border-sky-500/30 shadow-[0_-20px_100px_rgba(0,0,0,1)] rounded-t-[3rem]">
         <div class="w-full py-6 flex justify-center cursor-pointer" onclick="toggleProfile()">
             <div class="w-12 h-1.5 bg-white/20 rounded-full"></div>
         </div>
+        
         <div class="profile-inner px-8">
-            <h2 class="text-2xl font-black italic tracking-tighter mb-1 uppercase text-center">MAHIKA <span class="text-sky-400">AGENCY</span></h2>
-            <p class="text-[8px] font-bold text-white/30 tracking-[0.4em] text-center mb-10 uppercase">Official Reservation Partner</p>
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-black italic tracking-tighter uppercase">MAHIKA <span class="text-sky-400">AGENCY</span></h2>
+                <div class="h-1 w-12 bg-sky-400 mx-auto mt-2 mb-4 rounded-full"></div>
+                <p class="text-[9px] font-bold text-white/30 tracking-[0.3em] uppercase italic">Bridge to Your Destination</p>
+            </div>
+
+            <div class="mb-10 p-6 glass rounded-3xl">
+                <h3 class="text-[10px] font-black text-sky-400 uppercase tracking-[0.3em] mb-4 border-l-2 border-sky-400 pl-3">About Us</h3>
+                <p class="text-[11px] leading-relaxed text-white/70 text-justify mb-4">
+                    Mahika Agency adalah platform reservasi tiket satu pintu yang didedikasikan untuk mempermudah mobilitas masyarakat di seluruh penjuru Indonesia. Kami memahami bahwa waktu Anda berharga, itulah sebabnya kami menghadirkan ekosistem digital yang menghubungkan Anda dengan berbagai moda transportasi dalam satu antarmuka.
+                </p>
+                <p class="text-[11px] leading-relaxed text-white/70 text-justify uppercase font-bold tracking-tight text-sky-400/80">
+                    Satu Akses. Semua Perjalanan. Tanpa Batas.
+                </p>
+            </div>
 
             <div class="grid grid-cols-3 gap-3 mb-10 text-center uppercase">
-                <div class="p-3 glass rounded-xl"><i class="fa-solid fa-bus text-sky-400 mb-1"></i><p class="text-[6px] font-bold opacity-60">Bus</p></div>
-                <div class="p-3 glass rounded-xl"><i class="fa-solid fa-ship text-sky-400 mb-1"></i><p class="text-[6px] font-bold opacity-60">Kapal</p></div>
-                <div class="p-3 glass rounded-xl"><i class="fa-solid fa-plane text-sky-400 mb-1"></i><p class="text-[6px] font-bold opacity-60">Pesawat</p></div>
+                <div class="p-4 glass rounded-2xl flex flex-col items-center">
+                    <i class="fa-solid fa-bus-simple text-sky-400 mb-2"></i>
+                    <p class="text-[7px] font-black opacity-50 tracking-widest">Bus & Travel</p>
+                </div>
+                <div class="p-4 glass rounded-2xl flex flex-col items-center">
+                    <i class="fa-solid fa-ship text-sky-400 mb-2"></i>
+                    <p class="text-[7px] font-black opacity-50 tracking-widest">Kapal Laut</p>
+                </div>
+                <div class="p-4 glass rounded-2xl flex flex-col items-center">
+                    <i class="fa-solid fa-plane text-sky-400 mb-2"></i>
+                    <p class="text-[7px] font-black opacity-50 tracking-widest">Pesawat</p>
+                </div>
             </div>
 
             <div class="mb-10 glass p-8 rounded-3xl min-h-[160px] flex items-center justify-center">
                 <div id="testi-1" class="testi-item active">
-                    <img src="https://i.pravatar.cc/100?u=1" class="w-12 h-12 rounded-full border-2 border-sky-400 mb-3" alt="User">
-                    <p class="text-[10px] text-white/80 italic mb-2">"Pesan tiket travel makin mudah. Admin sangat responsif!"</p>
+                    <img src="https://i.pravatar.cc/100?u=1" class="w-12 h-12 rounded-full border-2 border-sky-400 mb-3" alt="Client">
+                    <p class="text-[10px] text-white/80 italic mb-2">"Pemesanan tiket paling transparan dan cepat yang pernah saya gunakan."</p>
                     <p class="text-[8px] font-black text-sky-400 uppercase">Andi Saputra</p>
                 </div>
                 <div id="testi-2" class="testi-item">
-                    <img src="https://i.pravatar.cc/100?u=2" class="w-12 h-12 rounded-full border-2 border-sky-400 mb-3" alt="User">
-                    <p class="text-[10px] text-white/80 italic mb-2">"Jadwal kapal laut akurat. Gak perlu ribet antre."</p>
+                    <img src="https://i.pravatar.cc/100?u=2" class="w-12 h-12 rounded-full border-2 border-sky-400 mb-3" alt="Client">
+                    <p class="text-[10px] text-white/80 italic mb-2">"Admin Mahika sangat membantu saat pemilihan rute kapal laut."</p>
                     <p class="text-[8px] font-black text-sky-400 uppercase">Maya Kurnia</p>
                 </div>
             </div>
 
-            <a href="http://maps.google.com" target="_blank" class="mb-10 glass p-5 rounded-2xl flex items-center gap-4">
+            <a href="https://maps.google.com" target="_blank" class="mb-10 glass p-5 rounded-2xl flex items-center gap-4 transition-all hover:bg-white/5">
                 <div class="w-10 h-10 bg-sky-400/20 rounded-full flex items-center justify-center text-sky-400"><i class="fa-solid fa-location-dot"></i></div>
                 <div class="text-[9px] leading-tight font-bold uppercase tracking-widest">
-                    Pusat Layanan:<br><span class="text-white">Central Hub Jakarta, Indonesia</span>
+                    Central Hub:<br><span class="text-white">Central Hub Jakarta, Indonesia</span>
                 </div>
             </a>
 
@@ -186,13 +188,14 @@
 
         let currentTesti = 1;
         setInterval(() => {
-            document.getElementById(`testi-${currentTesti}`).classList.remove('active');
+            const el = document.getElementById(`testi-${currentTesti}`);
+            if(el) el.classList.remove('active');
             currentTesti = currentTesti >= 2 ? 1 : currentTesti + 1;
-            document.getElementById(`testi-${currentTesti}`).classList.add('active');
+            const nextEl = document.getElementById(`testi-${currentTesti}`);
+            if(nextEl) nextEl.classList.add('active');
         }, 4000);
 
         loadInitialData();
     </script>
 </body>
-        </html>
-        
+</html>
