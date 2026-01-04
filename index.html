@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Jaya - Jadwal Bus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#647FBC',
+                        secondary: '#91ADC8',
+                        accent: '#AED6CF',
+                        light: '#FAFDD6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FAFDD6; } /* Pake warna krem lembutmu */
+    </style>
+</head>
+<body class="font-sans text-slate-800">
+
+    <nav class="bg-[#647FBC] p-5 shadow-lg text-white">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-white p-2 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#647FBC]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                </div>
+                <span class="text-xl font-bold tracking-tighter">TRANSPORT JAYA</span>
+            </div>
+            <ul class="hidden md:flex space-x-6 text-sm font-medium">
+                <li class="hover:text-[#AED6CF] cursor-pointer">Beranda</li>
+                <li class="hover:text-[#AED6CF] cursor-pointer">Tentang Kami</li>
+                <li class="hover:text-[#AED6CF] cursor-pointer">Kontak</li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="py-16 px-6 bg-gradient-to-b from-[#647FBC] to-[#91ADC8] text-white">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-4xl font-extrabold mb-4">Cari Jadwal Perjalananmu</h2>
+            <p class="mb-8 text-[#FAFDD6]/80 text-lg">Update jadwal bus real-time setiap hari.</p>
+            
+            <div class="relative group">
+                <input 
+                    type="text" 
+                    id="search-input"
+                    placeholder="Masukkan rute atau nama armada..." 
+                    class="w-full p-5 pl-14 rounded-2xl border-none shadow-xl text-slate-800 focus:ring-4 focus:ring-[#AED6CF] transition-all"
+                >
+                <div class="absolute left-5 top-5 text-slate-400 group-focus-within:text-[#647FBC]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-5xl mx-auto -mt-10 px-4 pb-20">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border-t-8 border-[#AED6CF]">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="font-bold text-lg text-[#647FBC]">Daftar Armada Aktif</h3>
+                <span class="bg-[#AED6CF] text-[#647FBC] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Live Update</span>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-400 text-xs uppercase tracking-widest text-left">
+                            <th class="p-5">Rute Tujuan</th>
+                            <th class="p-5">Nama Bus</th>
+                            <th class="p-5 text-right">Jam Berangkat</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bus-table" class="divide-y divide-slate-50">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    </body>
+  </html>
+  
