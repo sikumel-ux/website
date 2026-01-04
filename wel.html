@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Agency | Digital Transport Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --primary-dark: #010b13; 
+            --sky: #38bdf8; 
+            --neon-green: #4ade80; 
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: radial-gradient(circle at 50% -20%, #065084 0%, #010b13 100%);
+            color: white; min-height: 100vh; overflow-x: hidden; position: relative;
+        }
+
+        /* 1. PARTICLES BACKGROUND (BINTANG GERAK) */
+        #particles-js {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+        }
+
+        .content-wrapper { position: relative; z-index: 10; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        
+        /* 2. NEON GREEN GLOW (Lampu Ijo) */
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
+            border: 1px solid rgba(74, 222, 128, 0.5) !important;
+        }
+
+        /* 3. ANIMASI BUS SEARCH */
+        #travel-track { height: 2px; background: var(--neon-green); width: 0%; transition: width 0.8s ease; margin-top: 10px; border-radius: 10px; }
+        #travel-icon { opacity: 0; transition: all 0.8s ease; color: var(--neon-green); font-size: 14px; margin-bottom: -5px; }
+
+        /* PANEL & TABS */
+        #company-profile { z-index: 1000; background-color: var(--primary-dark); height: 85vh; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease forwards; }
+        .tab-content.active { display: block; }
+
+        /* TESTIMONI DENGAN FOTO */
+        .testi-item { display: none; animation: fadeIn 0.6s ease forwards; }
+        .testi-item.active { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--neon-green); margin-bottom: 10px; object-fit: cover; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .wa-floating-container { z-index: 500; position: fixed; bottom: 30px; right: 25px; }
+    </style>
+</head>
+<body class="flex flex-col items-center py-10 px-6">
+
+    <div id="particles-js"></div>
+
+    <div class="content-wrapper w-full max-w-lg">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-extrabold italic tracking-tighter uppercase">
+                <span class="text-sky-400">MAHIKA</span><span class="text-white font-black">AGENCY</span>
+            </h1>
+            <p class="text-[8px] font-bold text-white/30 tracking-[0.5em] uppercase">Integrated Booking Hub</p>
+        </div>
+
+        <div class="search-container glass neon-glow rounded-2xl p-1.5 flex items-center mb-2">
+            <div class="pl-4 text-green-400/50"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <input type="text" id="search-input" placeholder="Cari tujuanmu..." class="bg-transparent w-full p-3 outline-none text-white text-sm uppercase tracking-widest placeholder:text-white/10">
+            <button onclick="runBusAnimation()" class="bg-green-500 hover:bg-white text-[#010b13] font-black py-2.5 px-6 rounded-xl text-[9px] uppercase transition-all">CARI</button>
+        </div>
+
+        <div class="flex flex-col items-start px-2 h-12">
+            <i class="fa-solid fa-bus-simple" id="travel-icon"></i>
+            <div id="travel-track"></div>
+        </div>
+
+        <div id="result-container" class="hidden mb-12"><div id="bus-list" class="space-y-3"></div></div>
+
+        <div class="flex flex-col items-center gap-3">
+            <p class="text-[8px] font-black text-green-400 uppercase tracking-[0.4em]">Explore Agency</p>
+            <button onclick="toggleProfile()" class="w-12 h-12 glass neon-glow rounded-full flex items-center justify-center text-green-400 animate-bounce">
+                <i class="fa-solid fa-chevron-up"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="wa-floating-container">
+        <a href="https://wa.me/628123456789" target="_blank" class="glass border-green-500/50 p-4 rounded-2xl flex items-center gap-3">
+            <i class="fa-brands fa-whatsapp text-green-400 text-xl"></i>
+            <span class="text-[10px] font-black text-white uppercase tracking-widest">Hubungi Admin</span>
+        </a>
+    </div>
+
+    <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full transition-transform duration-500 ease-out border-t border-green-500/30 rounded-t-[3rem] shadow-[0_-20px_100px_rgba(0,0,0,1)]">
+        <div class="w-full py-6 flex justify-center cursor-pointer" onclick="toggleProfile()"><div class="w-12 h-1.5 bg-white/10 rounded-full"></div></div>
+
+        <div class="px-8 pb-10 max-h-[75vh] overflow-y-auto">
+            <div id="panel-home" class="tab-content active">
+                <h2 class="text-2xl font-black italic text-center uppercase mb-1"><span class="text-sky-400">MAHIKA</span> AGENCY</h2>
+                <p class="text-[8px] font-bold text-white/30 text-center mb-8 uppercase italic">Your Premium Travel Partner</p>
+                
+                <div class="glass p-6 rounded-3xl text-justify mb-6">
+                    <h3 class="text-[10px] font-black text-green-400 uppercase tracking-widest mb-3 border-l-2 border-green-400 pl-3">Visi Kami</h3>
+                    <p class="text-[11px] leading-relaxed text-white/70">Menghubungkan Nusantara melalui sistem reservasi Bus, Kapal, dan Pesawat yang transparan dan efisien.</p>
+                </div>
+
+                <div class="mb-8 glass neon-glow p-6 rounded-3xl min-h-[160px] flex items-center justify-center">
+                    <div id="testi-1" class="testi-item active">
+                        <img src="https://i.pravatar.cc/150?u=1" class="avatar" alt="User">
+                        <p class="text-[10px] text-white/80 italic mb-2">"Tiket langsung aman, admin fast respon banget!"</p>
+                        <p class="text-[8px] font-black text-green-400 uppercase">- Andi Wijaya</p>
+                    </div>
+                    <div id="testi-2" class="testi-item">
+                        <img src="https://i.pravatar.cc/150?u=2" class="avatar" alt="User">
+                        <p class="text-[10px] text-white/80 italic mb-2">"Gampang carinya, harganya juga jujur."</p>
+                        <p class="text-[8px] font-black text-green-400 uppercase">- Sarah Queen</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mb-10">
+                    <div onclick="showDetail('bus')" class="p-4 glass rounded-2xl flex flex-col items-center cursor-pointer hover:bg-green-500/10">
+                        <i class="fa-solid fa-bus text-green-400 mb-2"></i>
+                        <p class="text-[7px] font-black opacity-50 uppercase">Bus</p>
+                    </div>
+                    <div onclick="showDetail('kapal')" class="p-4 glass rounded-2xl flex flex-col items-center cursor-pointer hover:bg-green-500/10">
+                        <i class="fa-solid fa-ship text-green-400 mb-2"></i>
+                        <p class="text-[7px] font-black opacity-50 uppercase">Kapal</p>
+                    </div>
+                    <div onclick="showDetail('pesawat')" class="p-4 glass rounded-2xl flex flex-col items-center cursor-pointer hover:bg-green-500/10">
+                        <i class="fa-solid fa-plane text-green-400 mb-2"></i>
+                        <p class="text-[7px] font-black opacity-50 uppercase">Pesawat</p>
+                    </div>
+                </div>
+
+                <button onclick="toggleProfile()" class="w-full py-4 bg-white/5 border border-white/10 text-white font-black text-[10px] rounded-xl uppercase">CLOSE PANEL</button>
+            </div>
+
+            <div id="detail-bus" class="tab-content text-center">
+                <button onclick="goBack()" class="mb-4 text-green-400 text-[10px] uppercase font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> Back</button>
+                <h2 class="text-xl font-black text-green-400 uppercase mb-4">Layanan Bus</h2>
+                <p class="text-[11px] glass p-6 rounded-3xl text-white/70">Partner resmi PO Bus Executive & Travel door-to-door.</p>
+            </div>
+            <div id="detail-kapal" class="tab-content text-center">
+                <button onclick="goBack()" class="mb-4 text-green-400 text-[10px] uppercase font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> Back</button>
+                <h2 class="text-xl font-black text-green-400 uppercase mb-4">Layanan Kapal</h2>
+                <p class="text-[11px] glass p-6 rounded-3xl text-white/70">Tiket Pelni & Kapal Cepat rute seluruh Nusantara.</p>
+            </div>
+            <div id="detail-pesawat" class="tab-content text-center">
+                <button onclick="goBack()" class="mb-4 text-green-400 text-[10px] uppercase font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> Back</button>
+                <h2 class="text-xl font-black text-green-400 uppercase mb-4">Layanan Pesawat</h2>
+                <p class="text-[11px] glass p-6 rounded-3xl text-white/70">Tiket pesawat domestik & internasional harga terbaik.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Init Partikel Background
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80 },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.2 },
+                "size": { "value": 2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 1 }
+            }
+        });
+
+        let allBusData = [];
+        let isProfileOpen = false;
+
+        async function loadData() {
+            try {
+                const res = await fetch('https://script.google.com/macros/s/AKfycbwfulIjftKvtjSoovdF3iHt_GeOiRNiSg76FIi7KzmhreEHsQFYWS34Rbw9r-Q_IR2lvQ/exec');
+                allBusData = await res.json();
+            } catch(e) { console.log("Offline Mode"); }
+        }
+
+        function runBusAnimation() {
+            if(!document.getElementById('search-input').value) return;
+            const track = document.getElementById('travel-track');
+            const icon = document.getElementById('travel-icon');
+            track.style.width = '100%'; icon.style.opacity = '1'; icon.style.marginLeft = '90%';
+            setTimeout(() => {
+                executeSearch();
+                track.style.width = '0%'; icon.style.opacity = '0'; icon.style.marginLeft = '0%';
+            }, 800);
+        }
+
+        function executeSearch() {
+            const key = document.getElementById('search-input').value.toLowerCase().trim();
+            const container = document.getElementById('bus-list');
+            container.innerHTML = '';
+            const filtered = allBusData.filter(b => b.tujuan.toLowerCase().includes(key) || b.armada.toLowerCase().includes(key));
+            filtered.forEach(b => {
+                container.innerHTML += `<div class="glass neon-glow flex items-center justify-between p-5 rounded-2xl"><div><p class="text-xs font-black uppercase text-white">${b.armada}</p><p class="text-[9px] font-bold text-green-400/70 italic uppercase">${b.tujuan}</p></div><div class="text-right border-l border-white/5 pl-5"><p class="text-base font-black text-white">${b.jam.toString().replace('WIB','')}</p></div></div>`;
+            });
+            document.getElementById('result-container').classList.remove('hidden');
+        }
+
+        function toggleProfile() {
+            const panel = document.getElementById('company-profile');
+            isProfileOpen = !isProfileOpen;
+            panel.style.transform = isProfileOpen ? 'translateY(0)' : 'translateY(100%)';
+            if(!isProfileOpen) goBack();
+        }
+
+        function showDetail(moda) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('detail-' + moda).classList.add('active');
+        }
+
+        function goBack() {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('panel-home').classList.add('active');
+        }
+
+        // Testi Switcher
+        let currentTesti = 1;
+        setInterval(() => {
+            document.getElementById(`testi-${currentTesti}`).classList.remove('active');
+            currentTesti = currentTesti >= 2 ? 1 : currentTesti + 1;
+            document.getElementById(`testi-${currentTesti}`).classList.add('active');
+        }, 4000);
+
+        loadData();
+    </script>
+</body>
+              </html>
+                  
