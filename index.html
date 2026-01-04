@@ -3,90 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transport Jaya - Jadwal Bus</title>
+    <title>Transport Jaya | Solusi Perjalanan Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#647FBC',
-                        secondary: '#91ADC8',
-                        accent: '#AED6CF',
-                        light: '#FAFDD6',
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
     <style>
-        body { background-color: #FAFDD6; } /* Pake warna krem lembutmu */
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .swiper-pagination-bullet-active { background: #2563eb !important; }
     </style>
 </head>
-<body class="font-sans text-slate-800">
+<body>
 
-    <nav class="bg-[#647FBC] p-5 shadow-lg text-white">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="bg-white p-2 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#647FBC]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                    </svg>
-                </div>
-                <span class="text-xl font-bold tracking-tighter">TRANSPORT JAYA</span>
+    <nav class="fixed w-full z-50 top-0 px-6 py-4">
+        <div class="max-w-7xl mx-auto glass rounded-2xl px-6 py-3 flex justify-between items-center">
+            <div class="text-2xl font-extrabold tracking-tighter text-blue-500">TJ<span class="text-white">BUS</span></div>
+            <div class="hidden md:flex space-x-8 text-sm font-semibold uppercase tracking-widest">
+                <a href="#" class="hover:text-blue-500 transition">Sewa Bus</a>
+                <a href="#" class="hover:text-blue-500 transition">Jadwal</a>
+                <a href="#" class="hover:text-blue-500 transition">Promo</a>
             </div>
-            <ul class="hidden md:flex space-x-6 text-sm font-medium">
-                <li class="hover:text-[#AED6CF] cursor-pointer">Beranda</li>
-                <li class="hover:text-[#AED6CF] cursor-pointer">Tentang Kami</li>
-                <li class="hover:text-[#AED6CF] cursor-pointer">Kontak</li>
-            </ul>
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-bold transition shadow-lg shadow-blue-500/20">
+                Pesan Tiket
+            </button>
         </div>
     </nav>
 
-    <section class="py-16 px-6 bg-gradient-to-b from-[#647FBC] to-[#91ADC8] text-white">
-        <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-4xl font-extrabold mb-4">Cari Jadwal Perjalananmu</h2>
-            <p class="mb-8 text-[#FAFDD6]/80 text-lg">Update jadwal bus real-time setiap hari.</p>
-            
-            <div class="relative group">
-                <input 
-                    type="text" 
-                    id="search-input"
-                    placeholder="Masukkan rute atau nama armada..." 
-                    class="w-full p-5 pl-14 rounded-2xl border-none shadow-xl text-slate-800 focus:ring-4 focus:ring-[#AED6CF] transition-all"
-                >
-                <div class="absolute left-5 top-5 text-slate-400 group-focus-within:text-[#647FBC]">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+    <div class="swiper mySwiper h-[80vh]">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide relative flex items-center justify-center">
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2069&auto=format&fit=crop" class="absolute w-full h-full object-cover brightness-50">
+                <div class="relative z-10 text-center px-4">
+                    <h2 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">Perjalanan Kelas <span class="text-blue-500">Eksekutif</span></h2>
+                    <p class="text-lg text-slate-300 max-w-2xl mx-auto">Nikmati kenyamanan maksimal dengan armada terbaru kami yang dilengkapi fasilitas mewah.</p>
+                </div>
+            </div>
+            <div class="swiper-slide relative flex items-center justify-center">
+                <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=2071&auto=format&fit=crop" class="absolute w-full h-full object-cover brightness-50">
+                <div class="relative z-10 text-center px-4">
+                    <h2 class="text-4xl md:text-6xl font-extrabold mb-4">Tepat Waktu & <span class="text-blue-500">Aman</span></h2>
+                    <p class="text-lg text-slate-300 max-w-2xl mx-auto">Komitmen kami membawa Anda sampai tujuan dengan selamat dan sesuai jadwal.</p>
                 </div>
             </div>
         </div>
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <section class="relative z-20 max-w-4xl mx-auto -mt-16 px-6">
+        <div class="glass p-8 rounded-3xl shadow-2xl border-blue-500/20">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Cek Jadwal Keberangkatan
+            </h3>
+            <input 
+                type="text" 
+                id="search-input"
+                placeholder="Mau ke mana? (Contoh: Malang, Bali...)"
+                class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder:text-slate-500"
+            >
+        </div>
     </section>
 
-    <main class="max-w-5xl mx-auto -mt-10 px-4 pb-20">
-        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border-t-8 border-[#AED6CF]">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                <h3 class="font-bold text-lg text-[#647FBC]">Daftar Armada Aktif</h3>
-                <span class="bg-[#AED6CF] text-[#647FBC] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Live Update</span>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-400 text-xs uppercase tracking-widest text-left">
-                            <th class="p-5">Rute Tujuan</th>
-                            <th class="p-5">Nama Bus</th>
-                            <th class="p-5 text-right">Jam Berangkat</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bus-table" class="divide-y divide-slate-50">
-                        </tbody>
-                </table>
-            </div>
+    <section class="max-w-5xl mx-auto py-16 px-6">
+        <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/30">
+            <table class="w-full text-left">
+                <thead class="bg-slate-900 text-slate-400 text-xs uppercase tracking-[0.2em]">
+                    <tr>
+                        <th class="p-6">Tujuan</th>
+                        <th class="p-6">Armada</th>
+                        <th class="p-6 text-right">Jam</th>
+                    </tr>
+                </thead>
+                <tbody id="bus-table" class="divide-y divide-slate-800 font-medium">
+                    </tbody>
+            </table>
         </div>
-    </main>
+    </section>
 
-    </body>
-  </html>
-  
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Init Slider
+        const swiper = new Swiper(".mySwiper", {
+            pagination: { el: ".swiper-pagination", clickable: true },
+            autoplay: { delay: 4000 },
+            loop: true
+        });
+
+        // Fetch Data Logic (Sama seperti sebelumnya, hubungkan ke URL GAS kamu)
+        const scriptURL = 'MASUKKAN_URL_GAS_KAMU_DISINI';
+        let allBusData = [];
+
+        async function fetchJadwal() {
+            try {
+                const response = await fetch(scriptURL);
+                allBusData = await response.json();
+                renderTable(allBusData);
+            } catch (error) {
+                document.getElementById('bus-table').innerHTML = '<tr><td colspan="3" class="p-10 text-center text-red-400 font-bold uppercase tracking-widest">Server Offline</td></tr>';
+            }
+        }
+
+        function renderTable(data) {
+            const tableBody = document.getElementById('bus-table');
+            tableBody.innerHTML = data.map(bus => `
+                <tr class="hover:bg-blue-600/5 transition">
+                    <td class="p-6 text-lg">${bus.tujuan}</td>
+                    <td class="p-6 text-blue-400 font-bold">${bus.armada}</td>
+                    <td class="p-6 text-right font-mono text-xl">${bus.jam}</td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filtered = allBusData.filter(b => b.tujuan.toLowerCase().includes(keyword) || b.armada.toLowerCase().includes(keyword));
+            renderTable(filtered);
+        });
+
+        fetchJadwal();
+    </script>
+</body>
+</html>
