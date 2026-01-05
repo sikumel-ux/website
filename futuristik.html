@@ -3,197 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika | Blueprint Edition</title>
+    <title>Mahika Agency | Realism Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --bg-color: #f0f4f8; /* Warna kertas teknis */
-            --line-color: #2c3e50;
-            --accent-color: #3498db;
-        }
-
         body {
-            background-color: var(--bg-color);
-            /* Pola Dot Grid */
-            background-image: radial-gradient(var(--line-color) 0.5px, transparent 0.5px);
-            background-size: 30px 30px;
-            font-family: 'Space Mono', monospace;
-            color: var(--line-color);
+            font-family: 'Inter', sans-serif;
+            background: #000;
             margin: 0;
             overflow-x: hidden;
+            min-height: 100vh;
+            color: #fff;
         }
 
-        #canvas-blueprint {
+        /* BACKGROUND REALISME: Foto Jalanan yang di-blur parah */
+        .bg-realism {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=2069') no-repeat center center;
+            background-size: cover;
+            filter: blur(40px) brightness(0.4);
+            transform: scale(1.1); /* Ngilangin edge blur */
+        }
+
+        /* KACA BEKU (FROSTED GLASS) */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* TYPOGRAPHY */
+        .brand-text {
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(to bottom, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* SEARCH INPUT REALISME */
+        .search-input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px 24px;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* HASIL PENCARIAN */
+        .card-bus {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card-bus:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        /* CANVAS UNTUK DEBU (PARTIKEL) */
+        #dust-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.3;
-        }
-
-        .header-project {
-            border: 2px solid var(--line-color);
-            padding: 20px;
-            position: relative;
-        }
-
-        /* Label di pojok kotak ala blueprint */
-        .corner-label {
-            position: absolute;
-            background: var(--line-color);
-            color: white;
-            font-size: 8px;
-            padding: 2px 5px;
-            top: -10px;
-            left: 10px;
-            text-transform: uppercase;
-        }
-
-        .brand-mahika {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 4rem;
-            letter-spacing: -2px;
-            line-height: 0.8;
-            text-transform: uppercase;
-        }
-
-        .search-container {
-            border: 1px solid var(--line-color);
-            background: white;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-tech {
-            background: transparent;
-            width: 100%;
-            padding: 15px;
-            outline: none;
-            font-size: 14px;
-        }
-
-        .btn-tech {
-            background: var(--line-color);
-            color: white;
-            padding: 15px 30px;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-
-        .btn-tech:hover {
-            background: var(--accent-color);
-        }
-
-        .result-card {
-            border: 1px dashed var(--line-color);
-            padding: 20px;
-            background: rgba(255,255,255,0.7);
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .result-card:hover {
-            border-style: solid;
-            background: white;
-            transform: translateY(-3px);
-        }
-
-        .stamp-status {
-            border: 2px solid var(--line-color);
-            padding: 2px 8px;
-            font-size: 10px;
-            font-weight: bold;
-            transform: rotate(-10deg);
-            opacity: 0.6;
+            pointer-events: none;
         }
     </style>
 </head>
-<body class="flex flex-col items-center py-12 px-6">
+<body class="flex flex-col items-center py-16 px-6">
 
-    <canvas id="canvas-blueprint"></canvas>
+    <div class="bg-realism"></div>
+    <canvas id="dust-canvas"></canvas>
 
-    <div class="w-full max-w-lg">
-        <div class="header-project mb-10">
-            <span class="corner-label">Project: Mahika-01</span>
-            <h1 class="brand-mahika">MAHIKA<br>AGENCY.</h1>
-            <p class="text-[10px] mt-4 opacity-70">SYSTEMATIC LOGISTICS | SCALE 1:100</p>
+    <div class="w-full max-w-lg z-10">
+        <div class="text-center mb-12">
+            <h1 class="brand-text text-5xl mb-2">MAHIKA</h1>
+            <p class="text-sm opacity-40 font-light tracking-widest uppercase italic">Executive Transportation</p>
         </div>
 
-        <div class="search-container mb-8">
-            <input type="text" id="search-input" placeholder="INPUT_COORDINATE_DESTINATION" class="input-tech uppercase">
-            <button onclick="runProjectSearch()" class="btn-tech">EXEC</button>
+        <div class="glass-panel p-2 mb-10">
+            <div class="flex flex-col md:flex-row gap-2">
+                <input type="text" id="search-input" placeholder="Cari rute perjalanan..." class="search-input w-full">
+                <button onclick="scanData()" class="bg-white text-black font-bold px-8 py-4 rounded-xl hover:bg-gray-200 transition">Cek</button>
+            </div>
         </div>
 
         <div id="result-container" class="space-y-6">
             </div>
     </div>
 
-    <div class="fixed bottom-6 w-full max-w-lg flex justify-between items-center px-6">
-        <div class="text-[8px] border-l-2 border-black pl-2">
-            COORD: 07.24 S / 110.37 E<br>
-            STATUS: SYSTEM_READY
-        </div>
-        <a href="https://wa.me/628123456789" class="text-xs font-bold underline">CONTACT_ENGINEER</a>
-    </div>
-
     <script>
-        // ANIMASI PARTIKEL BLUEPRINT (Simple & Clean)
-        const canvas = document.getElementById('canvas-blueprint');
+        const canvas = document.getElementById('dust-canvas');
         const ctx = canvas.getContext('2d');
-        let points = [];
+        let dustArray = [];
 
         function init() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            for(let i=0; i<30; i++) {
-                points.push({
+            for(let i=0; i<80; i++) {
+                dustArray.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.5 + 0.1,
+                    opacity: Math.random() * 0.5
                 });
             }
         }
 
-        function draw() {
+        function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#2c3e50';
-            ctx.lineWidth = 0.5;
-
-            points.forEach((p, i) => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-                // Gambar Tanda "+" (Crosshair)
+            dustArray.forEach(p => {
+                p.y -= p.speed;
+                if(p.y < 0) p.y = canvas.height;
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
                 ctx.beginPath();
-                ctx.moveTo(p.x - 5, p.y); ctx.lineTo(p.x + 5, p.y);
-                ctx.moveTo(p.x, p.y - 5); ctx.lineTo(p.x, p.y + 5);
-                ctx.stroke();
-
-                // Garis antar titik kalau deket
-                points.forEach((p2, j) => {
-                    if(i === j) return;
-                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if(dist < 200) {
-                        ctx.globalAlpha = 1 - (dist/200);
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                    }
-                });
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
             });
-            requestAnimationFrame(draw);
+            requestAnimationFrame(animate);
         }
 
-        init(); draw();
+        init(); animate();
 
         // DATA HANDLER
         let allData = [];
@@ -204,7 +158,7 @@
             } catch(e) { console.log("System Ready!"); }
         }
 
-        function runProjectSearch() {
+        function scanData() {
             const key = document.getElementById('search-input').value.toLowerCase();
             const list = document.getElementById('result-container');
             list.innerHTML = '';
@@ -214,22 +168,22 @@
             if(filtered.length > 0) {
                 filtered.forEach(b => {
                     list.innerHTML += `
-                        <div class="result-card">
-                            <span class="text-[8px] absolute top-2 right-2 opacity-40">REF_ID: ${Math.random().toString(36).substr(2, 5).toUpperCase()}</span>
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <h3 class="text-xl font-bold uppercase">${b.armada}</h3>
-                                    <p class="text-xs opacity-60">DESTINATION: ${b.tujuan}</p>
+                        <div class="card-bus glass-panel flex justify-between items-center">
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-1">${b.armada}</h3>
+                                <div class="flex items-center gap-2 opacity-40 text-xs">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <span class="uppercase tracking-widest">${b.tujuan}</span>
                                 </div>
-                                <div class="text-right">
-                                    <div class="stamp-status inline-block mb-2">VERIFIED</div>
-                                    <p class="text-3xl font-bold leading-none">${b.jam}</p>
-                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-3xl font-light tracking-tighter">${b.jam.toString().replace('WIB','')}</span>
+                                <span class="text-[9px] bg-white/10 px-2 py-0.5 rounded uppercase font-bold">Confirmed</span>
                             </div>
                         </div>`;
                 });
             } else {
-                list.innerHTML = `<p class="text-center py-10 opacity-30">[ ERROR: DATA_NOT_FOUND ]</p>`;
+                list.innerHTML = `<p class="text-center py-10 opacity-20 italic">Rute belum tersedia dalam jadwal...</p>`;
             }
         }
 
