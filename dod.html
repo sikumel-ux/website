@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Agency | Pure Doodle Compact</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --doodle-black: #1a1a1a; 
+            --doodle-paper: #fffdf5; 
+            --doodle-accent: #ffeb3b;
+        }
+
+        body { 
+            font-family: 'Patrick Hand', cursive; 
+            background-color: var(--doodle-paper);
+            background-image: radial-gradient(#ccc 1px, transparent 1px);
+            background-size: 25px 25px;
+            color: var(--doodle-black);
+            min-height: 100vh;
+            padding-bottom: 120px; /* Space untuk bottom nav */
+        }
+
+        .doodle-card {
+            background: white;
+            border: 3px solid var(--doodle-black);
+            border-radius: 12px;
+            box-shadow: 6px 6px 0px var(--doodle-black);
+        }
+
+        .brand-mahika {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 3.5rem;
+            transform: rotate(-2deg);
+            display: inline-block;
+        }
+
+        .btn-doodle {
+            background: var(--doodle-accent);
+            border: 3px solid var(--doodle-black);
+            box-shadow: 4px 4px 0px var(--doodle-black);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-doodle:active {
+            box-shadow: 0px 0px 0px var(--doodle-black);
+            transform: translate(4px, 4px);
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(5deg) scale(1.05); }
+        }
+        .wiggle { animation: wiggle 1.2s infinite; display: inline-block; cursor: pointer; }
+
+        /* LOADING BUS */
+        #doodle-track {
+            height: 3px;
+            background: var(--doodle-black);
+            width: 100%;
+            margin-top: 5px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        #doodle-bus-icon {
+            opacity: 0;
+            transition: all 1s ease-in-out;
+            color: var(--doodle-black);
+            font-size: 22px;
+            position: absolute;
+            left: 0;
+            top: -12px;
+        }
+        #doodle-bus-icon.rtl { transform: rotateY(180deg); }
+
+        /* PANEL */
+        #company-profile {
+            z-index: 1000;
+            background: var(--doodle-paper);
+            border-top: 6px solid var(--doodle-black);
+            height: 85vh;
+            border-radius: 30px 30px 0 0;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="flex flex-col items-center py-8 px-6">
+
+    <div class="w-full max-w-lg">
+        <div class="text-center mb-6">
+            <h1 class="brand-mahika">Mahika</h1>
+            <div class="relative inline-block ml-1">
+                <span class="text-lg font-bold bg-pink-200 px-3 py-0.5 inline-block -rotate-3" style="border: 2px solid black; border-radius: 60% 40%;">Travel</span>
+            </div>
+        </div>
+
+        <div class="doodle-card p-2 flex items-center bg-white mb-2">
+            <input type="text" id="search-input" placeholder="Mau kemana hari ini?" class="bg-transparent w-full px-4 py-1 outline-none text-xl">
+            <button onclick="runSearch()" class="btn-doodle px-5 py-2">GAS!</button>
+        </div>
+
+        <div class="h-8 relative mb-4">
+            <div id="doodle-track"></div>
+            <i class="fa-solid fa-bus absolute" id="doodle-bus-icon"></i>
+        </div>
+
+        <div id="result-container" class="hidden">
+            <div id="bus-list" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-6 inset-x-0 px-6 flex justify-between items-end gap-4 max-w-lg mx-auto pointer-events-none">
+        
+        <div class="pointer-events-auto flex flex-col items-center">
+            <p class="text-[10px] font-bold uppercase tracking-widest mb-1 rotate-[-2deg]">Profil Kita</p>
+            <div onclick="toggleProfile()" class="doodle-card p-4 bg-white wiggle flex items-center justify-center">
+                <i class="fa-solid fa-bus-simple text-2xl"></i>
+            </div>
+        </div>
+
+        <div class="pointer-events-auto flex flex-col items-center">
+            <p class="text-[10px] font-bold uppercase tracking-widest mb-1 rotate-[2deg]">Tanya Sini</p>
+            <a href="https://wa.me/628123456789" target="_blank" class="doodle-card p-4 bg-white flex items-center justify-center">
+                <i class="fa-brands fa-whatsapp text-2xl"></i>
+            </a>
+        </div>
+    </div>
+
+    <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full">
+        <div class="w-full py-4 flex justify-center cursor-pointer" onclick="toggleProfile()">
+            <div class="w-16 h-1 bg-black rounded-full opacity-20"></div>
+        </div>
+
+        <div class="px-8 pb-10 max-h-[75vh] overflow-y-auto">
+            <div id="panel-home" class="tab-content active">
+                <h2 class="text-4xl font-bold text-center mb-6 underline decoration-pink-300">Siapa Mahika?</h2>
+                
+                <div class="doodle-card p-5 bg-blue-50 mb-6 rotate-1">
+                    <p class="text-lg leading-relaxed">Kami agen tiket paling santuy tapi serius. Mau bus, kapal, atau pesawat? Semuanya kami "nyoretin" dengan jujur buat kawan Mahika!</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mb-8">
+                    <div onclick="showDetail('bus')" class="doodle-card p-3 bg-yellow-100 flex flex-col items-center cursor-pointer">
+                        <i class="fa-solid fa-bus text-xl mb-1"></i>
+                        <p class="font-bold text-[10px] uppercase">Bus</p>
+                    </div>
+                    <div onclick="showDetail('kapal')" class="doodle-card p-3 bg-cyan-100 flex flex-col items-center cursor-pointer">
+                        <i class="fa-solid fa-ship text-xl mb-1"></i>
+                        <p class="font-bold text-[10px] uppercase">Laut</p>
+                    </div>
+                    <div onclick="showDetail('pesawat')" class="doodle-card p-3 bg-red-100 flex flex-col items-center cursor-pointer">
+                        <i class="fa-solid fa-plane text-xl mb-1"></i>
+                        <p class="font-bold text-[10px] uppercase">Udara</p>
+                    </div>
+                </div>
+
+                <div class="mb-10">
+                    <p class="text-xl font-bold mb-4 italic underline">Obrolan User:</p>
+                    <div class="space-y-4">
+                        <div class="doodle-card p-4 bg-white rotate-1 text-sm italic">
+                            "Adminnya ramah, harganya sketsa banget alias murah!"
+                        </div>
+                        <div class="doodle-card p-4 bg-white -rotate-1 text-sm italic">
+                            "Prosesnya sat-set, gak pake drama."
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mb-4">
+                    <button onclick="toggleProfile()" class="btn-doodle px-8 py-2">MANTAP!</button>
+                </div>
+            </div>
+            
+            <div id="detail-bus" class="tab-content text-center">
+                <button onclick="goBack()" class="btn-doodle px-4 py-1 text-xs mb-4">Kembali</button>
+                <div class="doodle-card p-6 bg-white rotate-1">
+                    <h3 class="text-2xl font-bold mb-2">Jalur Darat</h3>
+                    <p>Armada premium, kursi empuk, perjalanan tenang.</p>
+                </div>
+            </div>
+            </div>
+    </div>
+
+    <script>
+        let allData = [];
+        let isProfileOpen = false;
+
+        async function loadData() {
+            try {
+                const res = await fetch('https://script.google.com/macros/s/AKfycbwfulIjftKvtjSoovdF3iHt_GeOiRNiSg76FIi7KzmhreEHsQFYWS34Rbw9r-Q_IR2lvQ/exec');
+                allData = await res.json();
+            } catch(e) { console.log("System Ready!"); }
+        }
+
+        function runSearch() {
+            const list = document.getElementById('bus-list');
+            const container = document.getElementById('result-container');
+            const busIcon = document.getElementById('doodle-bus-icon');
+            const busTrack = document.getElementById('doodle-track');
+            
+            if(!document.getElementById('search-input').value) return;
+            container.classList.remove('hidden');
+            list.innerHTML = ''; 
+
+            busTrack.style.opacity = '1';
+            busIcon.style.opacity = '1';
+            busIcon.style.left = '0%';
+            busIcon.classList.remove('rtl');
+            
+            setTimeout(() => { busIcon.style.left = '90%'; }, 50);
+            setTimeout(() => { busIcon.classList.add('rtl'); busIcon.style.left = '0%'; }, 1000);
+            
+            setTimeout(() => {
+                busTrack.style.opacity = '0';
+                busIcon.style.opacity = '0';
+                executeSearch();
+            }, 2000);
+        }
+
+        function executeSearch() {
+            const key = document.getElementById('search-input').value.toLowerCase();
+            const list = document.getElementById('bus-list');
+            list.innerHTML = '';
+            const filtered = allData.filter(b => b.tujuan.toLowerCase().includes(key) || b.armada.toLowerCase().includes(key));
+            if(filtered.length > 0) {
+                filtered.forEach(b => {
+                    list.innerHTML += `
+                        <div class="doodle-card p-4 flex justify-between items-center rotate-1">
+                            <div>
+                                <p class="text-2xl font-bold text-gray-800 flex items-center">
+                                    <i class="fa-solid fa-bus text-blue-500 mr-2" style="font-size: 16px;"></i> ${b.armada}
+                                </p>
+                                <p class="text-sm font-bold uppercase text-gray-400">Ke: ${b.tujuan}</p>
+                            </div>
+                            <div class="text-2xl font-black bg-yellow-400 px-3 py-1 border-2 border-black rotate-2">${b.jam.toString().replace('WIB','')}</div>
+                        </div>`;
+                });
+            } else {
+                list.innerHTML = `<div class="p-8 doodle-card bg-white text-center font-bold">Rute Belum Digambar.. 😅</div>`;
+            }
+        }
+
+        function toggleProfile() {
+            const panel = document.getElementById('company-profile');
+            isProfileOpen = !isProfileOpen;
+            panel.style.transform = isProfileOpen ? 'translateY(0px)' : 'translateY(100%)';
+        }
+
+        function showDetail(moda) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('detail-' + moda).classList.add('active');
+        }
+
+        function goBack() {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('panel-home').classList.add('active');
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
