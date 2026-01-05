@@ -3,137 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika Agency | Street Route</title>
+    <title>Mahika Agency | Highway Route</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&family=Oswald:wght@700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --street-yellow: #ffcc00;
-            --street-red: #ff3e3e;
-            --asphalt: #0f0f0f;
+            --asphalt: #111111;
+            --road-line: #ffffff;
+            --neon-light: #ffeb3b;
         }
 
         body {
-            font-family: 'JetBrains Mono', monospace;
             background-color: var(--asphalt);
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
             color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
             min-height: 100vh;
         }
 
-        #particles-js {
+        /* BACKGROUND JALAN RAYA BERGERAK */
+        .highway-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
+            background: linear-gradient(to bottom, #000, #111);
         }
 
-        .street-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 800;
+        /* Garis Marka Jalan */
+        .road-line {
+            position: absolute;
+            left: 50%;
+            width: 6px;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 50px,
+                var(--road-line) 50px,
+                var(--road-line) 150px
+            );
+            transform: translateX(-50%);
+            animation: roadMove 1s linear infinite;
+            opacity: 0.2;
+        }
+
+        @keyframes roadMove {
+            from { background-position: 0 0; }
+            to { background-position: 0 200px; }
+        }
+
+        /* PARTIKEL LIGHT TRAILS (Lampu Mobil) */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* UI STYLE: PAPAN JALAN TOL */
+        .highway-sign {
+            background: #004d40; /* Hijau papan tol */
+            border: 4px solid white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .brand-logo {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            font-size: 4rem;
-            line-height: 0.8;
-            color: var(--street-yellow);
-            text-shadow: 4px 4px 0px var(--street-red);
+            border-bottom: 4px solid white;
+            display: inline-block;
         }
 
-        /* CARD GAYA MARKA JALAN */
-        .street-card {
+        .input-highway {
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #555;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .input-highway:focus {
+            border-color: var(--neon-light);
+            outline: none;
+        }
+
+        /* KARTU HASIL */
+        .bus-card {
             background: #1a1a1a;
-            border-left: 8px solid var(--street-yellow);
-            border-bottom: 2px solid #333;
-            transition: all 0.2s ease;
+            border-left: 10px solid #2e7d32;
+            transition: transform 0.3s;
         }
 
-        .street-card:hover {
+        .bus-card:hover {
+            transform: scale(1.02);
             background: #222;
-            transform: skewX(-2deg);
-            border-left: 12px solid white;
-        }
-
-        .btn-street {
-            background: white;
-            color: black;
-            font-weight: 900;
-            padding: 10px 25px;
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
-            transition: all 0.3s;
-        }
-
-        .btn-street:hover {
-            background: var(--street-yellow);
-            transform: scale(1.05);
-        }
-
-        /* SCANNING LINE */
-        .scan-line {
-            height: 2px;
-            background: var(--street-yellow);
-            width: 0%;
-            transition: width 1.5s ease;
-            box-shadow: 0 0 10px var(--street-yellow);
         }
     </style>
 </head>
-<body class="flex flex-col items-center py-12 px-6">
+<body class="flex flex-col items-center py-10 px-6">
 
-    <div id="particles-js"></div>
+    <div class="highway-bg">
+        <div class="road-line"></div>
+        <div id="particles-js"></div>
+    </div>
 
-    <div class="w-full max-w-lg">
-        <div class="mb-12">
-            <h1 class="street-title">MAHI<br>KA.</h1>
-            <p class="mt-4 bg-white text-black font-bold inline-block px-2 py-1 text-xs">STREET LOGISTICS v.1.0</p>
+    <div class="w-full max-w-lg z-10">
+        <div class="highway-sign p-6 text-center mb-10">
+            <h1 class="brand-logo mb-2">MAHIKA</h1>
+            <p class="text-sm font-bold tracking-widest uppercase">>>> Jalur Utama <<<</p>
         </div>
 
-        <div class="flex flex-col gap-2 mb-8">
+        <div class="bg-black/80 p-4 rounded-lg border border-gray-700 backdrop-blur-md mb-8">
             <div class="flex gap-2">
-                <input type="text" id="search-input" placeholder="INPUT DESTINATION..." class="bg-transparent border-2 border-white text-white p-3 w-full outline-none focus:border-[var(--street-yellow)]">
-                <button onclick="runStreetSearch()" class="btn-street">GET</button>
+                <input type="text" id="search-input" placeholder="CARI KOTA TUJUAN..." class="input-highway w-full p-3 uppercase">
+                <button onclick="driveSearch()" class="bg-white text-black font-black px-6 hover:bg-yellow-400 transition">GO</button>
             </div>
-            <div id="scan-bar" class="scan-line"></div>
+        </div>
+
+        <div id="loading" class="hidden text-center py-10">
+            <i class="fa-solid fa-car-side text-5xl animate-bounce"></i>
+            <p class="mt-4 font-bold tracking-tighter">MELUNCUR KE LOKASI...</p>
         </div>
 
         <div id="result-container" class="space-y-4"></div>
     </div>
 
-    <div class="fixed bottom-6 inset-x-0 px-6 flex justify-between items-center max-w-lg mx-auto pointer-events-none">
-        <button class="pointer-events-auto bg-black border-2 border-white p-4 text-white hover:bg-white hover:text-black transition">
-            <i class="fa-solid fa-map-location-dot"></i>
+    <div class="fixed bottom-6 inset-x-0 px-6 flex justify-between items-center max-w-lg mx-auto">
+        <button class="bg-gray-900 border-2 border-white p-4 rounded-full text-white shadow-xl">
+            <i class="fa-solid fa-compass fa-spin-slow"></i>
         </button>
-        <button class="pointer-events-auto bg-[var(--street-yellow)] border-2 border-black p-4 text-black font-bold">
-            <i class="fa-solid fa-phone"></i> CALL
-        </button>
+        <a href="https://wa.me/628123456789" class="bg-green-600 border-2 border-white px-8 py-3 rounded-xl font-black text-white shadow-xl">
+            KONTAK HUB
+        </a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-        // PARTICLES GAYA HUJAN JALANAN
+        // CONFIG LIGHT TRAILS (Lampu Mobil di Jalan Raya)
         particlesJS("particles-js", {
             "particles": {
-                "number": { "value": 150, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#ffffff" },
+                "number": { "value": 40 },
+                "color": { "value": ["#ff0000", "#ffffff", "#ffff00"] }, // Merah & Putih lampu mobil
                 "shape": { "type": "edge" },
-                "opacity": { "value": 0.2, "random": true },
-                "size": { "value": 1, "random": true },
+                "opacity": { "value": 0.4 },
+                "size": { "value": 2, "random": true },
                 "line_linked": { "enable": false },
                 "move": {
                     "enable": true,
-                    "speed": 10, // Cepat seperti hujan
-                    "direction": "bottom", // Jatuh ke bawah
-                    "random": false,
+                    "speed": 15,
+                    "direction": "bottom", // Meluncur ke bawah
                     "straight": true,
                     "out_mode": "out"
                 }
-            },
-            "interactivity": { "events": { "onhover": { "enable": false } } }
+            }
         });
 
         let allData = [];
@@ -141,14 +171,21 @@
             try {
                 const res = await fetch('https://script.google.com/macros/s/AKfycbwfulIjftKvtjSoovdF3iHt_GeOiRNiSg76FIi7KzmhreEHsQFYWS34Rbw9r-Q_IR2lvQ/exec');
                 allData = await res.json();
-            } catch(e) { console.log("Data offline"); }
+            } catch(e) { console.log("System Ready!"); }
         }
 
-        function runStreetSearch() {
-            const bar = document.getElementById('scan-bar');
-            bar.style.width = '100%';
+        function driveSearch() {
+            const container = document.getElementById('result-container');
+            const loading = document.getElementById('loading');
+            
+            if(!document.getElementById('search-input').value) return;
+
+            container.classList.add('hidden');
+            loading.classList.remove('hidden');
+
             setTimeout(() => {
-                bar.style.width = '0%';
+                loading.classList.add('hidden');
+                container.classList.remove('hidden');
                 executeSearch();
             }, 1000);
         }
@@ -163,19 +200,19 @@
             if(filtered.length > 0) {
                 filtered.forEach(b => {
                     list.innerHTML += `
-                        <div class="street-card p-4 flex justify-between items-center">
+                        <div class="bus-card p-5 flex justify-between items-center shadow-2xl">
                             <div>
-                                <h3 class="font-bold text-white text-xl">${b.armada}</h3>
-                                <p class="text-xs text-[var(--street-yellow)] uppercase tracking-widest">>> ${b.tujuan}</p>
+                                <h3 class="text-xl font-black text-white italic tracking-tighter">${b.armada}</h3>
+                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">>> ${b.tujuan}</p>
                             </div>
                             <div class="text-right">
-                                <span class="block text-xl font-bold italic">${b.jam}</span>
-                                <span class="text-[10px] bg-white text-black px-1 font-bold">DEPARTING</span>
+                                <span class="block text-2xl font-bold text-yellow-400">${b.jam}</span>
+                                <span class="text-[8px] border border-gray-500 px-2 py-0.5">READY</span>
                             </div>
                         </div>`;
                 });
             } else {
-                list.innerHTML = `<p class="text-center opacity-40">-- ROUTE NOT FOUND --</p>`;
+                list.innerHTML = `<div class="p-10 text-center opacity-30">DATA TIDAK DITEMUKAN DI JALUR INI</div>`;
             }
         }
 
