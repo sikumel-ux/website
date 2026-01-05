@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika Agency | Pure Doodle Coding</title>
+    <title>Mahika Agency | Pure Doodle Final</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
@@ -52,43 +52,35 @@
             transform: translate(4px, 4px);
         }
 
+        /* ANIMASI BARU: BUS PULSE & SHAKE */
+        @keyframes busVroom {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.2) rotate(-5deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+            75% { transform: scale(1.2) rotate(-3deg); }
+        }
+        .bus-vroom { 
+            animation: busVroom 0.5s infinite; 
+            display: inline-block; 
+        }
+
         @keyframes wiggle {
             0%, 100% { transform: rotate(-3deg); }
             50% { transform: rotate(5deg) scale(1.05); }
         }
         .wiggle { animation: wiggle 1.2s infinite; display: inline-block; cursor: pointer; }
 
-        /* LOADING BUS (Dikasih Jarak Biar Gak Nyenggol) */
-        #doodle-track {
-            height: 3px;
-            background: var(--doodle-black);
-            width: 100%;
-            margin-top: 15px; /* Biar gak nempel search */
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        #doodle-bus-icon {
-            opacity: 0;
-            transition: all 1s ease-in-out;
-            color: var(--doodle-black);
-            font-size: 22px;
-            position: absolute;
-            left: 0;
-            top: 2px; /* Posisi diatur biar pas di track */
-        }
-        #doodle-bus-icon.rtl { transform: rotateY(180deg); }
-
-        /* AVATAR DOODLE */
         .avatar-doodle {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border: 2px solid black;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #eee;
-            font-size: 24px;
+            background: #f0f0f0;
+            font-size: 20px;
+            flex-shrink: 0;
         }
 
         #company-profile {
@@ -114,14 +106,16 @@
             </div>
         </div>
 
-        <div class="doodle-card p-2 flex items-center bg-white mb-4">
+        <div class="doodle-card p-2 flex items-center bg-white mb-6">
             <input type="text" id="search-input" placeholder="Mau kemana hari ini?" class="bg-transparent w-full px-4 py-1 outline-none text-xl">
             <button onclick="runSearch()" class="btn-doodle px-5 py-2">GAS!</button>
         </div>
 
-        <div class="h-10 relative mb-4">
-            <div id="doodle-track" class="mx-2"></div>
-            <i class="fa-solid fa-bus absolute" id="doodle-bus-icon"></i>
+        <div id="loading-bus" class="hidden flex flex-col items-center justify-center mb-8">
+            <div class="bus-vroom text-5xl text-gray-800">
+                <i class="fa-solid fa-bus"></i>
+            </div>
+            <p class="font-bold mt-2 italic">Lagi manasin mesin... vroom!</p>
         </div>
 
         <div id="result-container" class="hidden">
@@ -152,10 +146,10 @@
 
         <div class="px-8 pb-10 max-h-[75vh] overflow-y-auto scrollbar-none">
             <div id="panel-home" class="tab-content active">
-                <h2 class="text-4xl font-bold text-center mb-6">Siapa Mahika?</h2>
+                <h2 class="text-4xl font-bold text-center mb-6">Tentang Mahika</h2>
                 
                 <div class="doodle-card p-5 bg-blue-50 mb-6 rotate-1">
-                    <p class="text-lg">Agen tiket paling jujur se-dunia sketsa. Mau kemana aja, kita bantu nyoretin tiketnya!</p>
+                    <p class="text-lg">Agen tiket yang hobinya nyoret-nyoret jadwal buat kamu. Jujur, murah, dan asik!</p>
                 </div>
 
                 <div class="grid grid-cols-3 gap-3 mb-8">
@@ -165,11 +159,11 @@
                     </div>
                     <div onclick="showDetail('kapal')" class="doodle-card p-3 bg-cyan-100 flex flex-col items-center cursor-pointer">
                         <i class="fa-solid fa-ship text-xl mb-1"></i>
-                        <p class="font-bold text-[10px]">LAUT</p>
+                        <p class="font-bold text-[10px]">KAPAL</p>
                     </div>
                     <div onclick="showDetail('pesawat')" class="doodle-card p-3 bg-red-100 flex flex-col items-center cursor-pointer">
                         <i class="fa-solid fa-plane text-xl mb-1"></i>
-                        <p class="font-bold text-[10px]">UDARA</p>
+                        <p class="font-bold text-[10px]">PESAWAT</p>
                     </div>
                 </div>
 
@@ -178,16 +172,23 @@
                     <div class="space-y-6">
                         <div class="flex items-start gap-3">
                             <div class="avatar-doodle">👨‍💻</div>
-                            <div class="doodle-card p-3 bg-white flex-1 rotate-1 relative">
-                                <p class="text-sm italic">"Tiketnya beneran murah, bukan coretan doang! Juara!"</p>
+                            <div class="doodle-card p-3 bg-white flex-1 rotate-1">
+                                <p class="text-sm italic">"Beneran murah, adminnya sabar banget nungguin gue milih kursi."</p>
                                 <span class="text-xs font-bold block mt-1 text-blue-500">- Bang Jago</span>
                             </div>
                         </div>
                         <div class="flex flex-row-reverse items-start gap-3">
-                            <div class="avatar-doodle">👩‍🎨</div>
-                            <div class="doodle-card p-3 bg-white flex-1 -rotate-1 relative">
-                                <p class="text-sm italic">"Adminnya ramah banget, berasa nanya ke temen sendiri."</p>
+                            <div class="avatar-doodle">🎨</div>
+                            <div class="doodle-card p-3 bg-white flex-1 -rotate-1">
+                                <p class="text-sm italic">"Suka sama tampilannya, booking tiket berasa liat komik!"</p>
                                 <span class="text-xs font-bold block mt-1 text-pink-500">- Susi Art</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="avatar-doodle">🕶️</div>
+                            <div class="doodle-card p-3 bg-white flex-1 rotate-2">
+                                <p class="text-sm italic">"Tiket pesawat dapet harga sketsa, kantong aman terkendali."</p>
+                                <span class="text-xs font-bold block mt-1 text-green-600">- Mas Tekno</span>
                             </div>
                         </div>
                     </div>
@@ -200,9 +201,28 @@
             
             <div id="detail-bus" class="tab-content text-center">
                 <button onclick="goBack()" class="btn-doodle px-4 py-1 text-xs mb-4">Kembali</button>
-                <div class="doodle-card p-6 bg-white rotate-1">
-                    <h3 class="text-2xl font-bold mb-2 text-blue-600"><i class="fa-solid fa-bus"></i> Jalur Darat</h3>
-                    <p>Pilih bus favoritmu, gas antar kota antar provinsi!</p>
+                <div class="doodle-card p-6 bg-yellow-50 rotate-1">
+                    <h3 class="text-2xl font-bold mb-2 uppercase italic">-- Jalur Darat --</h3>
+                    <p class="mb-4">Armada bus premium antar kota antar provinsi. Kursi nyaman, istirahat tenang di jalan.</p>
+                    <i class="fa-solid fa-bus text-5xl opacity-20"></i>
+                </div>
+            </div>
+
+            <div id="detail-kapal" class="tab-content text-center">
+                <button onclick="goBack()" class="btn-doodle px-4 py-1 text-xs mb-4">Kembali</button>
+                <div class="doodle-card p-6 bg-cyan-50 -rotate-1">
+                    <h3 class="text-2xl font-bold mb-2 uppercase italic">-- Jalur Laut --</h3>
+                    <p class="mb-4">Menyeberang pulau makin asyik dengan tiket Pelni & Ferry cepat. Gak pake antre lama!</p>
+                    <i class="fa-solid fa-ship text-5xl opacity-20"></i>
+                </div>
+            </div>
+
+            <div id="detail-pesawat" class="tab-content text-center">
+                <button onclick="goBack()" class="btn-doodle px-4 py-1 text-xs mb-4">Kembali</button>
+                <div class="doodle-card p-6 bg-red-50 rotate-1">
+                    <h3 class="text-2xl font-bold mb-2 uppercase italic">-- Jalur Udara --</h3>
+                    <p class="mb-4">Terbang tinggi kemana aja. Tiket pesawat domestik & internasional dengan harga paling coret.</p>
+                    <i class="fa-solid fa-plane text-5xl opacity-20"></i>
                 </div>
             </div>
         </div>
@@ -222,26 +242,18 @@
         function runSearch() {
             const list = document.getElementById('bus-list');
             const container = document.getElementById('result-container');
-            const busIcon = document.getElementById('doodle-bus-icon');
-            const busTrack = document.getElementById('doodle-track');
+            const loading = document.getElementById('loading-bus');
             
             if(!document.getElementById('search-input').value) return;
-            container.classList.add('hidden'); // Sembunyikan hasil lama dulu
+            
+            container.classList.add('hidden');
+            loading.classList.remove('hidden');
 
-            busTrack.style.opacity = '1';
-            busIcon.style.opacity = '1';
-            busIcon.style.left = '0%';
-            busIcon.classList.remove('rtl');
-            
-            setTimeout(() => { busIcon.style.left = '90%'; }, 50);
-            setTimeout(() => { busIcon.classList.add('rtl'); busIcon.style.left = '0%'; }, 1000);
-            
             setTimeout(() => {
-                busTrack.style.opacity = '0';
-                busIcon.style.opacity = '0';
+                loading.classList.add('hidden');
                 container.classList.remove('hidden');
                 executeSearch();
-            }, 2000);
+            }, 1500); // Durasi pulse mesin 1.5 detik
         }
 
         function executeSearch() {
@@ -263,7 +275,7 @@
                         </div>`;
                 });
             } else {
-                list.innerHTML = `<div class="p-8 doodle-card bg-white text-center font-bold">Rute Belum Digambar.. 😅</div>`;
+                list.innerHTML = `<div class="p-8 doodle-card bg-white text-center font-bold">Rute belum terdaftar di sketsa kami..</div>`;
             }
         }
 
@@ -286,5 +298,5 @@
         loadData();
     </script>
 </body>
-            </html>
-            
+                            </html>
+                            
