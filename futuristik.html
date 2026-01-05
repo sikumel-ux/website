@@ -3,169 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika Agency | Highway Route</title>
+    <title>Mahika | Blueprint Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --asphalt: #111111;
-            --road-line: #ffffff;
-            --neon-light: #ffeb3b;
+            --bg-color: #f0f4f8; /* Warna kertas teknis */
+            --line-color: #2c3e50;
+            --accent-color: #3498db;
         }
 
         body {
-            background-color: var(--asphalt);
-            color: white;
-            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            /* Pola Dot Grid */
+            background-image: radial-gradient(var(--line-color) 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+            font-family: 'Space Mono', monospace;
+            color: var(--line-color);
             margin: 0;
             overflow-x: hidden;
-            min-height: 100vh;
         }
 
-        /* BACKGROUND JALAN RAYA BERGERAK */
-        .highway-bg {
+        #canvas-blueprint {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: linear-gradient(to bottom, #000, #111);
+            opacity: 0.3;
         }
 
-        /* Garis Marka Jalan */
-        .road-line {
+        .header-project {
+            border: 2px solid var(--line-color);
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Label di pojok kotak ala blueprint */
+        .corner-label {
             position: absolute;
-            left: 50%;
-            width: 6px;
-            height: 100%;
-            background: repeating-linear-gradient(
-                to bottom,
-                transparent,
-                transparent 50px,
-                var(--road-line) 50px,
-                var(--road-line) 150px
-            );
-            transform: translateX(-50%);
-            animation: roadMove 1s linear infinite;
-            opacity: 0.2;
-        }
-
-        @keyframes roadMove {
-            from { background-position: 0 0; }
-            to { background-position: 0 200px; }
-        }
-
-        /* PARTIKEL LIGHT TRAILS (Lampu Mobil) */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* UI STYLE: PAPAN JALAN TOL */
-        .highway-sign {
-            background: #004d40; /* Hijau papan tol */
-            border: 4px solid white;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .brand-logo {
-            font-family: 'Oswald', sans-serif;
-            font-size: 3rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            border-bottom: 4px solid white;
-            display: inline-block;
-        }
-
-        .input-highway {
-            background: rgba(0,0,0,0.6);
-            border: 2px solid #555;
-            border-radius: 4px;
+            background: var(--line-color);
             color: white;
-            font-weight: bold;
+            font-size: 8px;
+            padding: 2px 5px;
+            top: -10px;
+            left: 10px;
+            text-transform: uppercase;
         }
 
-        .input-highway:focus {
-            border-color: var(--neon-light);
+        .brand-mahika {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 4rem;
+            letter-spacing: -2px;
+            line-height: 0.8;
+            text-transform: uppercase;
+        }
+
+        .search-container {
+            border: 1px solid var(--line-color);
+            background: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-tech {
+            background: transparent;
+            width: 100%;
+            padding: 15px;
             outline: none;
+            font-size: 14px;
         }
 
-        /* KARTU HASIL */
-        .bus-card {
-            background: #1a1a1a;
-            border-left: 10px solid #2e7d32;
-            transition: transform 0.3s;
+        .btn-tech {
+            background: var(--line-color);
+            color: white;
+            padding: 15px 30px;
+            font-weight: bold;
+            transition: all 0.2s;
         }
 
-        .bus-card:hover {
-            transform: scale(1.02);
-            background: #222;
+        .btn-tech:hover {
+            background: var(--accent-color);
+        }
+
+        .result-card {
+            border: 1px dashed var(--line-color);
+            padding: 20px;
+            background: rgba(255,255,255,0.7);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .result-card:hover {
+            border-style: solid;
+            background: white;
+            transform: translateY(-3px);
+        }
+
+        .stamp-status {
+            border: 2px solid var(--line-color);
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: bold;
+            transform: rotate(-10deg);
+            opacity: 0.6;
         }
     </style>
 </head>
-<body class="flex flex-col items-center py-10 px-6">
+<body class="flex flex-col items-center py-12 px-6">
 
-    <div class="highway-bg">
-        <div class="road-line"></div>
-        <div id="particles-js"></div>
-    </div>
+    <canvas id="canvas-blueprint"></canvas>
 
-    <div class="w-full max-w-lg z-10">
-        <div class="highway-sign p-6 text-center mb-10">
-            <h1 class="brand-logo mb-2">MAHIKA</h1>
-            <p class="text-sm font-bold tracking-widest uppercase">>>> Jalur Utama <<<</p>
+    <div class="w-full max-w-lg">
+        <div class="header-project mb-10">
+            <span class="corner-label">Project: Mahika-01</span>
+            <h1 class="brand-mahika">MAHIKA<br>AGENCY.</h1>
+            <p class="text-[10px] mt-4 opacity-70">SYSTEMATIC LOGISTICS | SCALE 1:100</p>
         </div>
 
-        <div class="bg-black/80 p-4 rounded-lg border border-gray-700 backdrop-blur-md mb-8">
-            <div class="flex gap-2">
-                <input type="text" id="search-input" placeholder="CARI KOTA TUJUAN..." class="input-highway w-full p-3 uppercase">
-                <button onclick="driveSearch()" class="bg-white text-black font-black px-6 hover:bg-yellow-400 transition">GO</button>
+        <div class="search-container mb-8">
+            <input type="text" id="search-input" placeholder="INPUT_COORDINATE_DESTINATION" class="input-tech uppercase">
+            <button onclick="runProjectSearch()" class="btn-tech">EXEC</button>
+        </div>
+
+        <div id="result-container" class="space-y-6">
             </div>
-        </div>
-
-        <div id="loading" class="hidden text-center py-10">
-            <i class="fa-solid fa-car-side text-5xl animate-bounce"></i>
-            <p class="mt-4 font-bold tracking-tighter">MELUNCUR KE LOKASI...</p>
-        </div>
-
-        <div id="result-container" class="space-y-4"></div>
     </div>
 
-    <div class="fixed bottom-6 inset-x-0 px-6 flex justify-between items-center max-w-lg mx-auto">
-        <button class="bg-gray-900 border-2 border-white p-4 rounded-full text-white shadow-xl">
-            <i class="fa-solid fa-compass fa-spin-slow"></i>
-        </button>
-        <a href="https://wa.me/628123456789" class="bg-green-600 border-2 border-white px-8 py-3 rounded-xl font-black text-white shadow-xl">
-            KONTAK HUB
-        </a>
+    <div class="fixed bottom-6 w-full max-w-lg flex justify-between items-center px-6">
+        <div class="text-[8px] border-l-2 border-black pl-2">
+            COORD: 07.24 S / 110.37 E<br>
+            STATUS: SYSTEM_READY
+        </div>
+        <a href="https://wa.me/628123456789" class="text-xs font-bold underline">CONTACT_ENGINEER</a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-        // CONFIG LIGHT TRAILS (Lampu Mobil di Jalan Raya)
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 40 },
-                "color": { "value": ["#ff0000", "#ffffff", "#ffff00"] }, // Merah & Putih lampu mobil
-                "shape": { "type": "edge" },
-                "opacity": { "value": 0.4 },
-                "size": { "value": 2, "random": true },
-                "line_linked": { "enable": false },
-                "move": {
-                    "enable": true,
-                    "speed": 15,
-                    "direction": "bottom", // Meluncur ke bawah
-                    "straight": true,
-                    "out_mode": "out"
-                }
-            }
-        });
+        // ANIMASI PARTIKEL BLUEPRINT (Simple & Clean)
+        const canvas = document.getElementById('canvas-blueprint');
+        const ctx = canvas.getContext('2d');
+        let points = [];
 
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            for(let i=0; i<30; i++) {
+                points.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 0.5;
+
+            points.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                // Gambar Tanda "+" (Crosshair)
+                ctx.beginPath();
+                ctx.moveTo(p.x - 5, p.y); ctx.lineTo(p.x + 5, p.y);
+                ctx.moveTo(p.x, p.y - 5); ctx.lineTo(p.x, p.y + 5);
+                ctx.stroke();
+
+                // Garis antar titik kalau deket
+                points.forEach((p2, j) => {
+                    if(i === j) return;
+                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if(dist < 200) {
+                        ctx.globalAlpha = 1 - (dist/200);
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(draw);
+        }
+
+        init(); draw();
+
+        // DATA HANDLER
         let allData = [];
         async function loadData() {
             try {
@@ -174,23 +204,7 @@
             } catch(e) { console.log("System Ready!"); }
         }
 
-        function driveSearch() {
-            const container = document.getElementById('result-container');
-            const loading = document.getElementById('loading');
-            
-            if(!document.getElementById('search-input').value) return;
-
-            container.classList.add('hidden');
-            loading.classList.remove('hidden');
-
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                container.classList.remove('hidden');
-                executeSearch();
-            }, 1000);
-        }
-
-        function executeSearch() {
+        function runProjectSearch() {
             const key = document.getElementById('search-input').value.toLowerCase();
             const list = document.getElementById('result-container');
             list.innerHTML = '';
@@ -200,19 +214,22 @@
             if(filtered.length > 0) {
                 filtered.forEach(b => {
                     list.innerHTML += `
-                        <div class="bus-card p-5 flex justify-between items-center shadow-2xl">
-                            <div>
-                                <h3 class="text-xl font-black text-white italic tracking-tighter">${b.armada}</h3>
-                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">>> ${b.tujuan}</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="block text-2xl font-bold text-yellow-400">${b.jam}</span>
-                                <span class="text-[8px] border border-gray-500 px-2 py-0.5">READY</span>
+                        <div class="result-card">
+                            <span class="text-[8px] absolute top-2 right-2 opacity-40">REF_ID: ${Math.random().toString(36).substr(2, 5).toUpperCase()}</span>
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <h3 class="text-xl font-bold uppercase">${b.armada}</h3>
+                                    <p class="text-xs opacity-60">DESTINATION: ${b.tujuan}</p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="stamp-status inline-block mb-2">VERIFIED</div>
+                                    <p class="text-3xl font-bold leading-none">${b.jam}</p>
+                                </div>
                             </div>
                         </div>`;
                 });
             } else {
-                list.innerHTML = `<div class="p-10 text-center opacity-30">DATA TIDAK DITEMUKAN DI JALUR INI</div>`;
+                list.innerHTML = `<p class="text-center py-10 opacity-30">[ ERROR: DATA_NOT_FOUND ]</p>`;
             }
         }
 
