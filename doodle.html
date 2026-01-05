@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Agency | Doodle Voyage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --doodle-black: #2d3436; 
+            --doodle-paper: #fffdf5; 
+            --doodle-accent: #ffeb3b; /* Warna stabilo kuning */
+            --doodle-blue: #74b9ff;
+        }
+
+        body { 
+            font-family: 'Patrick Hand', cursive; 
+            background-color: var(--doodle-paper);
+            background-image: radial-gradient(#ddd 1px, transparent 1px);
+            background-size: 20px 20px; /* Efek kertas kotak-kotak/titik */
+            color: var(--doodle-black);
+            min-height: 100vh;
+        }
+
+        /* EFEK GARIS TANGAN (Rough Border) */
+        .doodle-border {
+            border: 3px solid var(--doodle-black);
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            transition: all 0.3s ease;
+        }
+
+        .brand-mahika {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 3.5rem;
+            transform: rotate(-3deg);
+            display: inline-block;
+        }
+
+        /* TOMBOL SEPERTI CORETAN */
+        .btn-doodle {
+            background: var(--doodle-accent);
+            border: 2px solid var(--doodle-black);
+            box-shadow: 4px 4px 0px var(--doodle-black);
+            transform: rotate(1deg);
+        }
+
+        .btn-doodle:active {
+            box-shadow: 0px 0px 0px var(--doodle-black);
+            transform: translate(4px, 4px);
+        }
+
+        /* ANIMASI GOYANG */
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-1deg); }
+            50% { transform: rotate(1.5deg); }
+        }
+        .wiggle:hover { animation: wiggle 0.3s infinite; }
+
+        /* PANEL */
+        #company-profile {
+            z-index: 1000;
+            background: var(--doodle-paper);
+            border-top: 5px solid var(--doodle-black);
+            height: 85vh;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="flex flex-col items-center py-10 px-6">
+
+    <div class="w-full max-w-lg relative z-10">
+        <div class="text-center mb-10">
+            <h1 class="brand-mahika">Mahika</h1>
+            <div class="relative inline-block ml-2">
+                <span class="text-xl font-bold italic bg-blue-200 px-2 rotate-6 inline-block">Agency</span>
+                <svg class="absolute -bottom-2 -left-2 w-full h-2" viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <path d="M0 5 Q 25 0, 50 5 T 100 5" stroke="black" stroke-width="2" fill="transparent"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="doodle-border bg-white p-2 flex items-center mb-10 bg-white">
+            <input type="text" id="search-input" placeholder="Cari rute seru..." class="bg-transparent w-full px-4 py-2 outline-none text-lg">
+            <button onclick="runDoodleSearch()" class="btn-doodle px-6 py-2 font-bold uppercase tracking-tighter">Cek!</button>
+        </div>
+
+        <div id="result-container" class="hidden mb-12">
+            <div id="bus-list" class="space-y-4"></div>
+        </div>
+
+        <div class="flex flex-col items-center gap-2">
+            <p class="text-sm font-bold rotate-2">Klik si awan! 👇</p>
+            <button onclick="toggleProfile()" class="wiggle text-4xl text-blue-400">
+                <i class="fa-solid fa-cloud"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="fixed bottom-8 right-6 z-[500]">
+        <a href="https://wa.me/628123456789" target="_blank" class="bg-white doodle-border p-3 flex items-center gap-3 rotate-[-2deg]">
+            <i class="fa-brands fa-whatsapp text-2xl text-green-500"></i>
+            <span class="font-bold text-lg">Chat Admin!</span>
+        </a>
+    </div>
+
+    <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full transition-transform duration-500 ease-in-out">
+        <div class="w-full py-4 flex justify-center cursor-pointer" onclick="toggleProfile()">
+            <div class="w-16 h-1 bg-black rounded-full"></div>
+        </div>
+
+        <div class="px-8 pb-10 max-h-[75vh] overflow-y-auto">
+            <div id="panel-home" class="tab-content active text-center">
+                <h2 class="text-4xl font-bold mb-4 rotate-1">Halo, Kami Mahika!</h2>
+                <div class="doodle-border p-5 bg-yellow-50 mb-6 -rotate-1">
+                    <p class="text-lg">Kita bantu kamu cari tiket bus, kapal, sampe pesawat tanpa ribet! Gambarnya emang coretan, tapi pelayanannya seriusan! 😎</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mb-8">
+                    <div onclick="showDetail('bus')" class="group cursor-pointer">
+                        <div class="doodle-border p-4 bg-white group-hover:bg-yellow-200">
+                            <i class="fa-solid fa-bus text-2xl"></i>
+                        </div>
+                        <p class="font-bold mt-1">Bus</p>
+                    </div>
+                    <div onclick="showDetail('kapal')" class="group cursor-pointer">
+                        <div class="doodle-border p-4 bg-white group-hover:bg-blue-200">
+                            <i class="fa-solid fa-ship text-2xl"></i>
+                        </div>
+                        <p class="font-bold mt-1">Kapal</p>
+                    </div>
+                    <div onclick="showDetail('pesawat')" class="group cursor-pointer">
+                        <div class="doodle-border p-4 bg-white group-hover:bg-pink-200">
+                            <i class="fa-solid fa-plane text-2xl"></i>
+                        </div>
+                        <p class="font-bold mt-1">Pesawat</p>
+                    </div>
+                </div>
+
+                <a href="#" class="inline-block doodle-border px-6 py-3 bg-white hover:bg-gray-100 mb-8">
+                    <i class="fa-solid fa-map-pin mr-2"></i> Mampir ke Kantor Yuk!
+                </a>
+
+                <button onclick="toggleProfile()" class="block w-full text-gray-400 font-bold">Tutup X</button>
+            </div>
+            
+            <div id="detail-bus" class="tab-content">
+                <button onclick="goBack()" class="mb-4 font-bold text-blue-500 underline"><- Kembali</button>
+                <h3 class="text-3xl font-bold mb-4">Bus Mania</h3>
+                <p class="doodle-border p-4 bg-white">Tiket bus semua jurusan ada di sini! Tinggal pilih kursinya!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allData = [];
+
+        async function loadData() {
+            try {
+                const res = await fetch('https://script.google.com/macros/s/AKfycbwfulIjftKvtjSoovdF3iHt_GeOiRNiSg76FIi7KzmhreEHsQFYWS34Rbw9r-Q_IR2lvQ/exec');
+                allData = await res.json();
+            } catch(e) { console.log("System Ready!"); }
+        }
+
+        function runDoodleSearch() {
+            const list = document.getElementById('bus-list');
+            const container = document.getElementById('result-container');
+            if(!document.getElementById('search-input').value) return;
+
+            container.classList.remove('hidden');
+            list.innerHTML = `<p class="text-center font-bold animate-bounce mt-4">Lagi corat-coret nyari rute... ✏️</p>`;
+            
+            setTimeout(() => {
+                executeDoodleSearch();
+            }, 1000);
+        }
+
+        function executeDoodleSearch() {
+            const key = document.getElementById('search-input').value.toLowerCase();
+            const list = document.getElementById('bus-list');
+            list.innerHTML = '';
+            
+            const filtered = allData.filter(b => b.tujuan.toLowerCase().includes(key));
+            
+            if(filtered.length > 0) {
+                filtered.forEach(b => {
+                    list.innerHTML += `
+                        <div class="doodle-border bg-white p-4 flex justify-between items-center rotate-[1deg]">
+                            <div>
+                                <p class="text-blue-500 font-bold text-sm">#${b.armada}</p>
+                                <p class="text-xl font-bold uppercase">${b.tujuan}</p>
+                            </div>
+                            <div class="text-2xl font-black bg-yellow-300 px-2">${b.jam.toString().replace('WIB','')}</div>
+                        </div>`;
+                });
+            } else {
+                list.innerHTML = `<p class="text-center font-bold text-gray-400">Yah, rutenya belum ada di coretan kami.. 😅</p>`;
+            }
+        }
+
+        function toggleProfile() {
+            const panel = document.getElementById('company-profile');
+            const isOpen = panel.style.transform === 'translateY(0px)';
+            panel.style.transform = isOpen ? 'translateY(100%)' : 'translateY(0px)';
+        }
+
+        function showDetail(moda) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('detail-' + moda).classList.add('active');
+        }
+
+        function goBack() {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('panel-home').classList.add('active');
+        }
+
+        loadData();
+    </script>
+</body>
+                          </html>
+                          
