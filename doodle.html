@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika Agency | Doodle Voyage v2</title>
+    <title>Mahika Agency | Doodle Hard-Shadow</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
@@ -24,9 +24,18 @@
             min-height: 100vh;
         }
 
-        .doodle-border {
+        /* EFEK CARD DENGAN HARD SHADOW */
+        .doodle-card {
+            background: white;
             border: 3px solid var(--doodle-black);
-            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            border-radius: 15px 15px 15px 15px/15px 15px 15px 15px;
+            box-shadow: 8px 8px 0px var(--doodle-black);
+            transition: all 0.2s ease;
+        }
+
+        .doodle-card:active {
+            box-shadow: 2px 2px 0px var(--doodle-black);
+            transform: translate(4px, 4px);
         }
 
         .brand-mahika {
@@ -34,33 +43,36 @@
             font-size: 3.5rem;
             transform: rotate(-3deg);
             display: inline-block;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
         }
 
+        /* TOMBOL DOODLE */
         .btn-doodle {
             background: var(--doodle-accent);
             border: 3px solid var(--doodle-black);
-            box-shadow: 5px 5px 0px var(--doodle-black);
-            transform: rotate(1deg);
+            box-shadow: 6px 6px 0px var(--doodle-black);
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .btn-doodle:active {
             box-shadow: 0px 0px 0px var(--doodle-black);
-            transform: translate(5px, 5px);
+            transform: translate(6px, 6px);
         }
 
         @keyframes wiggle {
             0%, 100% { transform: rotate(-3deg); }
             50% { transform: rotate(5deg) scale(1.1); }
         }
-        .wiggle { animation: wiggle 1s infinite; display: inline-block; }
+        .wiggle { animation: wiggle 1.2s infinite; display: inline-block; cursor: pointer; }
 
         #company-profile {
             z-index: 1000;
             background: var(--doodle-paper);
-            border-top: 5px solid var(--doodle-black);
+            border-top: 6px solid var(--doodle-black);
             height: 85vh;
-            border-radius: 30px 30px 0 0;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 40px 40px 0 0;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2);
         }
 
         .tab-content { display: none; }
@@ -73,95 +85,103 @@
         <div class="text-center mb-10">
             <h1 class="brand-mahika">Mahika</h1>
             <div class="relative inline-block ml-2">
-                <span class="text-xl font-bold bg-pink-200 px-3 -rotate-3 inline-block">Travel</span>
+                <span class="text-xl font-bold bg-pink-200 px-4 doodle-border inline-block" style="border: 2px solid black; border-radius: 50% 20% / 10% 40%;">Travel</span>
             </div>
         </div>
 
-        <div class="doodle-border bg-white p-2 flex items-center mb-10">
-            <input type="text" id="search-input" placeholder="Tulis tujuanmu di sini..." class="bg-transparent w-full px-4 py-2 outline-none text-xl">
-            <button onclick="runSearch()" class="btn-doodle px-6 py-2 font-bold uppercase">CARI!</button>
+        <div class="doodle-card p-2 flex items-center mb-10 bg-white">
+            <input type="text" id="search-input" placeholder="Cari rute impianmu..." class="bg-transparent w-full px-4 py-2 outline-none text-xl">
+            <button onclick="runSearch()" class="btn-doodle px-6 py-2">CARI!</button>
         </div>
 
         <div id="result-container" class="hidden mb-12">
-            <div id="bus-list" class="space-y-4"></div>
+            <div id="bus-list" class="space-y-6"></div>
         </div>
 
-        <div class="flex flex-col items-center gap-2">
-            <p class="text-lg font-bold">Intip Mahika Yuk!</p>
-            <button onclick="toggleProfile()" class="wiggle text-6xl text-gray-800">
+        <div class="flex flex-col items-center gap-2 mt-4">
+            <p class="text-lg font-bold italic underline">Kepoin Profil Kita!</p>
+            <div onclick="toggleProfile()" class="wiggle text-7xl text-gray-800">
                 <i class="fa-solid fa-bus"></i>
-            </button>
+            </div>
         </div>
     </div>
 
     <div class="fixed bottom-8 right-6 z-[500]">
-        <a href="https://wa.me/628123456789" target="_blank" class="bg-white doodle-border p-3 flex items-center gap-3 rotate-[-3deg] hover:rotate-0 transition-all">
+        <a href="https://wa.me/628123456789" target="_blank" class="doodle-card p-4 flex items-center gap-3 rotate-[-3deg] hover:rotate-0">
             <i class="fa-brands fa-whatsapp text-3xl"></i>
-            <span class="font-bold text-xl">Admin</span>
+            <span class="font-bold text-xl">Tanya Admin</span>
         </a>
     </div>
 
     <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full">
-        <div class="w-full py-4 flex justify-center cursor-pointer" onclick="toggleProfile()">
-            <div class="w-20 h-2 bg-black rounded-full"></div>
+        <div class="w-full py-5 flex justify-center cursor-pointer" onclick="toggleProfile()">
+            <div class="w-20 h-2 bg-black rounded-full opacity-20"></div>
         </div>
 
         <div class="px-8 pb-10 max-h-[75vh] overflow-y-auto">
             <div id="panel-home" class="tab-content active">
                 <h2 class="text-4xl font-bold text-center mb-6">Tentang Mahika</h2>
-                <div class="grid grid-cols-3 gap-3 mb-8 text-center">
-                    <div onclick="showDetail('bus')" class="doodle-border p-4 bg-yellow-100 cursor-pointer">
-                        <i class="fa-solid fa-bus text-2xl"></i>
+                
+                <div class="doodle-card p-6 bg-blue-50 mb-8 -rotate-1">
+                    <h3 class="text-xl font-bold mb-2 underline">Siapa Kami?</h3>
+                    <p class="text-lg">Mahika Agency adalah kawan setia perjalananmu! Kami hadir buat bantu booking tiket transportasi dengan cara yang paling asik dan transparan. Nggak perlu pusing, biar kami yang urus sketsanya! ✏️</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mb-10">
+                    <div onclick="showDetail('bus')" class="doodle-card p-4 bg-yellow-100 flex flex-col items-center">
+                        <i class="fa-solid fa-bus text-2xl mb-1"></i>
                         <p class="font-bold">Bus</p>
                     </div>
-                    <div onclick="showDetail('kapal')" class="doodle-border p-4 bg-blue-100 cursor-pointer">
-                        <i class="fa-solid fa-ship text-2xl"></i>
+                    <div onclick="showDetail('kapal')" class="doodle-card p-4 bg-cyan-100 flex flex-col items-center">
+                        <i class="fa-solid fa-ship text-2xl mb-1"></i>
                         <p class="font-bold">Kapal</p>
                     </div>
-                    <div onclick="showDetail('pesawat')" class="doodle-border p-4 bg-red-100 cursor-pointer">
-                        <i class="fa-solid fa-plane text-2xl"></i>
+                    <div onclick="showDetail('pesawat')" class="doodle-card p-4 bg-red-100 flex flex-col items-center">
+                        <i class="fa-solid fa-plane text-2xl mb-1"></i>
                         <p class="font-bold">Pesawat</p>
                     </div>
                 </div>
 
                 <div class="mb-10">
-                    <p class="text-2xl font-bold mb-4 rotate-[-1deg]">Apa Kata Mereka? ✍️</p>
-                    <div class="space-y-4">
-                        <div class="doodle-border p-4 bg-white rotate-1">
-                            <p class="italic text-lg">"Cepat banget dapet tiketnya! Kernetnya ramah."</p>
-                            <p class="font-bold mt-2 text-blue-500">- Bro Budi</p>
+                    <p class="text-2xl font-bold mb-4 underline italic">Coreta User ✍️</p>
+                    <div class="space-y-6">
+                        <div class="doodle-card p-5 bg-white rotate-2">
+                            <p class="italic text-lg">"Gak nyangka dapet harga segini murahnya! Adminnya sabar banget."</p>
+                            <p class="font-bold mt-2 text-right text-pink-500">- @traveler_cepu</p>
                         </div>
-                        <div class="doodle-border p-4 bg-white -rotate-1">
-                            <p class="italic text-lg">"Web paling unik, berasa liat buku harian!"</p>
-                            <p class="font-bold mt-2 text-pink-500">- Sis Susi</p>
+                        <div class="doodle-card p-5 bg-white -rotate-2">
+                            <p class="italic text-lg">"Prosesnya sat-set, tiket langsung dikirim via WA. Juara!"</p>
+                            <p class="font-bold mt-2 text-right text-blue-500">- Bang Jago</p>
                         </div>
                     </div>
                 </div>
 
-                <button onclick="toggleProfile()" class="w-full p-4 font-bold underline">Kembali ke Beranda</button>
+                <button onclick="toggleProfile()" class="btn-doodle w-full py-4 bg-white text-xl mb-6">
+                    MANTAP, KEMBALI!
+                </button>
             </div>
             
             <div id="detail-bus" class="tab-content">
-                <button onclick="goBack()" class="mb-4 font-bold text-blue-500 underline"><- Back</button>
-                <h3 class="text-3xl font-bold mb-4 underline">Jalur Darat</h3>
-                <div class="doodle-border p-5 bg-white">
-                    <p class="text-xl">Armada bus premium dengan kursi rebah. Solo-Jakarta-Bali gas terus!</p>
+                <button onclick="goBack()" class="btn-doodle px-6 py-2 mb-6 text-sm"> Kembali </button>
+                <div class="doodle-card p-6 bg-white">
+                    <h3 class="text-3xl font-bold mb-4">Jalur Darat 🚌</h3>
+                    <p class="text-xl">Kami koneksikan kamu dengan ratusan armada bus terbaik. Fasilitas mewah, harga sketsa!</p>
                 </div>
             </div>
 
             <div id="detail-kapal" class="tab-content">
-                <button onclick="goBack()" class="mb-4 font-bold text-blue-500 underline"><- Back</button>
-                <h3 class="text-3xl font-bold mb-4 underline">Jalur Laut</h3>
-                <div class="doodle-border p-5 bg-blue-50">
-                    <p class="text-xl">Tiket Pelni & Ferry cepat. Menyeberang pulau jadi asyik tanpa antre!</p>
+                <button onclick="goBack()" class="btn-doodle px-6 py-2 mb-6 text-sm"> Kembali </button>
+                <div class="doodle-card p-6 bg-cyan-50">
+                    <h3 class="text-3xl font-bold mb-4">Jalur Laut ⚓</h3>
+                    <p class="text-xl">Arungi samudera tanpa antre tiket di pelabuhan. Pelni & Ferry siap sedia!</p>
                 </div>
             </div>
 
             <div id="detail-pesawat" class="tab-content">
-                <button onclick="goBack()" class="mb-4 font-bold text-blue-500 underline"><- Back</button>
-                <h3 class="text-3xl font-bold mb-4 underline">Jalur Udara</h3>
-                <div class="doodle-border p-5 bg-red-50">
-                    <p class="text-xl">Terbang kemana saja dengan harga 'sketsa'. Hemat di kantong, cepat sampai!</p>
+                <button onclick="goBack()" class="btn-doodle px-6 py-2 mb-6 text-sm"> Kembali </button>
+                <div class="doodle-card p-6 bg-red-50">
+                    <h3 class="text-3xl font-bold mb-4">Jalur Udara ✈️</h3>
+                    <p class="text-xl">Terbang tinggi bareng Mahika. Domestik atau Luar Negeri? Kita atur semua!</p>
                 </div>
             </div>
         </div>
@@ -183,7 +203,7 @@
             const container = document.getElementById('result-container');
             if(!document.getElementById('search-input').value) return;
             container.classList.remove('hidden');
-            list.innerHTML = `<p class="text-center font-bold animate-pulse text-2xl">Otw nyari data... 🚌💨</p>`;
+            list.innerHTML = `<p class="text-center font-bold animate-pulse text-2xl py-6">✏️ Lagi nyoret rute buatmu...</p>`;
             setTimeout(executeSearch, 1000);
         }
 
@@ -195,13 +215,16 @@
             if(filtered.length > 0) {
                 filtered.forEach(b => {
                     list.innerHTML += `
-                        <div class="doodle-border bg-white p-4 flex justify-between items-center rotate-[1deg]">
-                            <div><p class="font-bold text-sm text-blue-600">#${b.armada}</p><p class="text-2xl font-bold uppercase">${b.tujuan}</p></div>
-                            <div class="text-3xl font-black bg-yellow-400 px-3">${b.jam.toString().replace('WIB','')}</div>
+                        <div class="doodle-card p-5 flex justify-between items-center rotate-1">
+                            <div>
+                                <p class="font-bold text-sm text-blue-600">#${b.armada}</p>
+                                <p class="text-2xl font-bold uppercase">${b.tujuan}</p>
+                            </div>
+                            <div class="text-3xl font-black bg-yellow-400 px-3 border-2 border-black">${b.jam.toString().replace('WIB','')}</div>
                         </div>`;
                 });
             } else {
-                list.innerHTML = `<p class="text-center font-bold">Rutenya lagi off, cari yang lain yuk! 😅</p>`;
+                list.innerHTML = `<p class="text-center font-bold p-10 doodle-card bg-white">Yah, coretan rute ini belum ada... 😅</p>`;
             }
         }
 
@@ -224,5 +247,4 @@
         loadData();
     </script>
 </body>
-                                                                                              </html>
-                                                                                              
+</html>
