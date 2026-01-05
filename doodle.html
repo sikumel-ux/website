@@ -1,3 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Agency | Doodle Voyage Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --doodle-black: #1a1a1a; 
+            --doodle-paper: #fffdf5; 
+            --doodle-accent: #ffeb3b;
+        }
+
+        body { 
+            font-family: 'Patrick Hand', cursive; 
+            background-color: var(--doodle-paper);
+            background-image: radial-gradient(#ccc 1px, transparent 1px);
+            background-size: 25px 25px;
+            color: var(--doodle-black);
+            min-height: 100vh;
+        }
+
+        /* EFEK CARD DENGAN HARD SHADOW */
+        .doodle-card {
+            background: white;
+            border: 3px solid var(--doodle-black);
+            border-radius: 15px;
+            box-shadow: 8px 8px 0px var(--doodle-black);
+            transition: all 0.2s ease;
+        }
+
+        .doodle-card:active {
             box-shadow: 2px 2px 0px var(--doodle-black);
             transform: translate(4px, 4px);
         }
@@ -7,7 +43,6 @@
             font-size: 3.5rem;
             transform: rotate(-3deg);
             display: inline-block;
-            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
         }
 
         /* TOMBOL DOODLE */
@@ -17,6 +52,7 @@
             box-shadow: 6px 6px 0px var(--doodle-black);
             font-weight: bold;
             text-transform: uppercase;
+            transition: all 0.1s ease;
         }
 
         .btn-doodle:active {
@@ -24,12 +60,14 @@
             transform: translate(6px, 6px);
         }
 
+        /* ANIMASI BUS GOYANG */
         @keyframes wiggle {
             0%, 100% { transform: rotate(-3deg); }
             50% { transform: rotate(5deg) scale(1.05); }
         }
         .wiggle { animation: wiggle 1.2s infinite; display: inline-block; cursor: pointer; }
 
+        /* PANEL */
         #company-profile {
             z-index: 1000;
             background: var(--doodle-paper);
@@ -41,21 +79,23 @@
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        .scrollbar-none::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="flex flex-col items-center py-10 px-6">
 
     <div class="w-full max-w-lg">
         <div class="text-center mb-10">
-            <h1 class="brand-mahika">Mahika</h1>
+            <h1 class="brand-mahika text-black">Mahika</h1>
             <div class="relative inline-block ml-2">
-                <span class="text-xl font-bold bg-pink-200 px-4 doodle-border inline-block" style="border: 2px solid black; border-radius: 50% 20% / 10% 40%;">Travel</span>
+                <span class="text-xl font-bold bg-pink-200 px-4 py-1 inline-block -rotate-3" style="border: 2px solid black; border-radius: 40% 60% 40% 60% / 60% 40% 60% 40%;">Travel</span>
             </div>
         </div>
 
         <div class="doodle-card p-2 flex items-center mb-10 bg-white">
-            <input type="text" id="search-input" placeholder="Cari rute impianmu..." class="bg-transparent w-full px-4 py-2 outline-none text-xl">
-            <button onclick="runSearch()" class="btn-doodle px-6 py-2">CARI!</button>
+            <input type="text" id="search-input" placeholder="Mau jalan-jalan ke mana?" class="bg-transparent w-full px-4 py-2 outline-none text-xl">
+            <button onclick="runSearch()" class="btn-doodle px-6 py-2">GAS!</button>
         </div>
 
         <div id="result-container" class="hidden mb-12">
@@ -63,7 +103,7 @@
         </div>
 
         <div class="flex flex-col items-center gap-2 mt-4">
-            <p class="text-lg font-bold italic underline">Kepoin Mahika</p>
+            <p class="text-lg font-bold italic underline decoration-yellow-400">Klik Bus Ini!</p>
             <div onclick="toggleProfile()" class="wiggle text-5xl text-gray-800">
                 <i class="fa-solid fa-bus"></i>
             </div>
@@ -73,7 +113,7 @@
     <div class="fixed bottom-8 right-6 z-[500]">
         <a href="https://wa.me/628123456789" target="_blank" class="doodle-card p-4 flex items-center gap-3 rotate-[-3deg] hover:rotate-0">
             <i class="fa-brands fa-whatsapp text-3xl"></i>
-            <span class="font-bold text-xl">Tanya Admin</span>
+            <span class="font-bold text-xl">Tanya Kita</span>
         </a>
     </div>
 
@@ -82,70 +122,78 @@
             <div class="w-20 h-2 bg-black rounded-full opacity-20"></div>
         </div>
 
-        <div class="px-8 pb-10 max-h-[75vh] overflow-y-auto">
+        <div class="px-8 pb-10 max-h-[75vh] overflow-y-auto scrollbar-none">
             <div id="panel-home" class="tab-content active">
-                <h2 class="text-4xl font-bold text-center mb-6">Tentang Mahika</h2>
+                <h2 class="text-4xl font-bold text-center mb-6 underline decoration-pink-300">Profil Mahika</h2>
                 
                 <div class="doodle-card p-6 bg-blue-50 mb-8 -rotate-1">
-                    <h3 class="text-xl font-bold mb-2 underline">Siapa Kami?</h3>
-                    <p class="text-lg">Mahika Agency adalah kawan setia perjalananmu! Kami hadir buat bantu booking tiket transportasi dengan cara yang paling asik dan transparan. Nggak perlu pusing, biar kami yang urus sketsanya! ✏️</p>
+                    <h3 class="text-xl font-bold mb-2">Siapa Kami? 🤔</h3>
+                    <p class="text-lg">Mahika Agency adalah kawan setia perjalananmu! Kami bantu booking tiket transportasi dengan cara yang paling asik, transparan, dan tentunya bersahabat. Nggak usah pusing, biar kami yang urus semua coretannya! ✏️</p>
                 </div>
 
                 <div class="grid grid-cols-3 gap-4 mb-10">
-                    <div onclick="showDetail('bus')" class="doodle-card p-4 bg-yellow-100 flex flex-col items-center">
+                    <div onclick="showDetail('bus')" class="doodle-card p-4 bg-yellow-100 flex flex-col items-center cursor-pointer">
                         <i class="fa-solid fa-bus text-2xl mb-1"></i>
                         <p class="font-bold">Bus</p>
                     </div>
-                    <div onclick="showDetail('kapal')" class="doodle-card p-4 bg-cyan-100 flex flex-col items-center">
+                    <div onclick="showDetail('kapal')" class="doodle-card p-4 bg-cyan-100 flex flex-col items-center cursor-pointer">
                         <i class="fa-solid fa-ship text-2xl mb-1"></i>
                         <p class="font-bold">Kapal</p>
                     </div>
-                    <div onclick="showDetail('pesawat')" class="doodle-card p-4 bg-red-100 flex flex-col items-center">
+                    <div onclick="showDetail('pesawat')" class="doodle-card p-4 bg-red-100 flex flex-col items-center cursor-pointer">
                         <i class="fa-solid fa-plane text-2xl mb-1"></i>
                         <p class="font-bold">Pesawat</p>
                     </div>
                 </div>
 
                 <div class="mb-10">
-                    <p class="text-2xl font-bold mb-4 underline italic">Coreta User ✍️</p>
+                    <p class="text-2xl font-bold mb-4 italic">Coreta User ✍️</p>
                     <div class="space-y-6">
-                        <div class="doodle-card p-5 bg-white rotate-2">
-                            <p class="italic text-lg">"Gak nyangka dapet harga segini murahnya! Adminnya sabar banget."</p>
-                            <p class="font-bold mt-2 text-right text-pink-500">- @traveler_cepu</p>
-                        </div>
-                        <div class="doodle-card p-5 bg-white -rotate-2">
-                            <p class="italic text-lg">"Prosesnya sat-set, tiket langsung dikirim via WA. Juara!"</p>
+                        <div class="doodle-card p-5 bg-white rotate-1">
+                            <p class="italic text-lg">"Gak ribet, tiket langsung dikirim via WA. Juara!"</p>
                             <p class="font-bold mt-2 text-right text-blue-500">- Bang Jago</p>
+                        </div>
+                        <div class="doodle-card p-5 bg-white -rotate-1">
+                            <p class="italic text-lg">"Prosesnya sat-set, harganya jujur banget!"</p>
+                            <p class="font-bold mt-2 text-right text-pink-500">- @Susi_Travel</p>
                         </div>
                     </div>
                 </div>
 
-                <button onclick="toggleProfile()" class="btn-doodle w-full py-4 bg-white text-xl mb-6">
-                    MANTAP, KEMBALI!
-                </button>
+                <div class="flex justify-center mb-8">
+                    <button onclick="toggleProfile()" class="btn-doodle px-12 py-3 text-xl">
+                        MANTAP!
+                    </button>
+                </div>
             </div>
             
             <div id="detail-bus" class="tab-content">
-                <button onclick="goBack()" class="btn-doodle px-6 py-2 mb-6 text-sm"> Kembali </button>
-                <div class="doodle-card p-6 bg-white">
+                <div class="flex justify-center mb-6">
+                    <button onclick="goBack()" class="btn-doodle px-6 py-2 text-sm"> Kembali </button>
+                </div>
+                <div class="doodle-card p-6 bg-white rotate-1">
                     <h3 class="text-3xl font-bold mb-4">Jalur Darat 🚌</h3>
-                    <p class="text-xl">Kami koneksikan kamu dengan ratusan armada bus terbaik. Fasilitas mewah, harga sketsa!</p>
+                    <p class="text-xl">Kami koneksikan kamu dengan ratusan armada bus terbaik di seluruh Indonesia. Fasilitas mewah, harga sketsa!</p>
                 </div>
             </div>
 
             <div id="detail-kapal" class="tab-content">
-                <button onclick="goBack()" class="btn-doodle px-6 py-2 mb-6 text-sm"> Kembali </button>
-                <div class="doodle-card p-6 bg-cyan-50">
+                <div class="flex justify-center mb-6">
+                    <button onclick="goBack()" class="btn-doodle px-6 py-2 text-sm"> Kembali </button>
+                </div>
+                <div class="doodle-card p-6 bg-cyan-50 -rotate-1">
                     <h3 class="text-3xl font-bold mb-4">Jalur Laut ⚓</h3>
-                    <p class="text-xl">Arungi samudera tanpa antre tiket di pelabuhan. Pelni & Ferry siap sedia!</p>
+                    <p class="text-xl">Arungi samudera tanpa antre tiket di pelabuhan. Pelni & Ferry siap sedia buat kamu!</p>
                 </div>
             </div>
 
             <div id="detail-pesawat" class="tab-content">
-                <button onclick="goBack()" class="btn-doodle px-6 py-2 mb-6 text-sm"> Kembali </button>
-                <div class="doodle-card p-6 bg-red-50">
+                <div class="flex justify-center mb-6">
+                    <button onclick="goBack()" class="btn-doodle px-6 py-2 text-sm"> Kembali </button>
+                </div>
+                <div class="doodle-card p-6 bg-red-50 rotate-1">
                     <h3 class="text-3xl font-bold mb-4">Jalur Udara ✈️</h3>
-                    <p class="text-xl">Terbang tinggi bareng Mahika. Domestik atau Luar Negeri? Kita atur semua!</p>
+                    <p class="text-xl">Terbang tinggi bareng Mahika. Domestik atau Luar Negeri? Kita atur semua jadwalnya!</p>
                 </div>
             </div>
         </div>
@@ -155,6 +203,7 @@
         let allData = [];
         let isProfileOpen = false;
 
+        // LOAD DATA GOOGLE SHEET
         async function loadData() {
             try {
                 const res = await fetch('https://script.google.com/macros/s/AKfycbwfulIjftKvtjSoovdF3iHt_GeOiRNiSg76FIi7KzmhreEHsQFYWS34Rbw9r-Q_IR2lvQ/exec');
@@ -168,14 +217,14 @@
             if(!document.getElementById('search-input').value) return;
             container.classList.remove('hidden');
             list.innerHTML = `<p class="text-center font-bold animate-pulse text-2xl py-6">✏️ Lagi nyoret rute buatmu...</p>`;
-            setTimeout(executeSearch, 1000);
+            setTimeout(executeSearch, 800);
         }
 
         function executeSearch() {
             const key = document.getElementById('search-input').value.toLowerCase();
             const list = document.getElementById('bus-list');
             list.innerHTML = '';
-            const filtered = allData.filter(b => b.tujuan.toLowerCase().includes(key));
+            const filtered = allData.filter(b => b.tujuan.toLowerCase().includes(key) || b.armada.toLowerCase().includes(key));
             if(filtered.length > 0) {
                 filtered.forEach(b => {
                     list.innerHTML += `
@@ -188,7 +237,7 @@
                         </div>`;
                 });
             } else {
-                list.innerHTML = `<p class="text-center font-bold p-10 doodle-card bg-white">Yah, coretan rute ini belum ada... 😅</p>`;
+                list.innerHTML = `<div class="p-10 doodle-card bg-white text-center font-bold">Yah, rute itu belum masuk coretan kita.. 😅</div>`;
             }
         }
 
@@ -211,4 +260,5 @@
         loadData();
     </script>
 </body>
-</html>
+            </html>
+            
