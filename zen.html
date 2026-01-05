@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Agency | Zen Minimalist Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --zen-bg: #F9F7F2; 
+            --zen-gold: #C5A358; 
+            --zen-dark: #2D3436;
+            --zen-glass: rgba(255, 255, 255, 0.7);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--zen-bg);
+            color: var(--zen-dark); 
+            min-height: 100vh; overflow-x: hidden;
+        }
+
+        /* SOFT FLOW BACKGROUND */
+        .bg-gradient-soft {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(197, 163, 88, 0.05) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(197, 163, 88, 0.05) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .glass-zen { background: var(--zen-glass); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+        
+        /* HEADER */
+        .brand-mahika { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: var(--zen-dark); letter-spacing: -0.02em; }
+        .brand-agency { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.4em; color: var(--zen-gold); text-transform: uppercase; margin-top: -5px; }
+
+        /* SEARCH BUTTON */
+        .btn-zen { background: var(--zen-dark); color: white; transition: all 0.3s ease; }
+        .btn-zen:hover { background: var(--zen-gold); transform: translateY(-2px); }
+
+        /* PANEL */
+        #company-profile { z-index: 1000; background-color: white; height: 85vh; border-radius: 40px 40px 0 0; box-shadow: 0 -20px 60px rgba(0,0,0,0.05); }
+        .tab-content { display: none; animation: slideUp 0.5s ease-out forwards; }
+        .tab-content.active { display: block; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* TESTIMONI */
+        .avatar-zen { width: 60px; height: 60px; border-radius: 20px; border: 2px solid var(--zen-bg); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body class="flex flex-col items-center py-12 px-6">
+
+    <div class="bg-gradient-soft"></div>
+
+    <div class="w-full max-w-lg relative z-10">
+        <div class="text-center mb-12">
+            <h1 class="brand-mahika">Mahika</h1>
+            <p class="brand-agency">Travel Agency</p>
+            <div class="w-12 h-[1px] bg-zen-gold mx-auto mt-4" style="background-color: var(--zen-gold);"></div>
+        </div>
+
+        <div class="glass-zen rounded-3xl p-2 flex items-center mb-8">
+            <input type="text" id="search-input" placeholder="Mau kemana hari ini?" class="bg-transparent w-full px-5 py-3 outline-none text-sm tracking-wide text-gray-700 placeholder:text-gray-300">
+            <button onclick="runZenAnimation()" class="btn-zen px-8 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest">Cari</button>
+        </div>
+
+        <div id="result-container" class="hidden mb-12 animate-pulse">
+            <div id="bus-list" class="space-y-4"></div>
+        </div>
+
+        <div class="flex flex-col items-center gap-4 mt-10">
+            <p class="text-[9px] font-semibold uppercase tracking-[0.3em] text-gray-400">Discover More</p>
+            <button onclick="toggleProfile()" class="w-14 h-14 glass-zen rounded-full flex items-center justify-center transition-transform hover:scale-110">
+                <i class="fa-solid fa-leaf text-zen-gold" style="color: var(--zen-gold);"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="fixed bottom-8 right-6 z-[500]">
+        <a href="https://wa.me/628123456789" target="_blank" class="glass-zen p-4 rounded-3xl flex items-center gap-3 border-none">
+            <div class="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg shadow-green-200">
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+            </div>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-600">Concierge</span>
+        </a>
+    </div>
+
+    <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+        <div class="w-full py-6 flex justify-center cursor-pointer" onclick="toggleProfile()">
+            <div class="w-10 h-1 bg-gray-100 rounded-full"></div>
+        </div>
+
+        <div class="px-10 pb-12 max-h-[75vh] overflow-y-auto scrollbar-none text-center">
+            <div id="panel-home" class="tab-content active">
+                <h2 class="brand-mahika text-3xl mb-1">Mahika</h2>
+                <p class="text-[9px] font-bold tracking-[0.4em] text-gray-300 uppercase mb-8">Your Zen Travel Partner</p>
+
+                <div class="bg-gray-50 p-8 rounded-[40px] mb-8">
+                    <p class="text-sm leading-relaxed text-gray-500 italic font-light">
+                        "Perjalanan bukan hanya soal tujuan, tapi tentang ketenangan di setiap langkahnya."
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mb-10">
+                    <div onclick="showDetail('bus')" class="group cursor-pointer">
+                        <div class="w-full aspect-square glass-zen rounded-3xl flex items-center justify-center mb-2 group-hover:bg-gray-900 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-bus-simple"></i>
+                        </div>
+                        <p class="text-[8px] font-bold uppercase text-gray-400">Road</p>
+                    </div>
+                    <div onclick="showDetail('kapal')" class="group cursor-pointer">
+                        <div class="w-full aspect-square glass-zen rounded-3xl flex items-center justify-center mb-2 group-hover:bg-gray-900 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-anchor"></i>
+                        </div>
+                        <p class="text-[8px] font-bold uppercase text-gray-400">Sea</p>
+                    </div>
+                    <div onclick="showDetail('pesawat')" class="group cursor-pointer">
+                        <div class="w-full aspect-square glass-zen rounded-3xl flex items-center justify-center mb-2 group-hover:bg-gray-900 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-wind"></i>
+                        </div>
+                        <p class="text-[8px] font-bold uppercase text-gray-400">Air</p>
+                    </div>
+                </div>
+
+                <a href="https://maps.google.com" target="_blank" class="flex items-center justify-center gap-3 mb-10 text-gray-400">
+                    <i class="fa-solid fa-location-dot text-zen-gold" style="color: var(--zen-gold);"></i>
+                    <span class="text-[10px] font-medium tracking-widest uppercase">Visit Our Gallery</span>
+                </a>
+
+                <button onclick="toggleProfile()" class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-300">Back to Journey</button>
+            </div>
+
+            <div id="detail-bus" class="tab-content">
+                <button onclick="goBack()" class="mb-6 text-zen-gold text-xs uppercase font-bold tracking-widest">Back</button>
+                <h3 class="brand-mahika text-2xl mb-4">Luxury Road</h3>
+                <p class="text-sm text-gray-400 leading-relaxed px-4">Nikmati keheningan perjalanan darat dengan armada kelas suite kami.</p>
+            </div>
+            </div>
+    </div>
+
+    <script>
+        let allBusData = [];
+        let isProfileOpen = false;
+
+        async function loadData() {
+            try {
+                const res = await fetch('https://script.google.com/macros/s/AKfycbwfulIjftKvtjSoovdF3iHt_GeOiRNiSg76FIi7KzmhreEHsQFYWS34Rbw9r-Q_IR2lvQ/exec');
+                allBusData = await res.json();
+            } catch(e) { console.log("System Ready"); }
+        }
+
+        function runZenAnimation() {
+            const container = document.getElementById('result-container');
+            const list = document.getElementById('bus-list');
+            if(!document.getElementById('search-input').value) return;
+
+            container.classList.remove('hidden');
+            list.innerHTML = `<div class="text-center py-10 text-gray-300 text-[10px] uppercase tracking-widest">Searching for your peace...</div>`;
+            
+            setTimeout(() => {
+                executeZenSearch();
+            }, 1000);
+        }
+
+        function executeZenSearch() {
+            const key = document.getElementById('search-input').value.toLowerCase();
+            const list = document.getElementById('bus-list');
+            list.innerHTML = '';
+            
+            const filtered = allBusData.filter(b => b.tujuan.toLowerCase().includes(key));
+            
+            if(filtered.length > 0) {
+                filtered.forEach(b => {
+                    list.innerHTML += `
+                        <div class="glass-zen p-6 rounded-[30px] flex justify-between items-center animate-slide-up">
+                            <div>
+                                <p class="text-[9px] font-bold text-zen-gold uppercase tracking-widest mb-1">${b.armada}</p>
+                                <p class="text-sm font-semibold text-gray-700 uppercase">${b.tujuan}</p>
+                            </div>
+                            <div class="text-right font-black text-gray-900">${b.jam.toString().replace('WIB','')}</div>
+                        </div>`;
+                });
+            } else {
+                list.innerHTML = `<div class="text-center py-5 text-gray-400 text-[10px]">Tujuan belum tersedia</div>`;
+            }
+        }
+
+        function toggleProfile() {
+            const panel = document.getElementById('company-profile');
+            isProfileOpen = !isProfileOpen;
+            panel.style.transform = isProfileOpen ? 'translateY(0)' : 'translateY(100%)';
+        }
+
+        function showDetail(moda) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('detail-' + moda).classList.add('active');
+        }
+
+        function goBack() {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('panel-home').classList.add('active');
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
