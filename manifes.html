@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; }
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
         body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; }
         
         .header-section { padding: 50px 25px 30px; text-align: center; }
@@ -28,6 +28,9 @@
             border: 1px solid rgba(255,255,255,0.1); 
         }
 
+        .info-psg h4 { margin: 0; color: var(--gold); text-transform: uppercase; font-size: 16px; }
+        .info-psg small { display: block; margin-top: 3px; font-size: 11px; opacity: 0.8; }
+
         .btn-aksi { 
             width: 40px; 
             height: 40px; 
@@ -40,7 +43,9 @@
             justify-content: center; 
             text-decoration: none; 
             font-size: 16px; 
+            transition: 0.3s;
         }
+        .btn-aksi:active { background: rgba(255,255,255,0.2); transform: scale(0.9); }
 
         .nav-bottom { 
             position: fixed; 
@@ -55,19 +60,18 @@
             padding: 15px 0; 
             border-radius: 25px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 100;
         }
         
         .nav-bottom a { text-decoration: none; color: #999; font-size: 10px; text-align: center; font-weight: 600; }
         .nav-bottom a i { font-size: 18px; display: block; margin-bottom: 3px; }
         .nav-bottom a.active { color: var(--primary-blue); }
-
-        small { opacity: 0.8; font-size: 12px; }
     </style>
 </head>
 <body>
     <div class="header-section">
         <h2>Manifes Penumpang</h2>
-        <p id="countPsg">Memuat data...</p>
+        <p id="countPsg">Menghubungkan database...</p>
     </div>
 
     <div id="manifesContainer"></div>
@@ -80,7 +84,6 @@
     </div>
 
     <script>
-        // API GOOGLE APPS SCRIPT
         const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
 
         async function loadManifes() {
@@ -91,20 +94,20 @@
                 container.innerHTML = "";
                 
                 if (result.status === "success") {
-                    // 1. Ambil Tanggal Hari Ini & Reset Jam ke 00:00:00
-                    const skrg = new Date();
-                    skrg.setHours(0, 0, 0, 0);
+                    // 1. Ambil Waktu Sekarang (Set jam 00:00:00)
+                    const hariIni = new Date();
+                    hariIni.setHours(0, 0, 0, 0);
 
-                    // 2. Filter data: Hanya Hari Ini dan Ke Depan
-                    const filteredData = result.data.filter(item => {
-                        const travelDate = new Date(item.tanggal);
-                        travelDate.setHours(0, 0, 0, 0);
-                        return travelDate >= skrg;
+                    // 2. Filter: Hanya data hari ini dan mendatang
+                    const dataFilter = result.data.filter(item => {
+                        const tglTiket = new Date(item.tanggal);
+                        tglTiket.setHours(0, 0, 0, 0);
+                        return tglTiket >= hariIni;
                     });
 
-                    // 3. Render Data (Urutan Terbaru Di Atas)
-                    filteredData.reverse().forEach(data => {
-                        // Perbaiki Tampilan Tanggal (Bukan ISO lagi)
+                    // 3. Tampilkan Data (Urutan input terbaru di atas)
+                    dataFilter.reverse().forEach(data => {
+                        // Format Tanggal (Dari ISO ke Lokal Indonesia)
                         const d = new Date(data.tanggal);
                         const tglRapi = d.toLocaleDateString('id-ID', { 
                             day: '2-digit', 
@@ -112,23 +115,35 @@
                             year: 'numeric' 
                         });
 
-                        // Fix Nomor HP untuk WhatsApp
-                        let phone = data.hp ? data.hp.toString() : "";
-                        if (phone.startsWith('0')) phone = '62' + phone.slice(1);
+                        // --- FIX NOMOR WHATSAPP ---
+                        // Ambil hanya angka, hilangkan spasi/tanda baca
+                        let cleanPhone = data.hp ? data.hp.toString().replace(/\D/g, '') : "";
+                        let finalPhone = "";
+
+                        if (cleanPhone.startsWith('62')) {
+                            finalPhone = cleanPhone;
+                        } else if (cleanPhone.startsWith('0')) {
+                            finalPhone = '62' + cleanPhone.slice(1);
+                        } else if (cleanPhone.startsWith('8')) {
+                            finalPhone = '62' + cleanPhone;
+                        } else {
+                            finalPhone = cleanPhone;
+                        }
                         
-                        // Pesan WA & Link Etiket
-                        const urlEtiket = `${window.location.origin}/etiket.html?kode=${data.kode}`;
+                        // Isi Pesan WhatsApp & URL Etiket
+                        const origin = window.location.origin;
+                        const urlEtiket = `${origin}/etiket.html?kode=${data.kode}`;
                         const textWA = `Halo Kak *${data.nama}*, Berikut E-Tiket Mahika Trans Anda.%0A%0AKode: *${data.kode}*%0AJadwal: ${tglRapi} - ${data.jam}%0A%0ALink Tiket:%0A${urlEtiket}`;
 
                         container.innerHTML += `
                             <div class="card-manifes">
-                                <div>
-                                    <h4 style="margin:0; color:#FFD700;">${data.nama}</h4>
-                                    <small>${tglRapi} • ${data.jam}</small><br>
-                                    <small>${data.armada} • ${data.tujuan}</small>
+                                <div class="info-psg">
+                                    <h4>${data.nama}</h4>
+                                    <small><i class="far fa-calendar"></i> ${tglRapi} • ${data.jam}</small>
+                                    <small><i class="fas fa-bus"></i> ${data.armada} • ${data.tujuan}</small>
                                 </div>
                                 <div style="display:flex; gap:8px;">
-                                    <a href="https://wa.me/${phone}?text=${textWA}" target="_blank" class="btn-aksi">
+                                    <a href="https://wa.me/${finalPhone}?text=${textWA}" target="_blank" class="btn-aksi">
                                         <i class="fab fa-whatsapp"></i>
                                     </a>
                                     <a href="etiket.html?kode=${data.kode}" class="btn-aksi">
@@ -138,12 +153,12 @@
                             </div>`;
                     });
                     
-                    document.getElementById("countPsg").innerText = filteredData.length + " Penumpang Aktif";
+                    document.getElementById("countPsg").innerText = dataFilter.length + " Penumpang Aktif Hari Ini";
                 } else {
-                    document.getElementById("countPsg").innerText = "Tidak ada data aktif.";
+                    document.getElementById("countPsg").innerText = "Belum ada jadwal hari ini.";
                 }
             } catch (e) { 
-                document.getElementById("countPsg").innerText = "Gagal memuat data."; 
+                document.getElementById("countPsg").innerText = "Koneksi Bermasalah."; 
             }
         }
 
@@ -151,4 +166,3 @@
     </script>
 </body>
 </html>
-
