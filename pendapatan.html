@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendapatan | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; }
+        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 450px; padding: 50px 20px 120px; }
+        .summary-box { background: var(--white); color: var(--primary-blue); padding: 25px; border-radius: 28px; text-align: center; margin-bottom: 25px; }
+        .card { background: rgba(255,255,255,0.1); padding: 25px; border-radius: 24px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1); }
+        input { width: 100%; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; color: white; margin-bottom: 15px; box-sizing: border-box; }
+        button { width: 100%; padding: 16px; background: var(--white); color: var(--primary-blue); border: none; border-radius: 18px; font-weight: 800; cursor: pointer; }
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; }
+        .nav-bottom a { text-decoration: none; color: #999; font-size: 10px; text-align: center; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="summary-box"><small>Total Komisi</small><h2 id="grandTotal">Rp 0</h2></div>
+        <div class="card">
+            <h3>Input Komisi Manual</h3>
+            <form id="pendapatanForm">
+                <input type="date" id="tgl" required>
+                <input type="text" id="armada" placeholder="Nama Armada" required>
+                <input type="text" id="kursiInput" placeholder="Jumlah Kursi (contoh: 2)" required>
+                <input type="number" id="komisi" value="20000" required>
+                <button type="submit" id="btnSimpan">Simpan Transaksi</button>
+            </form>
+        </div>
+    </div>
+    <div class="nav-bottom">
+        <a href="index.html"><i class="fas fa-house"></i><br>Home</a>
+        <a href="input.html"><i class="fas fa-circle-plus"></i><br>Booking</a>
+        <a href="manifes.html"><i class="fas fa-file-lines"></i><br>Manifes</a>
+        <a href="pendapatan.html" class="active"><i class="fas fa-chart-pie"></i><br>Laporan</a>
+    </div>
+
+    <script>
+        const API = "https://script.google.com/macros/s/AKfycbymE-FI9lSBvS0vkGqc8ekjDbjau21u-j-vCwNJtQc7VB7SfABQw4Mwz4M2GYfoQ4CLPQ/exec";
+        document.getElementById('tgl').valueAsDate = new Date();
+        document.getElementById('pendapatanForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSimpan');
+            btn.innerText = "Menyimpan..."; btn.disabled = true;
+
+            const tgl = document.getElementById('tgl').value;
+            const pax = document.getElementById('kursiInput').value;
+            const kom = document.getElementById('komisi').value;
+
+            const p = new URLSearchParams();
+            p.append('action', 'saveKomisi');
+            p.append('tanggal', tgl);
+            p.append('armada', document.getElementById('armada').value);
+            p.append('kursi', pax);
+            p.append('komisi', kom);
+            p.append('total', pax * kom);
+            p.append('bulan', tgl.substring(0, 7));
+
+            await fetch(API, { method: 'POST', mode: 'no-cors', body: p });
+            alert("Berhasil!"); location.reload();
+        });
+
+        async function loadData() {
+            const bln = new Date().toISOString().substring(0, 7);
+            const res = await fetch(`${API}?action=getKomisi&bulan=${bln}`);
+            const result = await res.json();
+            if(result.status === "success") {
+                let total = 0;
+                result.data.forEach(r => total += parseInt(r.total));
+                document.getElementById('grandTotal').innerText = "Rp " + total.toLocaleString('id-ID');
+            }
+        }
+        window.onload = loadData;
+    </script>
+</body>
+</html>
