@@ -6,40 +6,157 @@
     <title>Login | Mahika Trans</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
     <style>
-        :root { --blue: #065084; --dark: #043a60; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--dark), var(--blue)); margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .login-box { width: 85%; max-width: 310px; background: white; padding: 40px 25px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; }
-        .logo-bus { width: 65px; height: 65px; background: var(--blue); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 28px; border-radius: 50%; margin: 0 auto 15px; box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
-        h2 { color: var(--blue); margin: 0; font-weight: 700; }
-        p.sub { font-size: 11px; color: #888; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
-        .input-group { position: relative; margin-bottom: 15px; }
-        .input-group i { position: absolute; left: 15px; top: 15px; color: #aaa; }
-        input { width: 100%; padding: 14px 15px 14px 45px; border: 1.5px solid #eee; border-radius: 15px; box-sizing: border-box; font-family: 'Poppins'; outline: none; transition: 0.3s; }
-        button { width: 100%; padding: 15px; background: var(--blue); border: none; color: white; border-radius: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        button:disabled { background: #ccc; }
-        #msg { margin-top: 15px; font-size: 11px; padding: 10px; border-radius: 10px; display: none; }
-        .err { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
-        .copyright { margin-top: 30px; font-size: 10px; color: rgba(255,255,255,0.6); text-align: center; line-height: 1.6; }
+        :root { 
+            --blue: #065084; 
+            --dark: #043a60; 
+            --gold: #FFD700;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: radial-gradient(circle at top right, var(--dark), var(--blue)); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            overflow: hidden;
+        }
+
+        /* Card Login Ramping */
+        .login-box { 
+            width: 85%; 
+            max-width: 300px; 
+            background: white; 
+            padding: 35px 25px; 
+            border-radius: 30px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
+            text-align: center; 
+        }
+
+        /* Logo Icon Bus Mewah */
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--blue);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        h2 { 
+            color: var(--blue); 
+            font-weight: 700; 
+            margin: 0;
+            font-size: 20px;
+        }
+
+        p.subtitle {
+            font-size: 10px;
+            color: #888;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Input Group */
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        input { 
+            width: 100%; 
+            padding: 12px 15px 12px 42px; 
+            border: 1.5px solid #eee; 
+            border-radius: 12px; 
+            box-sizing: border-box; 
+            font-family: 'Poppins'; 
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--blue);
+        }
+
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--blue); 
+            border: none; 
+            color: white; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            font-size: 14px;
+            cursor: pointer; 
+            transition: 0.3s;
+            margin-top: 5px;
+        }
+
+        button:disabled { background: #999; }
+
+        /* Pesan Error/Loading */
+        #msg { 
+            margin-top: 15px; 
+            font-size: 11px; 
+            padding: 10px; 
+            border-radius: 10px; 
+            display: none; 
+        }
+
+        .err-box { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+        .loading { color: var(--blue); font-weight: 600; }
+
+        /* Copyright Luar Card */
+        .copyright {
+            margin-top: 25px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
 
     <div class="login-box">
-        <div class="logo-bus"><i class="fas fa-bus"></i></div>
+        <div class="logo-icon">
+            <i class="fas fa-bus"></i>
+        </div>
         <h2>Mahika Trans</h2>
-        <p class="sub">Admin Management</p>
+        <p class="subtitle">Admin Management System</p>
+
         <form id="loginForm">
             <div class="input-group">
                 <i class="fas fa-user"></i>
-                <input type="text" id="user" placeholder="Username" required>
+                <input type="text" id="user" placeholder="Username" required autocomplete="off">
             </div>
             <div class="input-group">
                 <i class="fas fa-lock"></i>
                 <input type="password" id="pass" placeholder="Password" required>
             </div>
-            <button type="submit" id="btn">Masuk Aplikasi</button>
+            <button type="submit" id="btnLogin">Masuk Aplikasi</button>
         </form>
+
         <div id="msg"></div>
     </div>
 
@@ -48,40 +165,56 @@
     </div>
 
     <script>
-        // MASUKKAN URL BARU HASIL DEPLOY ULANG TADI
+        // URL API SUDAH SESUAI DENGAN YANG KAMU TES TADI
         const API = "https://script.google.com/macros/s/AKfycbxQBsV8TAUumwT_FgfbvzxDKNA2S-iPHC1OmRF8oH94jXzWu3zsC5-rVHzAtbmOkGR1OQ/exec";
 
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = document.getElementById('btn');
-            const msg = document.getElementById('msg');
+            const btn = document.getElementById('btnLogin');
+            const msgBox = document.getElementById('msg');
             const user = document.getElementById('user').value;
             const pass = document.getElementById('pass').value;
 
-            msg.style.display = "block";
-            msg.className = "";
-            msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memverifikasi...';
+            msgBox.style.display = "block";
+            msgBox.className = "loading";
+            msgBox.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sedang Memproses...';
             btn.disabled = true;
 
-            try {
-                // Fetch menggunakan URL query params
-                const res = await fetch(`${API}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`);
-                const data = await res.json();
+            // Membangun URL dengan parameter
+            const finalUrl = API + "?action=login&user=" + encodeURIComponent(user) + "&pass=" + encodeURIComponent(pass);
 
+            // Fetch dengan penanganan redirect otomatis dari Google
+            fetch(finalUrl)
+            .then(response => response.json())
+            .then(data => {
                 if (data.status === "success") {
+                    msgBox.style.color = "green";
+                    msgBox.innerText = "Login Berhasil! Mengalihkan...";
                     localStorage.setItem("mahika_session", "active");
-                    window.location.href = "input.html";
+                    localStorage.setItem("admin_nama", data.nama);
+                    
+                    setTimeout(() => {
+                        window.location.href = "input.html";
+                    }, 800);
                 } else {
-                    msg.className = "err";
-                    msg.innerText = data.message;
+                    showError(data.message || "Username/Password Salah");
                     btn.disabled = false;
                 }
-            } catch (err) {
-                msg.className = "err";
-                msg.innerText = "Error: Skrip tidak merespon. Pastikan Deployment 'Anyone'.";
+            })
+            .catch(err => {
                 btn.disabled = false;
-            }
+                // Pesan khusus jika terdeteksi blokir browser
+                showError("Gagal terhubung. Coba buka dari HP atau upload file ini ke hosting.");
+                console.error("Detail Error:", err);
+            });
         });
+
+        function showError(text) {
+            const msgBox = document.getElementById('msg');
+            msgBox.style.display = "block";
+            msgBox.className = "err-box";
+            msgBox.innerText = text;
+        }
     </script>
 </body>
 </html>
