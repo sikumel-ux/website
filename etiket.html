@@ -1,119 +1,182 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Tiket | Mahika Trans</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Poppins', sans-serif; background: #f4f7f9; display: flex; justify-content: center; margin: 0; }
-        .container { width: 100%; max-width: 450px; background: white; min-height: 100vh; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
-        .header { background: #065084; color: white; padding: 40px 20px; }
-        .header h3 { margin: 0; font-weight: 400; letter-spacing: 2px; font-size: 14px; }
-        .header h2 { margin: 10px 0 0; font-size: 28px; font-weight: 700; }
-        
-        #loading { padding-top: 100px; font-weight: bold; color: #065084; text-align: center; width: 100%; }
-        
-        .info-section { padding: 30px; text-align: left; color: #333; }
-        .info-section p { margin: 0 0 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; font-size: 14px; color: #666; }
-        .info-section b { color: #065084; font-size: 16px; float: right; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Etiket Mahika Trans</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#065084">
+<link rel="icon" href="m.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="stylez.css">
+<style>
+    body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
+    
+    /* HEADER ETIKET */
+    .etiket-header {
+        background-color: #065084 !important;
+        padding: 30px 20px;
+        text-align: center;
+        border-radius: 0 0 20px 20px;
+    }
 
-        .barcode-section { border-top: 2px dashed #ddd; padding: 30px; background: #fafafa; }
-        .barcode-section img { max-width: 100%; height: auto; mix-blend-mode: multiply; }
+    .kode-booking {
+        background: #FFD700;
+        color: #065084;
+        font-weight: 700;
+        margin-top: 10px;
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+    }
 
-        .action-area { padding: 20px; }
-        .btn-wa { 
-            background: #25D366; color: white; border: none; padding: 18px; 
-            border-radius: 15px; width: 100%; font-family: 'Poppins'; 
-            font-weight: 700; font-size: 16px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
-            text-decoration: none;
-        }
-        
-        .footer-note { font-size: 11px; color: #aaa; padding: 20px; }
-    </style>
+    /* CSS PENYUSUP */
+    .penyusup-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .penyusup-emoji { font-size: 80px; margin-bottom: 20px; animation: bounce 2s infinite; }
+    .penyusup-title { font-weight: 900; color: #e11d48; font-size: 26px; }
+    .penyusup-text { color: #64748b; margin-top: 10px; font-size: 15px; }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-20px);}
+        60% {transform: translateY(-10px);}
+    }
+
+    @media print { .nav-bottom { display: none; } }
+</style>
 </head>
+
 <body>
-    <div id="loading"><i class="fas fa-spinner fa-spin"></i> Memvalidasi Tiket...</div>
 
-    <div class="container" id="main" style="display:none">
+<audio id="audioError" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
+
+<div id="loading-state" style="text-align:center; padding-top:100px; color:#065084; font-weight:bold;">
+    <i class="fas fa-spinner fa-spin"></i> Memvalidasi Tiket...
+</div>
+
+<div id="main-content" class="etiket-container" style="display:none;">
+    <div class="etiket-header">
         <div class="header">
-            <h3>MAHIKA TRANS</h3>
-            <h2 id="kodeTiket"></h2>
+            <img src="logo.png" alt="Mahika Trans" class="logo">
         </div>
-        
-        <div class="info-section">
-            <p>Nama Penumpang <b id="nama"></b></p>
-            <p>Kota Tujuan <b id="tujuan"></b></p>
-            <p>Jadwal Berangkat <b id="jadwal"></b></p>
-            <p>Nomor Kursi <b id="kursi"></b></p>
-            <p>Armada <b id="armada"></b></p>
+        <p class="kode-booking" id="kodeBooking">-</p>
+    </div>
+
+    <div class="info-grid">
+        <div class="kolom">
+            <p><i class="fas fa-user"></i> <span id="nama"></span></p>
+            <p><i class="fas fa-phone"></i> <span id="no_hp"></span></p>
+            <p><i class="fas fa-bus"></i> <span id="armada"></span></p>
+            <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan"></span></p>
         </div>
 
-        <div class="barcode-section">
-            <img id="bc" src="" alt="barcode">
-        </div>
-
-        <div class="action-area">
-            <a href="#" id="waLink" class="btn-wa">
-                <i class="fab fa-whatsapp"></i> Kirim ke Penumpang
-            </a>
-        </div>
-
-        <div class="footer-note">
-            &copy; 2026 Mahika Trans Indonesia.
+        <div class="kolom">
+            <p><i class="fas fa-chair"></i> <span id="no_kursi"></span></p>
+            <p><i class="fas fa-calendar-alt"></i> <span id="tgl"></span></p>
+            <p><i class="fas fa-clock"></i> <span id="jam"></span></p>
+            <p><i class="fa-solid fa-rupiah-sign"></i> <span id="harga"></span></p>
         </div>
     </div>
 
-    <script>
-        const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
-        const urlParams = new URLSearchParams(window.location.search);
-        const kode = urlParams.get("kode");
+    <div class="tear-line"></div>
 
-        // FITUR PROTEKSI: TENDANG KE 404 KALAU KODE KOSONG
-        if (!kode || kode === "") {
-            window.location.href = "404.html";
+    <div class="barcode">
+        <img id="barcodeImg" alt="Barcode Kode Booking">
+        <p class="thanks">Terimakasih atas kepercayaan Anda menggunakan jasa layanan kami.</p>
+    </div>
+
+    <div class="keterangan">
+        <p><strong>Perhatian:</strong></p>
+        <p>1. Tiket yang sudah dipesan tidak dapat dibatalkan</p>
+        <p>2. Harap datang maksimal 30 menit sebelum jadwal pemberangkatan</p>
+        <p>3. Anak usia 3 tahun atau tinggi badan 90cm wajib membeli tiket</p>
+    </div>
+</div>
+
+<div id="penyusup-screen" style="display:none;">
+    <div class="penyusup-container">
+        <div class="penyusup-emoji">🚫</div>
+        <h1 class="penyusup-title">BELI TIKET DULU, BRO!</h1>
+        <p class="penyusup-text">Tiket tidak valid atau kode booking salah.<br>Silahkan hubungi admin Mahika Trans.</p>
+    </div>
+</div>
+
+<script>
+// API ANDA YANG SUDAH DICATAT
+const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
+const params = new URLSearchParams(window.location.search);
+const kode = params.get("kode");
+
+function mainkanTetot() {
+    const sound = document.getElementById("audioError");
+    sound.play().catch(e => console.log("Audio play blocked by browser"));
+}
+
+function tampilkanPenyusup() {
+    document.getElementById("loading-state").style.display = "none";
+    document.getElementById("penyusup-screen").style.display = "block";
+    document.getElementById("main-content").style.display = "none";
+    setTimeout(mainkanTetot, 500);
+}
+
+async function loadEtiket() {
+    if(!kode){
+        tampilkanPenyusup();
+        return;
+    }
+
+    try {
+        // AMBIL DATA DARI API (BUKAN LOCALSTORAGE)
+        const response = await fetch(`${API}?action=cekEtiket&kode=${kode}`);
+        const result = await response.json();
+
+        if(result.status === "success") {
+            const data = result.data;
+            
+            // ISI DATA KE HTML
+            document.getElementById("loading-state").style.display = "none";
+            document.getElementById("main-content").style.display = "block";
+            
+            document.getElementById("kodeBooking").innerText = data.kode;
+            document.getElementById("nama").innerText = data.nama;
+            document.getElementById("no_hp").innerText = data.hp || "-";
+            document.getElementById("armada").innerText = data.armada;
+            document.getElementById("tujuan").innerText = data.tujuan;
+            document.getElementById("no_kursi").innerText = data.kursi;
+            document.getElementById("jam").innerText = data.jam;
+            document.getElementById("tgl").innerText = data.tgl; // Format sudah diatur di GAS
+            
+            // Harga diformat rupiah
+            const hargaNominal = parseInt(data.harga) || 0;
+            // Jika harga dikirim dari API, format di sini atau biarkan teks biasa
+            document.getElementById("harga").innerText = hargaNominal > 0 ? hargaNominal.toLocaleString("id-ID") : "-";
+            
+            // Barcode
+            const barcodeUrl = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(data.kode) + "&code=Code128";
+            document.getElementById("barcodeImg").src = barcodeUrl;
+            
+        } else {
+            // Jika API merespon error (kode tidak ditemukan di Sheets)
+            tampilkanPenyusup();
         }
+    } catch (error) {
+        console.error("Gagal load API:", error);
+        tampilkanPenyusup();
+    }
+}
 
-        async function check() {
-            try {
-                const res = await fetch(`${API}?action=cekEtiket&kode=${kode}`);
-                const result = await res.json();
-                
-                if(result.status === "success") {
-                    const d = result.data;
-                    document.getElementById("nama").innerText = d.nama;
-                    document.getElementById("tujuan").innerText = d.tujuan;
-                    document.getElementById("jadwal").innerText = d.tgl + " | " + d.jam;
-                    document.getElementById("kursi").innerText = d.kursi;
-                    document.getElementById("armada").innerText = d.armada;
-                    document.getElementById("kodeTiket").innerText = d.kode;
-                    
-                    document.getElementById("bc").src = `https://bwipjs-api.metafloor.com/?bcid=code128&text=${d.kode}&scale=3&rotate=N&includetext`;
-
-                    // Ambil nomor HP dari data yang dikirim API (pastikan GAS mengembalikan d.hp)
-                    let phone = d.hp || ""; 
-                    if (phone.startsWith('0')) phone = '62' + phone.slice(1);
-                    
-                    const linkEtiket = window.location.href; 
-                    const text = `Halo Kak *${d.nama}*, Berikut adalah E-Tiket Mahika Trans Anda.%0A%0AKode: *${d.kode}*%0ATujuan: ${d.tujuan}%0AJadwal: ${d.tgl} - ${d.jam}%0AKursi: ${d.kursi}%0A%0ALihat Tiket Digital:%0A${linkEtiket}%0A%0AMohon datang 30 menit sebelum keberangkatan. Terima kasih!`;
-                    
-                    document.getElementById("waLink").href = `https://wa.me/${phone}?text=${text}`;
-
-                    document.getElementById("loading").style.display = "none";
-                    document.getElementById("main").style.display = "block";
-                } else {
-                    // JIKA KODE SALAH / TIDAK ADA DI DATABASE, TENDANG JUGA
-                    window.location.href = "404.html";
-                }
-            } catch (e) {
-                window.location.href = "404.html";
-            }
-        }
-        
-        if (kode) check();
-    </script>
+// Jalankan Fungsi
+loadEtiket();
+</script>
 </body>
 </html>
