@@ -10,7 +10,7 @@
         body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--dark), var(--blue)); margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; color: white; }
         .login-box { width: 90%; max-width: 350px; background: white; padding: 40px 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); color: #333; text-align: center; }
         h2 { color: var(--blue); font-weight: 700; margin-bottom: 30px; }
-        input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1.5px solid #eee; border-radius: 12px; box-sizing: border-box; font-family: 'Poppins'; }
+        input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1.5px solid #eee; border-radius: 12px; box-sizing: border-box; font-family: 'Poppins'; outline: none; }
         button { width: 100%; padding: 15px; background: var(--blue); border: none; color: white; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
         #msg { color: red; font-size: 12px; margin-top: 10px; }
     </style>
@@ -30,8 +30,7 @@
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnLogin');
-            btn.innerText = "Memverifikasi...";
-            btn.disabled = true;
+            btn.innerText = "Memverifikasi..."; btn.disabled = true;
             try {
                 const res = await fetch(`${API}?action=login&user=${document.getElementById('user').value}&pass=${document.getElementById('pass').value}`);
                 const data = await res.json();
@@ -40,10 +39,9 @@
                     window.location.href = "input.html";
                 } else {
                     document.getElementById('msg').innerText = data.message;
-                    btn.innerText = "Masuk";
-                    btn.disabled = false;
+                    btn.innerText = "Masuk"; btn.disabled = false;
                 }
-            } catch (err) { alert("Server error!"); btn.disabled = false; }
+            } catch (err) { document.getElementById('msg').innerText = "Koneksi Bermasalah!"; btn.disabled = false; }
         });
     </script>
 </body>
