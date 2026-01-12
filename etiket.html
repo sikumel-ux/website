@@ -9,11 +9,10 @@
 <link rel="icon" href="m.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="stylez.css">
 <style>
     body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
     
-    /* HEADER ETIKET */
     .etiket-header {
         background-color: #065084 !important;
         padding: 30px 20px;
@@ -31,7 +30,6 @@
         border-radius: 5px;
     }
 
-    /* CSS PENYUSUP */
     .penyusup-container {
         display: flex;
         flex-direction: column;
@@ -59,10 +57,6 @@
 <body>
 
 <audio id="audioError" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
-
-<div id="loading-state" style="text-align:center; padding-top:100px; color:#065084; font-weight:bold;">
-    <i class="fas fa-spinner fa-spin"></i> Memvalidasi Tiket...
-</div>
 
 <div id="main-content" class="etiket-container" style="display:none;">
     <div class="etiket-header">
@@ -103,48 +97,25 @@
     </div>
 </div>
 
-<div id="penyusup-screen" style="display:none;">
-    <div class="penyusup-container">
-        <div class="penyusup-emoji">🚫</div>
-        <h1 class="penyusup-title">BELI TIKET DULU, BRO!</h1>
-        <p class="penyusup-text">Tiket tidak valid atau kode booking salah.<br>Silahkan hubungi admin Mahika Trans.</p>
-    </div>
-</div>
-
 <script>
-// API ANDA YANG SUDAH DICATAT
 const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
 const params = new URLSearchParams(window.location.search);
 const kode = params.get("kode");
 
-function mainkanTetot() {
-    const sound = document.getElementById("audioError");
-    sound.play().catch(e => console.log("Audio play blocked by browser"));
+// Jika tidak ada kode sama sekali di URL, tendang ke 404
+if(!kode) {
+    window.location.href = "404.html";
+} else {
+    loadData();
 }
 
-function tampilkanPenyusup() {
-    document.getElementById("loading-state").style.display = "none";
-    document.getElementById("penyusup-screen").style.display = "block";
-    document.getElementById("main-content").style.display = "none";
-    setTimeout(mainkanTetot, 500);
-}
-
-async function loadEtiket() {
-    if(!kode){
-        tampilkanPenyusup();
-        return;
-    }
-
+async function loadData() {
     try {
-        // AMBIL DATA DARI API (BUKAN LOCALSTORAGE)
         const response = await fetch(`${API}?action=cekEtiket&kode=${kode}`);
         const result = await response.json();
 
         if(result.status === "success") {
             const data = result.data;
-            
-            // ISI DATA KE HTML
-            document.getElementById("loading-state").style.display = "none";
             document.getElementById("main-content").style.display = "block";
             
             document.getElementById("kodeBooking").innerText = data.kode;
@@ -154,29 +125,23 @@ async function loadEtiket() {
             document.getElementById("tujuan").innerText = data.tujuan;
             document.getElementById("no_kursi").innerText = data.kursi;
             document.getElementById("jam").innerText = data.jam;
-            document.getElementById("tgl").innerText = data.tgl; // Format sudah diatur di GAS
+            document.getElementById("tgl").innerText = data.tgl;
             
-            // Harga diformat rupiah
-            const hargaNominal = parseInt(data.harga) || 0;
-            // Jika harga dikirim dari API, format di sini atau biarkan teks biasa
-            document.getElementById("harga").innerText = hargaNominal > 0 ? hargaNominal.toLocaleString("id-ID") : "-";
+            // Format Harga
+            document.getElementById("harga").innerText = Number(data.harga || 0).toLocaleString("id-ID");
             
             // Barcode
             const barcodeUrl = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(data.kode) + "&code=Code128";
             document.getElementById("barcodeImg").src = barcodeUrl;
-            
         } else {
-            // Jika API merespon error (kode tidak ditemukan di Sheets)
-            tampilkanPenyusup();
+            // Kode tidak terdaftar di Sheets, tendang ke 404
+            window.location.href = "404.html";
         }
-    } catch (error) {
-        console.error("Gagal load API:", error);
-        tampilkanPenyusup();
+    } catch (e) {
+        console.log("Error API:", e);
+        window.location.href = "404.html";
     }
 }
-
-// Jalankan Fungsi
-loadEtiket();
 </script>
 </body>
 </html>
