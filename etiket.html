@@ -12,57 +12,19 @@
 <link rel="stylesheet" href="stylez.css">
 <style>
     body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
-    
-    .etiket-header {
-        background-color: #065084 !important;
-        padding: 30px 20px;
-        text-align: center;
-        border-radius: 0 0 20px 20px;
-    }
-
-    .kode-booking {
-        background: #FFD700;
-        color: #065084;
-        font-weight: 700;
-        margin-top: 10px;
-        display: inline-block;
-        padding: 5px 15px;
-        border-radius: 5px;
-    }
-
-    .penyusup-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        text-align: center;
-        padding: 20px;
-    }
-
-    .penyusup-emoji { font-size: 80px; margin-bottom: 20px; animation: bounce 2s infinite; }
-    .penyusup-title { font-weight: 900; color: #e11d48; font-size: 26px; }
-    .penyusup-text { color: #64748b; margin-top: 10px; font-size: 15px; }
-
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-        40% {transform: translateY(-20px);}
-        60% {transform: translateY(-10px);}
-    }
-
+    .etiket-header { background-color: #065084 !important; padding: 30px 20px; text-align: center; border-radius: 0 0 20px 20px; }
+    .kode-booking { background: #FFD700; color: #065084; font-weight: 700; margin-top: 10px; display: inline-block; padding: 5px 15px; border-radius: 5px; }
+    @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-20px);} 60% {transform: translateY(-10px);} }
     @media print { .nav-bottom { display: none; } }
 </style>
 </head>
 
 <body>
-
 <audio id="audioError" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
 
 <div id="main-content" class="etiket-container" style="display:none;">
     <div class="etiket-header">
-        <div class="header">
-            <img src="logo.png" alt="Mahika Trans" class="logo">
-        </div>
+        <div class="header"><img src="logo.png" alt="Mahika Trans" class="logo"></div>
         <p class="kode-booking" id="kodeBooking">-</p>
     </div>
 
@@ -73,7 +35,6 @@
             <p><i class="fas fa-bus"></i> <span id="armada"></span></p>
             <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan"></span></p>
         </div>
-
         <div class="kolom">
             <p><i class="fas fa-chair"></i> <span id="no_kursi"></span></p>
             <p><i class="fas fa-calendar-alt"></i> <span id="tgl"></span></p>
@@ -83,9 +44,8 @@
     </div>
 
     <div class="tear-line"></div>
-
     <div class="barcode">
-        <img id="barcodeImg" alt="Barcode Kode Booking">
+        <img id="barcodeImg" alt="Barcode">
         <p class="thanks">Terimakasih atas kepercayaan Anda menggunakan jasa layanan kami.</p>
     </div>
 
@@ -102,12 +62,7 @@ const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_Az
 const params = new URLSearchParams(window.location.search);
 const kode = params.get("kode");
 
-// Jika tidak ada kode sama sekali di URL, tendang ke 404
-if(!kode) {
-    window.location.href = "404.html";
-} else {
-    loadData();
-}
+if(!kode) { window.location.href = "404.html"; } else { loadData(); }
 
 async function loadData() {
     try {
@@ -115,32 +70,36 @@ async function loadData() {
         const result = await response.json();
 
         if(result.status === "success") {
-            const data = result.data;
+            const d = result.data;
             document.getElementById("main-content").style.display = "block";
             
-            document.getElementById("kodeBooking").innerText = data.kode;
-            document.getElementById("nama").innerText = data.nama;
-            document.getElementById("no_hp").innerText = data.hp || "-";
-            document.getElementById("armada").innerText = data.armada;
-            document.getElementById("tujuan").innerText = data.tujuan;
-            document.getElementById("no_kursi").innerText = data.kursi;
-            document.getElementById("jam").innerText = data.jam;
-            document.getElementById("tgl").innerText = data.tgl;
+            // Tampilkan Data Utama
+            document.getElementById("kodeBooking").innerText = d.kode;
+            document.getElementById("nama").innerText = d.nama;
+            document.getElementById("armada").innerText = d.armada;
+            document.getElementById("tujuan").innerText = d.tujuan;
+            document.getElementById("no_kursi").innerText = d.kursi;
+            document.getElementById("jam").innerText = d.jam;
             
-            // Format Harga
-            document.getElementById("harga").innerText = Number(data.harga || 0).toLocaleString("id-ID");
-            
+            // Fix Nomor HP (Nol depan)
+            let phone = d.hp ? d.hp.toString() : "";
+            if (phone !== "" && !phone.startsWith('0') && !phone.startsWith('62')) phone = '0' + phone;
+            document.getElementById("no_hp").innerText = phone || "-";
+
+            // Fix Tanggal (ISO ke Lokal)
+            if (d.tgl) {
+                const dt = new Date(d.tgl);
+                document.getElementById("tgl").innerText = dt.toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric'});
+            }
+
+            // Fix Harga (Nominal)
+            document.getElementById("harga").innerText = Number(d.harga || 0).toLocaleString("id-ID");
+
             // Barcode
-            const barcodeUrl = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(data.kode) + "&code=Code128";
-            document.getElementById("barcodeImg").src = barcodeUrl;
-        } else {
-            // Kode tidak terdaftar di Sheets, tendang ke 404
-            window.location.href = "404.html";
-        }
-    } catch (e) {
-        console.log("Error API:", e);
-        window.location.href = "404.html";
-    }
+            document.getElementById("barcodeImg").src = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(d.kode) + "&code=Code128";
+            
+        } else { window.location.href = "404.html"; }
+    } catch (e) { window.location.href = "404.html"; }
 }
 </script>
 </body>
