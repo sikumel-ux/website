@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Tiket | Mahika Trans</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f4f7f9; display: flex; justify-content: center; margin: 0; }
+        .container { width: 100%; max-width: 450px; background: white; min-height: 100vh; text-align: center; }
+        .header { background: #065084; color: white; padding: 40px 20px; }
+        #loading { padding-top: 100px; font-weight: bold; color: #065084; }
+    </style>
+</head>
+<body>
+    <div id="loading">Memvalidasi Tiket...</div>
+    <div class="container" id="main" style="display:none">
+        <div class="header">
+            <h3>MAHIKA TRANS</h3>
+            <h2 id="kodeTiket"></h2>
+        </div>
+        <div style="padding:30px; text-align:left;">
+            <p>Nama: <b id="nama"></b></p>
+            <p>Tujuan: <b id="tujuan"></b></p>
+            <p>Jadwal: <b id="jadwal"></b></p>
+            <p>Kursi: <b id="kursi"></b></p>
+        </div>
+        <div style="border-top: 2px dashed #ddd; padding: 30px;">
+            <img id="bc" src="" alt="barcode">
+        </div>
+    </div>
+
+    <script>
+        const API = "https://script.google.com/macros/s/AKfycbymE-FI9lSBvS0vkGqc8ekjDbjau21u-j-vCwNJtQc7VB7SfABQw4Mwz4M2GYfoQ4CLPQ/exec";
+        const kode = new URLSearchParams(window.location.search).get("kode");
+
+        async function check() {
+            if(!kode) { window.location.href = "404.html"; return; }
+            try {
+                const res = await fetch(`${API}?kode=${kode}`);
+                const data = await res.json();
+                if(data.status === "success") {
+                    document.getElementById("nama").innerText = data.nama;
+                    document.getElementById("tujuan").innerText = data.tujuan;
+                    document.getElementById("jadwal").innerText = data.tanggal + " " + data.jam;
+                    document.getElementById("kursi").innerText = data.no_kursi;
+                    document.getElementById("kodeTiket").innerText = data.kode_booking;
+                    document.getElementById("bc").src = `https://barcode.tec-it.com/barcode.ashx?data=${kode}&code=Code128`;
+                    document.getElementById("loading").style.display = "none";
+                    document.getElementById("main").style.display = "block";
+                } else { window.location.href = "404.html"; }
+            } catch (e) { window.location.href = "404.html"; }
+        }
+        check();
+    </script>
+</body>
+</html>
