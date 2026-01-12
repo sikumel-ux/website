@@ -1,0 +1,171 @@
+/* =========================
+   GLOBAL
+========================= */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: 
+        url('https://www.transparenttextures.com/patterns/inspiration-geometry.png'),
+        #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    /* Memberi ruang agar konten tidak tertutup nav-bottom */
+    padding-bottom: 80px; 
+}
+
+/* =========================
+   CONTAINER UTAMA
+========================= */
+.etiket-container {
+    width: 100%;
+    max-width: 400px;
+    min-height: 100vh;
+    background: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   HEADER & KODE BOOKING
+========================= */
+.etiket-header {
+    background: linear-gradient(135deg, #0066AE, #005b99);
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 0 0 25px 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    margin-bottom: 40px; /* Ruang untuk kode booking yang melayang */
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+}
+
+.logo { width: 180px; height: auto; }
+
+.kode-booking {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    padding: 12px;
+    background: #fff;
+    color: #0066AE;
+    font-weight: 800;
+    font-size: 18px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    z-index: 10;
+    border: 1px solid #eee;
+}
+
+/* =========================
+   INFO GRID (CARD STYLE)
+========================= */
+.info-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.kolom { width: 48%; }
+
+.kolom p {
+    font-size: 13px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    color: #333;
+}
+
+.kolom i { color: #0066AE; margin-right: 8px; width: 15px; }
+
+/* =========================
+   NAV BOTTOM (APP STYLE)
+========================= */
+.nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+    border-radius: 20px 20px 0 0;
+    z-index: 1000;
+}
+
+.nav-bottom a {
+    text-decoration: none;
+    color: #bbb; /* Warna pasif */
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+/* Label kecil di bawah icon */
+.nav-bottom a span {
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.nav-bottom a:hover, .nav-bottom a.active {
+    color: #0066AE; /* Warna aktif */
+    transform: translateY(-3px);
+}
+
+/* =========================
+   BARCODE & LAINNYA
+========================= */
+.tear-line {
+    width: 100%;
+    height: 2px;
+    margin: 20px 0;
+    background: repeating-linear-gradient(90deg, #ccc, #ccc 5px, transparent 5px, transparent 10px);
+}
+
+.barcode {
+    text-align: center;
+    padding: 15px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.barcode img { width: 60%; height: auto; }
+
+.keterangan {
+    font-size: 11px;
+    background: #fefefe;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid #0066AE;
+    color: #666;
+    line-height: 1.6;
+}
