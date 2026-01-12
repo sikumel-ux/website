@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Tiket | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: #333; }
+        
+        /* Struk Tiket */
+        .ticket-card { width: 100%; max-width: 350px; background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.4); position: relative; }
+        .ticket-header { background: var(--primary-blue); color: white; padding: 25px; text-align: center; }
+        .ticket-header i { font-size: 30px; color: var(--gold); margin-bottom: 10px; }
+        .ticket-header h2 { margin: 0; font-size: 18px; letter-spacing: 1px; }
+        
+        .ticket-body { padding: 20px; position: relative; }
+        .info-row { margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
+        .label { font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700; }
+        .value { font-size: 15px; color: var(--primary-blue); font-weight: 600; }
+        
+        .ticket-footer { background: #f9f9f9; padding: 20px; text-align: center; border-top: 2px dashed #ccc; }
+        .qr-placeholder { width: 100px; height: 100px; margin: 0 auto 10px; background: #eee; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 40px; color: #ccc; }
+        .booking-code { font-size: 18px; font-weight: 800; color: var(--primary-blue); border: 2px solid var(--primary-blue); display: inline-block; padding: 5px 15px; border-radius: 8px; }
+
+        /* Buttons */
+        .action-btns { width: 100%; max-width: 350px; margin-top: 20px; display: flex; gap: 10px; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 15px; font-family: 'Poppins'; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .btn-wa { background: #25D366; color: white; }
+        .btn-dl { background: var(--gold); color: var(--primary-blue); }
+        .btn-back { background: rgba(255,255,255,0.2); color: white; margin-top: 15px; width: 100%; max-width: 350px; text-decoration: none; text-align: center; padding: 12px; border-radius: 12px; font-size: 13px; }
+        
+        #loading { color: white; margin-top: 50px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div id="loading">Memuat Tiket...</div>
+
+    <div id="ticketArea" class="ticket-card" style="display: none;">
+        <div class="ticket-header">
+            <i class="fas fa-bus"></i>
+            <h2>MAHIKA TRANS</h2>
+            <p style="font-size: 10px; margin: 0; opacity: 0.8;">E-Ticket Resmi Penumpang</p>
+        </div>
+        
+        <div class="ticket-body">
+            <div class="info-row">
+                <div class="label">Nama Penumpang</div>
+                <div class="value" id="disp-nama">-</div>
+            </div>
+            <div class="row" style="display: flex; gap: 20px;">
+                <div class="info-row" style="flex: 1;">
+                    <div class="label">Tanggal</div>
+                    <div class="value" id="disp-tgl">-</div>
+                </div>
+                <div class="info-row" style="flex: 1;">
+                    <div class="label">Jam</div>
+                    <div class="value" id="disp-jam">-</div>
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="label">Armada</div>
+                <div class="value" id="disp-armada">-</div>
+            </div>
+            <div class="row" style="display: flex; gap: 20px;">
+                <div class="info-row" style="flex: 1;">
+                    <div class="label">Tujuan</div>
+                    <div class="value" id="disp-tujuan">-</div>
+                </div>
+                <div class="info-row" style="flex: 1;">
+                    <div class="label">Kursi</div>
+                    <div class="value" id="disp-kursi">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-footer">
+            <div class="qr-placeholder"><i class="fas fa-qrcode"></i></div>
+            <div class="label">Kode Booking</div>
+            <div class="booking-code" id="disp-kode">-</div>
+            <p style="font-size: 9px; color: #999; margin-top: 10px;">Simpan tiket ini sebagai bukti perjalanan Anda.</p>
+        </div>
+    </div>
+
+    <div class="action-btns" id="actionArea" style="display: none;">
+        <button class="btn btn-wa" onclick="shareWA()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+        <button class="btn btn-dl" onclick="downloadTiket()"><i class="fas fa-download"></i> Simpan</button>
+    </div>
+
+    <a href="input.html" class="btn-back">Kembali ke Input</a>
+
+    <script>
+        const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
+        const urlParams = new URLSearchParams(window.location.search);
+        const kodeBooking = urlParams.get('kode');
+        let dataPenumpang = {};
+
+        async function loadTiket() {
+            if(!kodeBooking) return alert("Kode tidak ditemukan");
+            
+            try {
+                const res = await fetch(`${API}?action=cekEtiket&kode=${kodeBooking}`);
+                const result = await res.json();
+                
+                if(result.status === "success") {
+                    dataPenumpang = result.data;
+                    document.getElementById('disp-nama').innerText = dataPenumpang.nama;
+                    document.getElementById('disp-tgl').innerText = dataPenumpang.tgl;
+                    document.getElementById('disp-jam').innerText = dataPenumpang.jam;
+                    document.getElementById('disp-armada').innerText = dataPenumpang.armada;
+                    document.getElementById('disp-tujuan').innerText = dataPenumpang.tujuan;
+                    document.getElementById('disp-kursi').innerText = dataPenumpang.kursi;
+                    document.getElementById('disp-kode').innerText = dataPenumpang.kode;
+                    
+                    document.getElementById('loading').style.display = "none";
+                    document.getElementById('ticketArea').style.display = "block";
+                    document.getElementById('actionArea').style.display = "flex";
+                } else {
+                    alert("Tiket tidak ditemukan!");
+                }
+            } catch (err) {
+                alert("Gagal mengambil data tiket");
+            }
+        }
+
+        function shareWA() {
+            const pesan = `*E-TIKET MAHIKA TRANS*%0A---------------------------%0ANama: ${dataPenumpang.nama}%0ATgl/Jam: ${dataPenumpang.tgl} / ${dataPenumpang.jam}%0AArmada: ${dataPenumpang.armada}%0ATujuan: ${dataPenumpang.tujuan}%0AKursi: ${dataPenumpang.kursi}%0AKode: *${dataPenumpang.kode}*%0A---------------------------%0A_Mohon datang 30 menit sebelum keberangkatan._`;
+            window.open(`https://wa.me/?text=${pesan}`, '_blank');
+        }
+
+        function downloadTiket() {
+            const ticket = document.getElementById('ticketArea');
+            html2canvas(ticket).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Tiket_${dataPenumpang.nama}_${dataPenumpang.kode}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        loadTiket();
+    </script>
+</body>
+      </html>
+      
