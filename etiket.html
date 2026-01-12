@@ -6,144 +6,114 @@
     <title>E-Tiket | Mahika Trans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: #333; }
+        body { font-family: 'Poppins', sans-serif; background: #f4f7f9; display: flex; justify-content: center; margin: 0; }
+        .container { width: 100%; max-width: 450px; background: white; min-height: 100vh; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .header { background: #065084; color: white; padding: 40px 20px; }
+        .header h3 { margin: 0; font-weight: 400; letter-spacing: 2px; font-size: 14px; }
+        .header h2 { margin: 10px 0 0; font-size: 28px; font-weight: 700; }
         
-        /* Struk Tiket */
-        .ticket-card { width: 100%; max-width: 350px; background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.4); position: relative; }
-        .ticket-header { background: var(--primary-blue); color: white; padding: 25px; text-align: center; }
-        .ticket-header i { font-size: 30px; color: var(--gold); margin-bottom: 10px; }
-        .ticket-header h2 { margin: 0; font-size: 18px; letter-spacing: 1px; }
+        #loading { padding-top: 100px; font-weight: bold; color: #065084; text-align: center; width: 100%; }
         
-        .ticket-body { padding: 20px; position: relative; }
-        .info-row { margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
-        .label { font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700; }
-        .value { font-size: 15px; color: var(--primary-blue); font-weight: 600; }
-        
-        .ticket-footer { background: #f9f9f9; padding: 20px; text-align: center; border-top: 2px dashed #ccc; }
-        .qr-placeholder { width: 100px; height: 100px; margin: 0 auto 10px; background: #eee; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 40px; color: #ccc; }
-        .booking-code { font-size: 18px; font-weight: 800; color: var(--primary-blue); border: 2px solid var(--primary-blue); display: inline-block; padding: 5px 15px; border-radius: 8px; }
+        .info-section { padding: 30px; text-align: left; color: #333; }
+        .info-section p { margin: 0 0 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; font-size: 14px; color: #666; }
+        .info-section b { color: #065084; font-size: 16px; float: right; }
 
-        /* Buttons */
-        .action-btns { width: 100%; max-width: 350px; margin-top: 20px; display: flex; gap: 10px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 15px; font-family: 'Poppins'; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
-        .btn-wa { background: #25D366; color: white; }
-        .btn-dl { background: var(--gold); color: var(--primary-blue); }
-        .btn-back { background: rgba(255,255,255,0.2); color: white; margin-top: 15px; width: 100%; max-width: 350px; text-decoration: none; text-align: center; padding: 12px; border-radius: 12px; font-size: 13px; }
+        .barcode-section { border-top: 2px dashed #ddd; padding: 30px; background: #fafafa; }
+        .barcode-section img { max-width: 100%; height: auto; mix-blend-mode: multiply; }
+
+        .action-area { padding: 20px; }
+        .btn-wa { 
+            background: #25D366; color: white; border: none; padding: 18px; 
+            border-radius: 15px; width: 100%; font-family: 'Poppins'; 
+            font-weight: 700; font-size: 16px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+            text-decoration: none;
+        }
         
-        #loading { color: white; margin-top: 50px; font-weight: 600; }
+        .footer-note { font-size: 11px; color: #aaa; padding: 20px; }
     </style>
 </head>
 <body>
+    <div id="loading"><i class="fas fa-spinner fa-spin"></i> Memvalidasi Tiket...</div>
 
-    <div id="loading">Memuat Tiket...</div>
-
-    <div id="ticketArea" class="ticket-card" style="display: none;">
-        <div class="ticket-header">
-            <i class="fas fa-bus"></i>
-            <h2>MAHIKA TRANS</h2>
-            <p style="font-size: 10px; margin: 0; opacity: 0.8;">E-Ticket Resmi Penumpang</p>
+    <div class="container" id="main" style="display:none">
+        <div class="header">
+            <h3>MAHIKA TRANS</h3>
+            <h2 id="kodeTiket"></h2>
         </div>
         
-        <div class="ticket-body">
-            <div class="info-row">
-                <div class="label">Nama Penumpang</div>
-                <div class="value" id="disp-nama">-</div>
-            </div>
-            <div class="row" style="display: flex; gap: 20px;">
-                <div class="info-row" style="flex: 1;">
-                    <div class="label">Tanggal</div>
-                    <div class="value" id="disp-tgl">-</div>
-                </div>
-                <div class="info-row" style="flex: 1;">
-                    <div class="label">Jam</div>
-                    <div class="value" id="disp-jam">-</div>
-                </div>
-            </div>
-            <div class="info-row">
-                <div class="label">Armada</div>
-                <div class="value" id="disp-armada">-</div>
-            </div>
-            <div class="row" style="display: flex; gap: 20px;">
-                <div class="info-row" style="flex: 1;">
-                    <div class="label">Tujuan</div>
-                    <div class="value" id="disp-tujuan">-</div>
-                </div>
-                <div class="info-row" style="flex: 1;">
-                    <div class="label">Kursi</div>
-                    <div class="value" id="disp-kursi">-</div>
-                </div>
-            </div>
+        <div class="info-section">
+            <p>Nama Penumpang <b id="nama"></b></p>
+            <p>Kota Tujuan <b id="tujuan"></b></p>
+            <p>Jadwal Berangkat <b id="jadwal"></b></p>
+            <p>Nomor Kursi <b id="kursi"></b></p>
+            <p>Armada <b id="armada"></b></p>
         </div>
 
-        <div class="ticket-footer">
-            <div class="qr-placeholder"><i class="fas fa-qrcode"></i></div>
-            <div class="label">Kode Booking</div>
-            <div class="booking-code" id="disp-kode">-</div>
-            <p style="font-size: 9px; color: #999; margin-top: 10px;">Simpan tiket ini sebagai bukti perjalanan Anda.</p>
+        <div class="barcode-section">
+            <img id="bc" src="" alt="barcode">
+        </div>
+
+        <div class="action-area">
+            <a href="#" id="waLink" class="btn-wa">
+                <i class="fab fa-whatsapp"></i> Kirim ke Penumpang
+            </a>
+        </div>
+
+        <div class="footer-note">
+            &copy; 2026 Mahika Trans Indonesia.
         </div>
     </div>
-
-    <div class="action-btns" id="actionArea" style="display: none;">
-        <button class="btn btn-wa" onclick="shareWA()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-        <button class="btn btn-dl" onclick="downloadTiket()"><i class="fas fa-download"></i> Simpan</button>
-    </div>
-
-    <a href="input.html" class="btn-back">Kembali ke Input</a>
 
     <script>
         const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
         const urlParams = new URLSearchParams(window.location.search);
-        const kodeBooking = urlParams.get('kode');
-        let dataPenumpang = {};
+        const kode = urlParams.get("kode");
 
-        async function loadTiket() {
-            if(!kodeBooking) return alert("Kode tidak ditemukan");
-            
+        // FITUR PROTEKSI: TENDANG KE 404 KALAU KODE KOSONG
+        if (!kode || kode === "") {
+            window.location.href = "404.html";
+        }
+
+        async function check() {
             try {
-                const res = await fetch(`${API}?action=cekEtiket&kode=${kodeBooking}`);
+                const res = await fetch(`${API}?action=cekEtiket&kode=${kode}`);
                 const result = await res.json();
                 
                 if(result.status === "success") {
-                    dataPenumpang = result.data;
-                    document.getElementById('disp-nama').innerText = dataPenumpang.nama;
-                    document.getElementById('disp-tgl').innerText = dataPenumpang.tgl;
-                    document.getElementById('disp-jam').innerText = dataPenumpang.jam;
-                    document.getElementById('disp-armada').innerText = dataPenumpang.armada;
-                    document.getElementById('disp-tujuan').innerText = dataPenumpang.tujuan;
-                    document.getElementById('disp-kursi').innerText = dataPenumpang.kursi;
-                    document.getElementById('disp-kode').innerText = dataPenumpang.kode;
+                    const d = result.data;
+                    document.getElementById("nama").innerText = d.nama;
+                    document.getElementById("tujuan").innerText = d.tujuan;
+                    document.getElementById("jadwal").innerText = d.tgl + " | " + d.jam;
+                    document.getElementById("kursi").innerText = d.kursi;
+                    document.getElementById("armada").innerText = d.armada;
+                    document.getElementById("kodeTiket").innerText = d.kode;
                     
-                    document.getElementById('loading').style.display = "none";
-                    document.getElementById('ticketArea').style.display = "block";
-                    document.getElementById('actionArea').style.display = "flex";
+                    document.getElementById("bc").src = `https://bwipjs-api.metafloor.com/?bcid=code128&text=${d.kode}&scale=3&rotate=N&includetext`;
+
+                    // Ambil nomor HP dari data yang dikirim API (pastikan GAS mengembalikan d.hp)
+                    let phone = d.hp || ""; 
+                    if (phone.startsWith('0')) phone = '62' + phone.slice(1);
+                    
+                    const linkEtiket = window.location.href; 
+                    const text = `Halo Kak *${d.nama}*, Berikut adalah E-Tiket Mahika Trans Anda.%0A%0AKode: *${d.kode}*%0ATujuan: ${d.tujuan}%0AJadwal: ${d.tgl} - ${d.jam}%0AKursi: ${d.kursi}%0A%0ALihat Tiket Digital:%0A${linkEtiket}%0A%0AMohon datang 30 menit sebelum keberangkatan. Terima kasih!`;
+                    
+                    document.getElementById("waLink").href = `https://wa.me/${phone}?text=${text}`;
+
+                    document.getElementById("loading").style.display = "none";
+                    document.getElementById("main").style.display = "block";
                 } else {
-                    alert("Tiket tidak ditemukan!");
+                    // JIKA KODE SALAH / TIDAK ADA DI DATABASE, TENDANG JUGA
+                    window.location.href = "404.html";
                 }
-            } catch (err) {
-                alert("Gagal mengambil data tiket");
+            } catch (e) {
+                window.location.href = "404.html";
             }
         }
-
-        function shareWA() {
-            const pesan = `*E-TIKET MAHIKA TRANS*%0A---------------------------%0ANama: ${dataPenumpang.nama}%0ATgl/Jam: ${dataPenumpang.tgl} / ${dataPenumpang.jam}%0AArmada: ${dataPenumpang.armada}%0ATujuan: ${dataPenumpang.tujuan}%0AKursi: ${dataPenumpang.kursi}%0AKode: *${dataPenumpang.kode}*%0A---------------------------%0A_Mohon datang 30 menit sebelum keberangkatan._`;
-            window.open(`https://wa.me/?text=${pesan}`, '_blank');
-        }
-
-        function downloadTiket() {
-            const ticket = document.getElementById('ticketArea');
-            html2canvas(ticket).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `Tiket_${dataPenumpang.nama}_${dataPenumpang.kode}.png`;
-                link.href = canvas.toDataURL();
-                link.click();
-            });
-        }
-
-        loadTiket();
+        
+        if (kode) check();
     </script>
 </body>
-      </html>
-      
+</html>
