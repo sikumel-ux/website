@@ -17,7 +17,6 @@
         .info-psg h4 { margin: 0; color: var(--gold); text-transform: uppercase; font-size: 16px; }
         .info-psg small { display: block; margin-top: 3px; font-size: 11px; opacity: 0.8; }
         .btn-aksi { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 16px; transition: 0.3s; }
-        .btn-aksi:active { background: rgba(255,255,255,0.2); transform: scale(0.9); }
         .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 100; }
         .nav-bottom a { text-decoration: none; color: #999; font-size: 10px; text-align: center; font-weight: 600; }
         .nav-bottom a i { font-size: 18px; display: block; margin-bottom: 3px; }
@@ -27,7 +26,7 @@
 <body>
     <div class="header-section">
         <h2>Manifes Penumpang</h2>
-        <p id="countPsg">Menghubungkan database...</p>
+        <p id="countPsg">Sinkronisasi data...</p>
     </div>
 
     <div id="manifesContainer"></div>
@@ -50,24 +49,31 @@
                 container.innerHTML = "";
                 
                 if (result.status === "success") {
-                    const hariIni = new Date();
-                    hariIni.setHours(0, 0, 0, 0);
+                    const skrg = new Date();
+                    skrg.setHours(0, 0, 0, 0);
 
+                    // FILTER TANGGAL (Hapus yang lampau)
                     const dataFilter = result.data.filter(item => {
                         const tglTiket = new Date(item.tanggal);
                         tglTiket.setHours(0, 0, 0, 0);
-                        return tglTiket >= hariIni;
+                        return tglTiket >= skrg;
                     });
 
                     dataFilter.reverse().forEach(data => {
-                        const d = new Date(data.tanggal);
-                        const tglRapi = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+                        // FIX TANGGAL AGAR TIDAK GESER (Ambil murni YYYY-MM-DD dari string ISO)
+                        const tglString = data.tanggal.split("T")[0]; 
+                        const parts = tglString.split("-");
+                        const d = new Date(parts[0], parts[1] - 1, parts[2]); // Tahun, Bulan (0-11), Hari
+                        
+                        const tglRapi = d.toLocaleDateString('id-ID', { 
+                            day: '2-digit', month: 'short', year: 'numeric' 
+                        });
 
                         // FIX NOMOR WHATSAPP
                         let cleanPhone = data.hp ? data.hp.toString().replace(/\D/g, '') : "";
                         let finalPhone = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone.startsWith('8') ? '62' + cleanPhone : cleanPhone;
                         
-                        // FORMAT PESAN WHATSAPP BARU
+                        // PESAN WHATSAPP SESUAI PERMINTAAN
                         const urlEtiket = `${window.location.origin}/etiket.html?kode=${data.kode}`;
                         const textWA = `Halo, kak *${data.nama}*..%0ABerikut adalah data pemesanan tiket Anda di Mahika Trans.%0A%0ATanggal: ${tglRapi}%0AJam: ${data.jam}%0ANama: ${data.nama}%0AArmada: ${data.armada}%0ATujuan: ${data.tujuan}%0ANo kursi: ${data.kursi}%0A%0AKode Pemesanan: *${data.kode}*%0AEtiket Anda: ${urlEtiket}%0A%0A--------------------------%0A%0AHarap datang selambat-lambatnya 30 menit sebelum jam jadwal pemberangkatan.%0A%0ATerimakasih.`;
 
