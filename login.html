@@ -6,153 +6,46 @@
     <title>Login | Mahika Trans</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
     <style>
-        :root { 
-            --blue: #065084; 
-            --dark: #043a60; 
-            --gold: #FFD700;
-            --light: #f4f7f9;
-        }
-
+        :root { --blue: #065084; --dark: #043a60; --gold: #FFD700; }
         body { 
             font-family: 'Poppins', sans-serif; 
             background: radial-gradient(circle at top right, var(--dark), var(--blue)); 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            overflow: hidden;
+            margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; 
         }
-
-        /* Card Login Ramping */
         .login-box { 
-            width: 85%; 
-            max-width: 320px; 
-            background: white; 
-            padding: 35px 25px; 
-            border-radius: 30px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
-            text-align: center; 
-            position: relative;
+            width: 85%; max-width: 310px; background: white; padding: 35px 25px; border-radius: 30px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; 
         }
-
-        /* Logo Icon Bus */
-        .logo-icon {
-            width: 70px;
-            height: 70px;
-            background: var(--blue);
-            color: var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            border-radius: 50%;
-            margin: 0 auto 20px auto;
-            box-shadow: 0 8px 15px rgba(6, 80, 132, 0.3);
+        .logo-bus {
+            width: 65px; height: 65px; background: var(--blue); color: var(--gold);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; border-radius: 50%; margin: 0 auto 15px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
         }
-
-        h2 { 
-            color: var(--blue); 
-            font-weight: 700; 
-            margin: 0 0 5px 0;
-            letter-spacing: -0.5px;
-        }
-
-        p.subtitle {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 25px;
-        }
-
-        /* Input Style */
-        .input-group {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .input-group i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #aaa;
-            font-size: 14px;
-        }
-
+        h2 { color: var(--blue); margin: 0; font-weight: 700; }
+        p.sub { font-size: 11px; color: #888; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+        .input-group { position: relative; margin-bottom: 15px; }
+        .input-group i { position: absolute; left: 15px; top: 15px; color: #aaa; }
         input { 
-            width: 100%; 
-            padding: 14px 15px 14px 45px; 
-            border: 1.5px solid #eee; 
-            border-radius: 15px; 
-            box-sizing: border-box; 
-            font-family: 'Poppins'; 
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
+            width: 100%; padding: 14px 15px 14px 45px; border: 1.5px solid #eee; 
+            border-radius: 15px; box-sizing: border-box; font-family: 'Poppins'; outline: none;
         }
-
-        input:focus {
-            border-color: var(--blue);
-            background: #f9f9f9;
-        }
-
-        /* Button Style */
         button { 
-            width: 100%; 
-            padding: 15px; 
-            background: var(--blue); 
-            border: none; 
-            color: white; 
-            border-radius: 15px; 
-            font-weight: 700; 
-            font-size: 15px;
-            cursor: pointer; 
-            transition: 0.3s;
-            margin-top: 10px;
+            width: 100%; padding: 15px; background: var(--blue); border: none; 
+            color: white; border-radius: 15px; font-weight: 700; cursor: pointer; margin-top: 10px;
         }
-
-        button:active {
-            transform: scale(0.96);
-        }
-
-        button:disabled {
-            background: #999;
-            cursor: not-allowed;
-        }
-
-        /* Error Box */
-        #msg { 
-            margin-top: 15px; 
-            font-size: 11px; 
-            padding: 10px; 
-            border-radius: 10px; 
-            display: none; 
-        }
-
-        .err-box { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
-        .loading { color: var(--blue); font-weight: 600; }
-
-        /* Copyright luar card */
-        .copyright {
-            margin-top: 25px;
-            font-size: 11px;
-            color: rgba(255,255,255,0.6);
-            text-align: center;
-        }
+        #msg { margin-top: 15px; font-size: 11px; padding: 10px; border-radius: 10px; display: none; }
+        .err { background: #ffebee; color: #c62828; }
+        .copyright { margin-top: 25px; font-size: 10px; color: rgba(255,255,255,0.5); text-align: center; line-height: 1.5; }
     </style>
 </head>
 <body>
 
     <div class="login-box">
-        <div class="logo-icon">
-            <i class="fas fa-bus"></i>
-        </div>
+        <div class="logo-bus"><i class="fas fa-bus"></i></div>
         <h2>Mahika Trans</h2>
-        <p class="subtitle">Admin Management System</p>
-
+        <p class="sub">Manajemen Tiket</p>
         <form id="loginForm">
             <div class="input-group">
                 <i class="fas fa-user"></i>
@@ -162,65 +55,50 @@
                 <i class="fas fa-lock"></i>
                 <input type="password" id="pass" placeholder="Password" required>
             </div>
-            <button type="submit" id="btnLogin">Masuk Aplikasi</button>
+            <button type="submit" id="btn">Masuk Aplikasi</button>
         </form>
-
         <div id="msg"></div>
     </div>
 
     <div class="copyright">
-        &copy; 2024 Mahika Trans Indonesia.<br>All rights reserved.
+        &copy; 2024 Mahika Trans Indonesia.<br>Sistem Administrasi Penumpang.
     </div>
 
     <script>
-        const API = "https://script.google.com/macros/s/AKfycbyIyX0QqZk2mNUp1uLxyb5B-I_MGhbRSbLq3t30oQBruwn8-a_xySN6jEayZ0652hfATg/exec";
+        // GANTI DENGAN URL BARU HASIL DEPLOY TADI!
+        const API = "https://script.google.com/macros/s/AKfycbyvvch040xqQ2DzUpAHaUdxDrfRCyM3dnZvsp--YdTlLsEJMxY-_a7vLawqdIAPEOpT5A/exec";
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('btnLogin');
-            const msgBox = document.getElementById('msg');
-            const user = document.getElementById('user').value;
-            const pass = document.getElementById('pass').value;
-
-            // Reset UI
-            msgBox.style.display = "block";
-            msgBox.className = "loading";
-            msgBox.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memverifikasi...';
+            const btn = document.getElementById('btn');
+            const msg = document.getElementById('msg');
+            
+            msg.style.display = "block";
+            msg.className = "";
+            msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengecek...';
             btn.disabled = true;
 
             try {
-                // Gunakan mode cors dan redirect follow untuk GAS
-                const response = await fetch(`${API}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`);
-                const data = await response.json();
+                // Gunakan URLSearchParams untuk menghindari masalah karakter khusus
+                const url = `${API}?action=login&user=${encodeURIComponent(document.getElementById('user').value)}&pass=${encodeURIComponent(document.getElementById('pass').value)}`;
+                
+                const res = await fetch(url);
+                const data = await res.json();
 
                 if (data.status === "success") {
-                    msgBox.style.color = "green";
-                    msgBox.innerText = "Berhasil! Mengalihkan...";
                     localStorage.setItem("mahika_session", "active");
-                    localStorage.setItem("admin_name", data.nama);
-                    
-                    setTimeout(() => {
-                        window.location.href = "input.html";
-                    }, 1000);
+                    window.location.href = "input.html";
                 } else {
-                    showError(data.message || "Akses ditolak!");
+                    msg.className = "err";
+                    msg.innerText = data.message;
                     btn.disabled = false;
-                    btn.innerText = "Masuk Aplikasi";
                 }
             } catch (err) {
+                msg.className = "err";
+                msg.innerText = "Gagal terhubung ke server. Coba klik lagi.";
                 btn.disabled = false;
-                btn.innerText = "Masuk Aplikasi";
-                showError("Gagal terhubung ke server. Coba lagi.");
-                console.error(err);
             }
         });
-
-        function showError(text) {
-            const msgBox = document.getElementById('msg');
-            msgBox.style.display = "block";
-            msgBox.className = "err-box";
-            msgBox.innerText = text;
-        }
     </script>
 </body>
 </html>
