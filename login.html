@@ -12,7 +12,11 @@
         h2 { color: var(--blue); font-weight: 700; margin-bottom: 30px; }
         input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1.5px solid #eee; border-radius: 12px; box-sizing: border-box; font-family: 'Poppins'; outline: none; }
         button { width: 100%; padding: 15px; background: var(--blue); border: none; color: white; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        #msg { color: red; font-size: 12px; margin-top: 10px; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        /* Style untuk pesan error agar lebih jelas */
+        #msg { margin-top: 15px; font-size: 11px; line-height: 1.4; padding: 10px; border-radius: 8px; display: none; }
+        .err-box { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+        .loading-text { color: var(--blue); font-size: 12px; }
     </style>
 </head>
 <body>
@@ -25,24 +29,72 @@
         </form>
         <div id="msg"></div>
     </div>
+
     <script>
+        // URL API KAMU YANG BARU
         const API = "https://script.google.com/macros/s/AKfycbzYQ8loBWvWHn4bE1XAgNqGu_mGn11JO53GEMltdcES23zdjX5j3wXiO2-rclrm9bHSlg/exec";
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnLogin');
-            btn.innerText = "Memverifikasi..."; btn.disabled = true;
+            const msgBox = document.getElementById('msg');
+            const user = document.getElementById('user').value;
+            const pass = document.getElementById('pass').value;
+
+            // Reset & Start Loading
+            msgBox.style.display = "block";
+            msgBox.className = "loading-text";
+            msgBox.innerText = "Sedang menghubungi server...";
+            btn.innerText = "Memproses...";
+            btn.disabled = true;
+
             try {
-                const res = await fetch(`${API}?action=login&user=${document.getElementById('user').value}&pass=${document.getElementById('pass').value}`);
-                const data = await res.json();
+                // Menambahkan timeout untuk mendeteksi koneksi lambat
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 detik timeout
+
+                const response = await fetch(`${API}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`, {
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                const data = await response.json();
+
                 if (data.status === "success") {
+                    msgBox.style.color = "green";
+                    msgBox.innerText = "Login Berhasil! Mengalihkan...";
                     localStorage.setItem("mahika_session", "active");
-                    window.location.href = "input.html";
+                    localStorage.setItem("mahika_user", data.nama);
+                    
+                    setTimeout(() => {
+                        window.location.href = "input.html";
+                    }, 1000);
                 } else {
-                    document.getElementById('msg').innerText = data.message;
-                    btn.innerText = "Masuk"; btn.disabled = false;
+                    showError(data.message || "Username/Password salah.");
+                    btn.disabled = false;
+                    btn.innerText = "Masuk";
                 }
-            } catch (err) { document.getElementById('msg').innerText = "Koneksi Bermasalah!"; btn.disabled = false; }
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerText = "Masuk";
+                
+                if (err.name === 'AbortError') {
+                    showError("RTO (Request Timeout): Server Google lambat merespon. Coba klik masuk lagi.");
+                } else if (err.message === "Failed to fetch") {
+                    showError("Network Error: URL API tidak dapat dijangkau. Pastikan Deployment diset ke 'Anyone'.");
+                } else {
+                    showError("System Error: " + err.message);
+                }
+                console.error("Detail Error:", err);
+            }
         });
+
+        function showError(text) {
+            const msgBox = document.getElementById('msg');
+            msgBox.style.display = "block";
+            msgBox.className = "err-box";
+            msgBox.innerText = text;
+        }
     </script>
 </body>
 </html>
