@@ -9,28 +9,80 @@
     <style>
         :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; }
         body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; }
+        
         .header-section { padding: 50px 25px 30px; text-align: center; }
+        .header-section h2 { margin: 0; font-weight: 700; }
+        #countPsg { opacity: 0.8; font-size: 14px; margin-top: 5px; }
+
         #manifesContainer { padding: 10px 20px 140px; }
-        .card-manifes { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 18px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
-        .btn-aksi { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 16px; }
-        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; }
-        .nav-bottom a { text-decoration: none; color: #999; font-size: 10px; text-align: center; }
+        
+        .card-manifes { 
+            background: rgba(255,255,255,0.1); 
+            backdrop-filter: blur(10px); 
+            border-radius: 20px; 
+            padding: 18px; 
+            margin-bottom: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
+
+        .btn-aksi { 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 12px; 
+            background: rgba(255,255,255,0.05); 
+            color: #fff; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-decoration: none; 
+            font-size: 16px; 
+        }
+
+        .nav-bottom { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 90%; 
+            max-width: 400px; 
+            background: rgba(255, 255, 255, 0.95); 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 15px 0; 
+            border-radius: 25px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .nav-bottom a { text-decoration: none; color: #999; font-size: 10px; text-align: center; font-weight: 600; }
+        .nav-bottom a i { font-size: 18px; display: block; margin-bottom: 3px; }
         .nav-bottom a.active { color: var(--primary-blue); }
+
+        small { opacity: 0.8; font-size: 12px; }
     </style>
 </head>
 <body>
-    <div class="header-section"><h2>Manifes Penumpang</h2><p id="countPsg">Memuat data...</p></div>
+    <div class="header-section">
+        <h2>Manifes Penumpang</h2>
+        <p id="countPsg">Memuat data...</p>
+    </div>
+
     <div id="manifesContainer"></div>
+
     <div class="nav-bottom">
-        <a href="index.html"><i class="fas fa-house"></i><br>Home</a>
-        <a href="input.html"><i class="fas fa-circle-plus"></i><br>Booking</a>
-        <a href="manifes.html" class="active"><i class="fas fa-file-lines"></i><br>Manifes</a>
-        <a href="pendapatan.html"><i class="fas fa-chart-pie"></i><br>Laporan</a>
+        <a href="index.html"><i class="fas fa-house"></i>Home</a>
+        <a href="input.html"><i class="fas fa-circle-plus"></i>Booking</a>
+        <a href="manifes.html" class="active"><i class="fas fa-file-lines"></i>Manifes</a>
+        <a href="pendapatan.html"><i class="fas fa-chart-pie"></i>Laporan</a>
     </div>
 
     <script>
+        // API GOOGLE APPS SCRIPT
         const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
-        
+
         async function loadManifes() {
             try {
                 const res = await fetch(`${API}?action=readManifes`);
@@ -39,46 +91,64 @@
                 container.innerHTML = "";
                 
                 if (result.status === "success") {
-                    // Ambil tanggal hari ini (reset jam ke 00:00 biar akurat)
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
+                    // 1. Ambil Tanggal Hari Ini & Reset Jam ke 00:00:00
+                    const skrg = new Date();
+                    skrg.setHours(0, 0, 0, 0);
 
-                    // Filter: Hanya hari ini dan masa depan
+                    // 2. Filter data: Hanya Hari Ini dan Ke Depan
                     const filteredData = result.data.filter(item => {
                         const travelDate = new Date(item.tanggal);
-                        return travelDate >= today;
+                        travelDate.setHours(0, 0, 0, 0);
+                        return travelDate >= skrg;
                     });
 
+                    // 3. Render Data (Urutan Terbaru Di Atas)
                     filteredData.reverse().forEach(data => {
-                        // Logic Format Nomor HP
+                        // Perbaiki Tampilan Tanggal (Bukan ISO lagi)
+                        const d = new Date(data.tanggal);
+                        const tglRapi = d.toLocaleDateString('id-ID', { 
+                            day: '2-digit', 
+                            month: 'short', 
+                            year: 'numeric' 
+                        });
+
+                        // Fix Nomor HP untuk WhatsApp
                         let phone = data.hp ? data.hp.toString() : "";
                         if (phone.startsWith('0')) phone = '62' + phone.slice(1);
                         
-                        // Isi Pesan WhatsApp
+                        // Pesan WA & Link Etiket
                         const urlEtiket = `${window.location.origin}/etiket.html?kode=${data.kode}`;
-                        const textWA = `Halo Kak *${data.nama}*, Berikut E-Tiket Mahika Trans Anda.%0A%0AKode: *${data.kode}*%0AJadwal: ${data.tanggal}%0A%0ALink Tiket:%0A${urlEtiket}`;
+                        const textWA = `Halo Kak *${data.nama}*, Berikut E-Tiket Mahika Trans Anda.%0A%0AKode: *${data.kode}*%0AJadwal: ${tglRapi} - ${data.jam}%0A%0ALink Tiket:%0A${urlEtiket}`;
 
                         container.innerHTML += `
                             <div class="card-manifes">
                                 <div>
-                                    <h4 style="margin:0">${data.nama}</h4>
-                                    <small>${data.tanggal} • ${data.jam}</small><br>
+                                    <h4 style="margin:0; color:#FFD700;">${data.nama}</h4>
+                                    <small>${tglRapi} • ${data.jam}</small><br>
                                     <small>${data.armada} • ${data.tujuan}</small>
                                 </div>
                                 <div style="display:flex; gap:8px;">
-                                    <a href="https://wa.me/${phone}?text=${textWA}" target="_blank" class="btn-aksi"><i class="fab fa-whatsapp"></i></a>
-                                    <a href="etiket.html?kode=${data.kode}" class="btn-aksi"><i class="fas fa-ticket-alt"></i></a>
+                                    <a href="https://wa.me/${phone}?text=${textWA}" target="_blank" class="btn-aksi">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                    <a href="etiket.html?kode=${data.kode}" class="btn-aksi">
+                                        <i class="fas fa-ticket-alt"></i>
+                                    </a>
                                 </div>
                             </div>`;
                     });
                     
                     document.getElementById("countPsg").innerText = filteredData.length + " Penumpang Aktif";
+                } else {
+                    document.getElementById("countPsg").innerText = "Tidak ada data aktif.";
                 }
             } catch (e) { 
                 document.getElementById("countPsg").innerText = "Gagal memuat data."; 
             }
         }
+
         window.onload = loadManifes;
     </script>
 </body>
 </html>
+
