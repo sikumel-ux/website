@@ -14,7 +14,7 @@
             margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; 
         }
         .login-box { 
-            width: 85%; max-width: 310px; background: white; padding: 35px 25px; border-radius: 30px; 
+            width: 85%; max-width: 310px; background: white; padding: 40px 25px; border-radius: 30px; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; 
         }
         .logo-bus {
@@ -29,15 +29,16 @@
         .input-group i { position: absolute; left: 15px; top: 15px; color: #aaa; }
         input { 
             width: 100%; padding: 14px 15px 14px 45px; border: 1.5px solid #eee; 
-            border-radius: 15px; box-sizing: border-box; font-family: 'Poppins'; outline: none;
+            border-radius: 15px; box-sizing: border-box; font-family: 'Poppins'; outline: none; transition: 0.3s;
         }
+        input:focus { border-color: var(--blue); }
         button { 
             width: 100%; padding: 15px; background: var(--blue); border: none; 
             color: white; border-radius: 15px; font-weight: 700; cursor: pointer; margin-top: 10px;
         }
         #msg { margin-top: 15px; font-size: 11px; padding: 10px; border-radius: 10px; display: none; }
-        .err { background: #ffebee; color: #c62828; }
-        .copyright { margin-top: 25px; font-size: 10px; color: rgba(255,255,255,0.5); text-align: center; line-height: 1.5; }
+        .err { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+        .copyright { margin-top: 30px; font-size: 10px; color: rgba(255,255,255,0.6); text-align: center; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -45,7 +46,7 @@
     <div class="login-box">
         <div class="logo-bus"><i class="fas fa-bus"></i></div>
         <h2>Mahika Trans</h2>
-        <p class="sub">Manajemen Tiket</p>
+        <p class="sub">Admin System</p>
         <form id="loginForm">
             <div class="input-group">
                 <i class="fas fa-user"></i>
@@ -61,12 +62,12 @@
     </div>
 
     <div class="copyright">
-        &copy; 2024 Mahika Trans Indonesia.<br>Sistem Administrasi Penumpang.
+        &copy; 2026 Mahika Trans.<br>All rights reserved.
     </div>
 
     <script>
-        // GANTI DENGAN URL BARU HASIL DEPLOY TADI!
-        const API = "https://script.google.com/macros/s/AKfycbyvvch040xqQ2DzUpAHaUdxDrfRCyM3dnZvsp--YdTlLsEJMxY-_a7vLawqdIAPEOpT5A/exec";
+        // GANTI INI DENGAN URL API BARU KAMU
+        const API = "https://script.google.com/macros/s/AKfycbyH-zOh8Otp4U0--Dgqhfv90txCcdVjad7waxyPcRe831EHo6ihd2MzRfXtDk8TWciVgw/exec";
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -75,13 +76,11 @@
             
             msg.style.display = "block";
             msg.className = "";
-            msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengecek...';
+            msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
             btn.disabled = true;
 
             try {
-                // Gunakan URLSearchParams untuk menghindari masalah karakter khusus
                 const url = `${API}?action=login&user=${encodeURIComponent(document.getElementById('user').value)}&pass=${encodeURIComponent(document.getElementById('pass').value)}`;
-                
                 const res = await fetch(url);
                 const data = await res.json();
 
@@ -95,7 +94,7 @@
                 }
             } catch (err) {
                 msg.className = "err";
-                msg.innerText = "Gagal terhubung ke server. Coba klik lagi.";
+                msg.innerText = "Koneksi Gagal. Cek internet atau URL API.";
                 btn.disabled = false;
             }
         });
