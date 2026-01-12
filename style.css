@@ -10,9 +10,8 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
-    min-height: 100vh;
-    /* Memberi ruang agar konten tidak tertutup nav-bottom */
-    padding-bottom: 80px; 
+    align-items: center;
+    height: 100vh;
 }
 
 /* =========================
@@ -21,26 +20,25 @@ body {
 .etiket-container {
     width: 100%;
     max-width: 400px;
-    min-height: 100vh;
+    height: 100vh;
     background: #fff;
     padding: 20px;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
 /* =========================
-   HEADER & KODE BOOKING
+   HEADER
 ========================= */
 .etiket-header {
     background: linear-gradient(135deg, #0066AE, #005b99);
     color: #fff;
     padding: 20px;
     text-align: center;
-    border-radius: 0 0 25px 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
-    margin-bottom: 40px; /* Ruang untuk kode booking yang melayang */
 }
 
 .header {
@@ -50,122 +48,187 @@ body {
     height: 40px;
 }
 
-.logo { width: 180px; height: auto; }
-
-.kode-booking {
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70%;
-    padding: 12px;
-    background: #fff;
-    color: #0066AE;
-    font-weight: 800;
-    font-size: 18px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    z-index: 10;
-    border: 1px solid #eee;
+.header img,
+.logo {
+    width: 80%;
+    height: auto;
 }
 
 /* =========================
-   INFO GRID (CARD STYLE)
+   KODE BOOKING
+========================= */
+.kode-booking {
+    position: relative;
+    top: 40px;
+    margin: auto;
+    width: 80%;
+    padding: 12px 20px;
+    background: #fff;
+    color: #004a80;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 10;
+}
+
+/* =========================
+   NAV TOP
+========================= */
+.nav-top {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.nav-top i {
+    color: #fff;
+    font-size: 18px;
+}
+
+/* =========================
+   INFO GRID
 ========================= */
 .info-grid {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-    flex-wrap: wrap;
+    margin-top: 40px;
+    flex-grow: 1;
 }
 
-.kolom { width: 48%; }
+.kolom {
+    width: 48%;
+}
 
 .kolom p {
-    font-size: 13px;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+    padding: 8px;
+    background: #fff;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
-    color: #333;
 }
 
-.kolom i { color: #0066AE; margin-right: 8px; width: 15px; }
+.kolom i {
+    margin-right: 8px;
+}
 
 /* =========================
-   NAV BOTTOM (APP STYLE)
+   KETERANGAN
 ========================= */
-.nav-bottom {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 400px;
-    background: #ffffff;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
-    border-radius: 20px 20px 0 0;
-    z-index: 1000;
-}
-
-.nav-bottom a {
-    text-decoration: none;
-    color: #bbb; /* Warna pasif */
-    text-align: center;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 18px;
-    transition: 0.3s;
-}
-
-/* Label kecil di bawah icon */
-.nav-bottom a span {
-    font-size: 10px;
-    font-weight: 600;
-    margin-top: 4px;
-}
-
-.nav-bottom a:hover, .nav-bottom a.active {
-    color: #0066AE; /* Warna aktif */
-    transform: translateY(-3px);
+.keterangan {
+    font-size: 12px;
+    background: #eee;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
 }
 
 /* =========================
-   BARCODE & LAINNYA
+   TEAR LINE
 ========================= */
 .tear-line {
     width: 100%;
-    height: 2px;
-    margin: 20px 0;
-    background: repeating-linear-gradient(90deg, #ccc, #ccc 5px, transparent 5px, transparent 10px);
+    height: 10px;
+    margin: 5px 0;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 8px,
+        #ccc 8px,
+        #ccc 10px
+    );
+}
+
+/* =========================
+   BARCODE
+========================= */
+.barcode-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .barcode {
+    width: 95%;
     text-align: center;
-    padding: 15px;
+    padding: 10px;
     background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.barcode img { width: 60%; height: auto; }
+.barcode img {
+    width: 50%;
+    max-width: 60%;
+    height: auto;
+}
 
-.keterangan {
-    font-size: 11px;
-    background: #fefefe;
-    padding: 15px;
-    border-radius: 10px;
-    border-left: 4px solid #0066AE;
-    color: #666;
-    line-height: 1.6;
+.thanks {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #000;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.etiket-footer {
+    position: relative;
+    padding: 10px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0066AE, #004a80);
+}
+
+.etiket-footer::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    bottom: 100%;
+    left: 0;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/6/6a/Sine_wave.svg');
+    background-size: cover;
+}
+
+/* =========================
+   NAV BOTTOM
+========================= */
+.nav-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+}
+
+.nav-bottom a {
+    width: 22%;
+    background: linear-gradient(135deg, #0066AE, #004a80);
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 18px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.nav-bottom a:hover {
+    background: #005b99;
+    transform: scale(1.1);
+}
+
+/* =========================
+   KONTEN
+========================= */
+.konten {
+    padding-top: 20px;
+    padding-bottom: 80px;
 }
