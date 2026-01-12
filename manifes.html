@@ -7,133 +7,77 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; }
         body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; }
-        
         .header-section { padding: 50px 25px 30px; text-align: center; }
-        .header-section h2 { margin-bottom: 5px; font-weight: 700; letter-spacing: 1px; }
-        #countPsg { opacity: 0.8; font-size: 14px; }
-
         #manifesContainer { padding: 10px 20px 140px; }
-        
-        /* CARD STYLE */
-        .card-manifes { 
-            background: rgba(255,255,255,0.1); 
-            backdrop-filter: blur(10px); 
-            border-radius: 20px; 
-            padding: 18px; 
-            margin-bottom: 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            transition: 0.3s;
-        }
-        .card-manifes:active { transform: scale(0.98); background: rgba(255,255,255,0.15); }
-
-        .info-psg h4 { margin: 0; font-size: 16px; color: var(--gold); text-transform: uppercase; }
-        .info-psg small { display: block; margin-top: 3px; font-size: 11px; opacity: 0.9; }
-        .badge-kursi { background: var(--white); color: var(--primary-blue); padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 10px; margin-left: 5px; }
-
-        .btn-aksi { 
-            width: 45px; 
-            height: 45px; 
-            border-radius: 15px; 
-            background: var(--gold); 
-            color: var(--primary-blue); 
-            border: none; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            text-decoration: none; 
-            font-size: 18px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        /* NAVBAR */
-        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; }
-        .nav-bottom a { text-decoration: none; color: #999; font-size: 10px; text-align: center; font-weight: 600; }
-        .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
+        .card-manifes { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 18px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-aksi { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 16px; }
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; }
+        .nav-bottom a { text-decoration: none; color: #999; font-size: 10px; text-align: center; }
         .nav-bottom a.active { color: var(--primary-blue); }
-
-        /* LOADING ANIMATION */
-        .loader { text-align: center; padding: 50px; font-size: 14px; opacity: 0.7; }
     </style>
 </head>
 <body>
-    <div class="header-section">
-        <h2>Manifes Penumpang</h2>
-        <p id="countPsg"><i class="fas fa-spinner fa-spin"></i> Menghubungkan ke database...</p>
-    </div>
-
-    <div id="manifesContainer">
-        <div class="loader">Tunggu sebentar ya, Bro...</div>
-    </div>
-
+    <div class="header-section"><h2>Manifes Penumpang</h2><p id="countPsg">Memuat data...</p></div>
+    <div id="manifesContainer"></div>
     <div class="nav-bottom">
-        <a href="index.html"><i class="fas fa-house"></i>Home</a>
-        <a href="input.html"><i class="fas fa-circle-plus"></i>Booking</a>
-        <a href="manifes.html" class="active"><i class="fas fa-file-lines"></i>Manifes</a>
-        <a href="pendapatan.html"><i class="fas fa-chart-pie"></i>Laporan</a>
+        <a href="index.html"><i class="fas fa-house"></i><br>Home</a>
+        <a href="input.html"><i class="fas fa-circle-plus"></i><br>Booking</a>
+        <a href="manifes.html" class="active"><i class="fas fa-file-lines"></i><br>Manifes</a>
+        <a href="pendapatan.html"><i class="fas fa-chart-pie"></i><br>Laporan</a>
     </div>
 
     <script>
-        // API SAKTI KITA
         const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
-
+        
         async function loadManifes() {
             try {
-                // Panggil action readManifes sesuai di GAS
                 const res = await fetch(`${API}?action=readManifes`);
                 const result = await res.json();
                 const container = document.getElementById("manifesContainer");
+                container.innerHTML = "";
                 
                 if (result.status === "success") {
-                    container.innerHTML = "";
-                    
-                    // Urutkan dari yang terbaru (reverse)
-                    const dataReverse = result.data.reverse();
+                    // Ambil tanggal hari ini (reset jam ke 00:00 biar akurat)
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
 
-                    dataReverse.forEach(item => {
-                        // Format Tanggal rapi
-                        let tglTampil = item.tanggal;
-                        if(item.tanggal.includes('T')) {
-                             const d = new Date(item.tanggal);
-                             tglTampil = d.toLocaleDateString('id-ID', {day:'2-digit', month:'short'});
-                        }
+                    // Filter: Hanya hari ini dan masa depan
+                    const filteredData = result.data.filter(item => {
+                        const travelDate = new Date(item.tanggal);
+                        return travelDate >= today;
+                    });
 
-                        // Format Harga
-                        const hargaFmt = Number(item.harga || 0).toLocaleString('id-ID');
+                    filteredData.reverse().forEach(data => {
+                        // Logic Format Nomor HP
+                        let phone = data.hp ? data.hp.toString() : "";
+                        if (phone.startsWith('0')) phone = '62' + phone.slice(1);
+                        
+                        // Isi Pesan WhatsApp
+                        const urlEtiket = `${window.location.origin}/etiket.html?kode=${data.kode}`;
+                        const textWA = `Halo Kak *${data.nama}*, Berikut E-Tiket Mahika Trans Anda.%0A%0AKode: *${data.kode}*%0AJadwal: ${data.tanggal}%0A%0ALink Tiket:%0A${urlEtiket}`;
 
                         container.innerHTML += `
                             <div class="card-manifes">
-                                <div class="info-psg">
-                                    <h4>${item.nama} <span class="badge-kursi">#${item.kursi}</span></h4>
-                                    <small><i class="far fa-calendar"></i> ${tglTampil} • <i class="far fa-clock"></i> ${item.jam}</small>
-                                    <small><i class="fas fa-bus"></i> ${item.armada} • <i class="fas fa-location-arrow"></i> ${item.tujuan}</small>
-                                    <small style="color:var(--gold); font-weight:bold; margin-top:5px;">Rp ${hargaFmt}</small>
+                                <div>
+                                    <h4 style="margin:0">${data.nama}</h4>
+                                    <small>${data.tanggal} • ${data.jam}</small><br>
+                                    <small>${data.armada} • ${data.tujuan}</small>
                                 </div>
-                                <div style="display:flex; gap:10px;">
-                                    <a href="etiket.html?kode=${item.kode}" class="btn-aksi" title="Lihat Etiket">
-                                        <i class="fas fa-ticket-alt"></i>
-                                    </a>
+                                <div style="display:flex; gap:8px;">
+                                    <a href="https://wa.me/${phone}?text=${textWA}" target="_blank" class="btn-aksi"><i class="fab fa-whatsapp"></i></a>
+                                    <a href="etiket.html?kode=${data.kode}" class="btn-aksi"><i class="fas fa-ticket-alt"></i></a>
                                 </div>
                             </div>`;
                     });
-
-                    document.getElementById("countPsg").innerHTML = `<i class="fas fa-users"></i> Total ${result.data.length} Penumpang Terdaftar`;
-                } else {
-                    container.innerHTML = `<div class="loader">Belum ada data penumpang, Bro.</div>`;
-                    document.getElementById("countPsg").innerText = "0 Penumpang";
+                    
+                    document.getElementById("countPsg").innerText = filteredData.length + " Penumpang Aktif";
                 }
             } catch (e) { 
-                console.error(e);
-                document.getElementById("countPsg").innerText = "Koneksi Gagal!"; 
-                document.getElementById("manifesContainer").innerHTML = `<div class="loader">Cek koneksi internetmu, Bro.</div>`;
+                document.getElementById("countPsg").innerText = "Gagal memuat data."; 
             }
         }
-
-        // Jalankan saat halaman dibuka
         window.onload = loadManifes;
     </script>
 </body>
