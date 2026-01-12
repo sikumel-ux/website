@@ -63,16 +63,13 @@
                         const d = new Date(data.tanggal);
                         const tglRapi = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 
-                        // Fix Nomor WhatsApp
+                        // FIX NOMOR WHATSAPP
                         let cleanPhone = data.hp ? data.hp.toString().replace(/\D/g, '') : "";
-                        let finalPhone = "";
-                        if (cleanPhone.startsWith('62')) finalPhone = cleanPhone;
-                        else if (cleanPhone.startsWith('0')) finalPhone = '62' + cleanPhone.slice(1);
-                        else if (cleanPhone.startsWith('8')) finalPhone = '62' + cleanPhone;
-                        else finalPhone = cleanPhone;
+                        let finalPhone = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone.startsWith('8') ? '62' + cleanPhone : cleanPhone;
                         
-                        // Pesan WhatsApp Baru
-                        const textWA = `Halo, kak *${data.nama}*..%0ABerikut adalah data pemesanan tiket Anda di Mahika Trans.%0A%0ATanggal: ${tglRapi}%0AJam: ${data.jam}%0ANama: ${data.nama}%0AArmada: ${data.armada}%0ATujuan: ${data.tujuan}%0ANo kursi: ${data.kursi}%0A%0AHarap datang selambat-lambatnya 30 menit sebelum jam jadwal pemberangkatan.%0A%0ATerimakasih.`;
+                        // FORMAT PESAN WHATSAPP BARU
+                        const urlEtiket = `${window.location.origin}/etiket.html?kode=${data.kode}`;
+                        const textWA = `Halo, kak *${data.nama}*..%0ABerikut adalah data pemesanan tiket Anda di Mahika Trans.%0A%0ATanggal: ${tglRapi}%0AJam: ${data.jam}%0ANama: ${data.nama}%0AArmada: ${data.armada}%0ATujuan: ${data.tujuan}%0ANo kursi: ${data.kursi}%0A%0AKode Pemesanan: *${data.kode}*%0AEtiket Anda: ${urlEtiket}%0A%0A--------------------------%0A%0AHarap datang selambat-lambatnya 30 menit sebelum jam jadwal pemberangkatan.%0A%0ATerimakasih.`;
 
                         container.innerHTML += `
                             <div class="card-manifes">
