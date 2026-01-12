@@ -8,34 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root { --blue: #065084; --dark: #043a60; --gold: #FFD700; }
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background: radial-gradient(circle at top right, var(--dark), var(--blue)); 
-            margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; 
-        }
-        .login-box { 
-            width: 85%; max-width: 310px; background: white; padding: 40px 25px; border-radius: 30px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; 
-        }
-        .logo-bus {
-            width: 65px; height: 65px; background: var(--blue); color: var(--gold);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; border-radius: 50%; margin: 0 auto 15px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-        }
+        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--dark), var(--blue)); margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .login-box { width: 85%; max-width: 310px; background: white; padding: 40px 25px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; }
+        .logo-bus { width: 65px; height: 65px; background: var(--blue); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 28px; border-radius: 50%; margin: 0 auto 15px; box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
         h2 { color: var(--blue); margin: 0; font-weight: 700; }
         p.sub { font-size: 11px; color: #888; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
         .input-group { position: relative; margin-bottom: 15px; }
         .input-group i { position: absolute; left: 15px; top: 15px; color: #aaa; }
-        input { 
-            width: 100%; padding: 14px 15px 14px 45px; border: 1.5px solid #eee; 
-            border-radius: 15px; box-sizing: border-box; font-family: 'Poppins'; outline: none; transition: 0.3s;
-        }
-        input:focus { border-color: var(--blue); }
-        button { 
-            width: 100%; padding: 15px; background: var(--blue); border: none; 
-            color: white; border-radius: 15px; font-weight: 700; cursor: pointer; margin-top: 10px;
-        }
+        input { width: 100%; padding: 14px 15px 14px 45px; border: 1.5px solid #eee; border-radius: 15px; box-sizing: border-box; font-family: 'Poppins'; outline: none; transition: 0.3s; }
+        button { width: 100%; padding: 15px; background: var(--blue); border: none; color: white; border-radius: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        button:disabled { background: #ccc; }
         #msg { margin-top: 15px; font-size: 11px; padding: 10px; border-radius: 10px; display: none; }
         .err { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
         .copyright { margin-top: 30px; font-size: 10px; color: rgba(255,255,255,0.6); text-align: center; line-height: 1.6; }
@@ -46,7 +28,7 @@
     <div class="login-box">
         <div class="logo-bus"><i class="fas fa-bus"></i></div>
         <h2>Mahika Trans</h2>
-        <p class="sub">Admin System</p>
+        <p class="sub">Admin Management</p>
         <form id="loginForm">
             <div class="input-group">
                 <i class="fas fa-user"></i>
@@ -62,26 +44,28 @@
     </div>
 
     <div class="copyright">
-        &copy; 2026 Mahika Trans.<br>All rights reserved.
+        &copy; 2026 Mahika Trans Indonesia.<br>All rights reserved.
     </div>
 
     <script>
-        // GANTI INI DENGAN URL API BARU KAMU
+        // MASUKKAN URL BARU HASIL DEPLOY ULANG TADI
         const API = "https://script.google.com/macros/s/AKfycbxQBsV8TAUumwT_FgfbvzxDKNA2S-iPHC1OmRF8oH94jXzWu3zsC5-rVHzAtbmOkGR1OQ/exec";
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn');
             const msg = document.getElementById('msg');
-            
+            const user = document.getElementById('user').value;
+            const pass = document.getElementById('pass').value;
+
             msg.style.display = "block";
             msg.className = "";
-            msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memverifikasi...';
             btn.disabled = true;
 
             try {
-                const url = `${API}?action=login&user=${encodeURIComponent(document.getElementById('user').value)}&pass=${encodeURIComponent(document.getElementById('pass').value)}`;
-                const res = await fetch(url);
+                // Fetch menggunakan URL query params
+                const res = await fetch(`${API}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`);
                 const data = await res.json();
 
                 if (data.status === "success") {
@@ -94,7 +78,7 @@
                 }
             } catch (err) {
                 msg.className = "err";
-                msg.innerText = "Koneksi Gagal. Cek internet atau URL API.";
+                msg.innerText = "Error: Skrip tidak merespon. Pastikan Deployment 'Anyone'.";
                 btn.disabled = false;
             }
         });
