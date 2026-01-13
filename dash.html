@@ -3,93 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Mahika Trans Modern</title>
-    
+    <title>Dashboard | Mahika Trans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
     <style>
-        :root {
-            --primary-blue: #065084;
-            --bg-darker: #043a60;
-            --white: #ffffff;
-            --glass: rgba(255, 255, 255, 0.1);
-        }
-
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --glass: rgba(255, 255, 255, 0.1); --gold: #FFD700; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--primary-blue);
-            color: var(--white);
-            margin: 0; padding: 0;
-            display: flex; justify-content: center;
-            overflow-x: hidden;
-        }
-
-        .etiket-container {
-            width: 100%; max-width: 450px;
-            min-height: 100vh;
-            padding-bottom: 120px;
-            background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue));
-        }
-
+        body { font-family: 'Poppins', sans-serif; background-color: var(--primary-blue); color: var(--white); margin: 0; display: flex; justify-content: center; }
+        .etiket-container { width: 100%; max-width: 450px; min-height: 100vh; padding-bottom: 120px; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); }
         .etiket-header { padding: 50px 25px 30px 25px; }
-        .etiket-header h1 { font-size: 14px; margin: 0; opacity: 0.7; font-weight: 300; letter-spacing: 1px; }
+        .etiket-header h1 { font-size: 14px; margin: 0; opacity: 0.7; font-weight: 300; }
         .etiket-header h2 { font-size: 26px; margin: 5px 0 0 0; font-weight: 700; }
-
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .stat-card {
-            background: var(--white); padding: 20px 15px; border-radius: 24px; text-align: left;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        }
+        .stat-card { background: var(--white); padding: 20px 15px; border-radius: 24px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); }
         .stat-card i { font-size: 20px; color: var(--primary-blue); margin-bottom: 12px; display: block; }
-        .stat-card span { display: block; font-size: 9px; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+        .stat-card span { display: block; font-size: 9px; color: #666; font-weight: 600; text-transform: uppercase; }
         .stat-card strong { font-size: 15px; color: var(--primary-blue); font-weight: 700; }
-
         .section-title { padding: 35px 25px 15px 25px; font-size: 16px; font-weight: 600; opacity: 0.9; }
-        
         .service-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 20px; }
         .service-item { text-align: center; text-decoration: none; color: var(--white); }
-        .service-icon {
-            width: 65px; height: 65px; background: var(--glass); border-radius: 22px; 
-            display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; 
-            font-size: 22px; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
-        }
-        .service-item:active .service-icon { transform: scale(0.9); background: rgba(255,255,255,0.2); }
-        .service-item span { font-size: 11px; opacity: 0.8; }
-
+        .service-icon { width: 60px; height: 60px; background: var(--glass); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 20px; border: 1px solid rgba(255,255,255,0.1); }
         .antrean-list { display: flex; flex-direction: column; gap: 12px; padding: 0 20px; }
-        .antrean-item {
-            display: flex; align-items: center; gap: 15px; padding: 16px;
-            background: var(--glass); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .tgl-circle {
-            width: 50px; height: 50px; background: var(--white); color: var(--primary-blue);
-            border-radius: 50%; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; font-size: 10px; font-weight: 700; line-height: 1.1;
-        }
-
+        .antrean-item { display: flex; align-items: center; gap: 15px; padding: 16px; background: var(--glass); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); }
+        .tgl-circle { width: 45px; height: 45px; background: var(--white); color: var(--primary-blue); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
         .antrean-info { flex: 1; }
-        .antrean-info b { font-size: 14px; display: block; margin-bottom: 2px; }
+        .antrean-info b { font-size: 13px; display: block; }
         .antrean-info span { font-size: 11px; opacity: 0.6; }
-        .jam-text { font-size: 13px; font-weight: 600; opacity: 0.9; }
-
-        .nav-bottom {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95);
-            display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 1000;
-            transition: 0.4s;
-        }
-
-        .nav-hidden { transform: translate(-50%, 150%) !important; opacity: 0; }
-
-        .nav-bottom a { text-decoration: none; color: #999; text-align: center; flex: 1; }
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 1000; }
+        .nav-bottom a { text-decoration: none; color: #999; text-align: center; flex: 1; font-size: 10px; font-weight: 600; }
         .nav-bottom a.active { color: var(--primary-blue); }
-        .nav-bottom i { font-size: 20px; }
-        .nav-bottom span { display: block; font-size: 10px; font-weight: 600; margin-top: 4px; }
+        .nav-bottom i { font-size: 18px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -97,92 +40,80 @@
 <div class="etiket-container">
     <div class="etiket-header">
         <h1 id="greeting">Halo,</h1>
-        <h2 id="userNameDisplay">Mahika Trans</h2>
+        <h2>Mahika Trans</h2>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card">
-            <i class="fas fa-arrow-trend-up"></i>
-            <span>KOMISI BULAN INI</span>
+            <i class="fas fa-wallet"></i>
+            <span>KOMISI BLN INI</span>
             <strong id="statKomisi">Rp 0</strong>
         </div>
         <div class="stat-card">
-            <i class="fas fa-users-viewfinder"></i>
+            <i class="fas fa-users"></i>
             <span>TOTAL PAX</span>
-            <strong id="statPax">0 Orang</strong>
+            <strong id="statPax">0</strong>
         </div>
     </div>
 
     <div class="section-title"><span>Layanan</span></div>
     <div class="service-grid">
-        <a href="input.html" class="service-item"><div class="service-icon"><i class="fa-solid fa-bus"></i></div><span>Bus</span></a>
-        <a href="input.html" class="service-item"><div class="service-icon"><i class="fa-solid fa-ship"></i></div><span>Kapal</span></a>
-        <a href="input.html" class="service-item"><div class="service-icon"><i class="fa-solid fa-plane"></i></div><span>Pesawat</span></a>
-        <a href="input.html" class="service-item"><div class="service-icon"><i class="fa-solid fa-truck-ramp-box"></i></div><span>Cargo</span></a>
+        <a href="input_komisi.html" class="service-item"><div class="service-icon"><i class="fa-solid fa-bus"></i></div><span>Input</span></a>
+        <a href="pendapatan.html" class="service-item"><div class="service-icon"><i class="fa-solid fa-chart-line"></i></div><span>Laporan</span></a>
+        <a href="#" class="service-item"><div class="service-icon"><i class="fa-solid fa-ship"></i></div><span>Kapal</span></a>
+        <a href="#" class="service-item"><div class="service-icon"><i class="fa-solid fa-box"></i></div><span>Cargo</span></a>
     </div>
 
-    <div class="section-title"><span>Daftar Manifes Terbaru</span></div>
-    <div class="antrean-list" id="antreanList">
-        <p style="text-align:center; font-size:12px; opacity:0.5; padding:20px;">Memuat data...</p>
+    <div class="section-title"><span>Manifes Terkini</span></div>
+    <div id="antreanList" class="antrean-list">
+        <p style="text-align:center; font-size:12px; opacity:0.5;">Memuat data...</p>
     </div>
 </div>
 
 <div class="nav-bottom">
-    <a href="index.html" class="active"><i class="fas fa-house"></i><span>Home</span></a>
-    <a href="input.html"><i class="fas fa-circle-plus"></i><span>Booking</span></a>
-    <a href="manifes.html"><i class="fas fa-file-lines"></i><span>Manifes</span></a>
-    <a href="pendapatan.html"><i class="fas fa-chart-bar"></i><span>Laporan</span></a>
+    <a href="index.html" class="active"><i class="fas fa-house"></i>Home</a>
+    <a href="input_komisi.html"><i class="fas fa-circle-plus"></i>Input</a>
+    <a href="pendapatan.html"><i class="fas fa-file-invoice-dollar"></i>Laporan</a>
 </div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
+    const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
 
-    const jam = new Date().getHours();
-    let salam = jam < 11 ? "Selamat Pagi" : jam < 15 ? "Selamat Siang" : jam < 19 ? "Selamat Sore" : "Selamat Malam";
-    document.getElementById('greeting').innerText = salam + ",";
-
-    async function loadDashboard() {
+    async function init() {
         try {
-            // Ambil data pendapatan & manifes (kita pakai getPendapatan karena isinya lengkap)
-            const res = await fetch(`${API_URL}?action=getPendapatan`);
+            const res = await fetch(`${API}?action=getPendapatan`);
             const data = await res.json();
-            
-            const list = document.getElementById('antreanList');
             const blnIni = ("0" + (new Date().getMonth() + 1)).slice(-2);
             
-            let totalKomisi = 0;
-            let totalPax = 0;
+            let komisi = 0, pax = 0;
+            
+            // Urutkan data terbaru di atas
+            const sorted = data.sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
 
-            if(data && data.length > 0) {
-                // Filter untuk Stats (Hanya Bulan Ini)
-                data.forEach(item => {
-                    const bulanData = item.tanggal.split("-")[1];
-                    if(bulanData === blnIni) {
-                        totalKomisi += parseInt(item.komisi) || 0;
-                        totalPax += parseInt(item.jumlah_penumpang || item.pax) || 0;
-                    }
-                });
+            // Hitung Stats
+            data.forEach(item => {
+                if(item.tanggal && item.tanggal.split("-")[1] === blnIni) {
+                    komisi += parseInt(item.komisi) || 0;
+                    pax += parseInt(item.pax) || 0;
+                }
+            });
 
-                // Update Stats
-                document.getElementById('statKomisi').innerText = "Rp " + totalKomisi.toLocaleString('id-ID');
-                document.getElementById('statPax').innerText = totalPax + " Orang";
+            document.getElementById('statKomisi').innerText = "Rp " + komisi.toLocaleString('id-ID');
+            document.getElementById('statPax').innerText = pax + " Orang";
 
-                // Tampilkan Manifes (10 data terbaru, diurutkan tanggal terbaru)
-                const sortedData = data.sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal)).slice(0, 10);
-                
-                list.innerHTML = sortedData.map(item => {
-                    const tglObj = new Date(item.tanggal);
-                    const tgl = tglObj.getDate();
-                    const bln = tglObj.toLocaleDateString('id-ID', {month:'short'});
-                    
+            // Render List
+            const list = document.getElementById('antreanList');
+            if(sorted.length > 0) {
+                list.innerHTML = sorted.slice(0, 5).map(item => {
+                    const d = new Date(item.tanggal);
                     return `
-                        <div class="antrean-item" onclick="location.href='manifes.html'">
-                            <div class="tgl-circle"><b>${tgl}</b>${bln}</div>
+                        <div class="antrean-item">
+                            <div class="tgl-circle"><b>${d.getDate()}</b>${d.toLocaleDateString('id-ID',{month:'short'})}</div>
                             <div class="antrean-info">
-                                <b>${item.nama || 'Penumpang'}</b>
-                                <span>${item.armada || '-'} • Komisi: Rp ${parseInt(item.komisi).toLocaleString()}</span>
+                                <b>${item.armada}</b>
+                                <span>Komisi: Rp ${parseInt(item.komisi).toLocaleString()}</span>
                             </div>
-                            <div class="jam-text">ID: ${Math.floor(Math.random()*900)}</div>
+                            <div style="font-size:12px; font-weight:700;">${item.pax} Pax</div>
                         </div>
                     `;
                 }).join('');
@@ -190,16 +121,10 @@
                 list.innerHTML = "<p style='text-align:center; font-size:12px; opacity:0.5;'>Belum ada data.</p>";
             }
         } catch (e) {
-            document.getElementById('antreanList').innerHTML = "<p style='text-align:center; font-size:12px; color:#ff9999;'>Gagal terhubung ke Sheets.</p>";
+            document.getElementById('antreanList').innerHTML = "<p style='text-align:center; color:#ff9999;'>Gagal terhubung ke Sheets</p>";
         }
     }
-
-    // Toggle menu melayang
-    document.addEventListener('dblclick', () => {
-        document.querySelector('.nav-bottom').classList.toggle('nav-hidden');
-    });
-
-    loadDashboard();
+    window.onload = init;
 </script>
 </body>
 </html>
