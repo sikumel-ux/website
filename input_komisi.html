@@ -19,7 +19,7 @@
         <h3 style="margin-top:0; color:#065084">Input Komisi</h3>
         <form id="f">
             <label>Tanggal</label><input type="date" id="tgl" required>
-            <label>Armada</label><input type="text" id="arm" placeholder="Mahika 01" required>
+            <label>Armada</label><input type="text" id="arm" placeholder="Mahika" required>
             <label>Jumlah Pax</label><input type="number" id="pax" value="1" required>
             <label>Harga Tiket (Total)</label><input type="number" id="hrg" required>
             <label>Nominal Komisi (Rp)</label><input type="number" id="kms" style="border: 2px solid #065084" required>
@@ -27,7 +27,7 @@
         </form>
     </div>
     <script>
-        const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
+        const API = "https://script.google.com/macros/s/AKfycbwYjU8eEgrFHW9w6WsVPUw6H1GJOlXda_6Z-AhWmCBYRzAqCh2Rr8JO1WlDS3KH6YC9/exec";
         document.getElementById('tgl').valueAsDate = new Date();
         document.getElementById('f').onsubmit = async (e) => {
             e.preventDefault();
@@ -41,7 +41,7 @@
             p.append('harga', document.getElementById('hrg').value);
             p.append('komisi', document.getElementById('kms').value);
             await fetch(API, { method: 'POST', mode: 'no-cors', body: p });
-            alert("Berhasil!"); window.location.href="pendapatan.html";
+            alert("Berhasil!"); window.location.href="komisi.html";
         };
     </script>
 </body>
