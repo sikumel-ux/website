@@ -8,13 +8,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #065084; --bg: #043a60; --white: #ffffff; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--primary); color: var(--white); margin: 0; padding: 0; display: flex; justify-content: center; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--white); margin: 0; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 450px; min-height: 100vh; background: radial-gradient(circle at top right, var(--bg), var(--primary)); padding-bottom: 100px; }
         .header { padding: 40px 20px 20px; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .stat-card { background: var(--white); padding: 20px; border-radius: 20px; color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .stat-card span { font-size: 10px; font-weight: 700; color: #888; display: block; text-transform: uppercase; }
-        .stat-card strong { font-size: 16px; display: block; margin-top: 5px; color: var(--primary); }
+        .stat-card { background: var(--white); padding: 20px; border-radius: 20px; color: var(--primary); }
+        .stat-card span { font-size: 10px; font-weight: 700; color: #888; display: block; }
+        .stat-card strong { font-size: 16px; display: block; margin-top: 5px; }
         .list-container { padding: 20px; }
         .item-manifes { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; display: flex; align-items: center; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
         .tgl-box { width: 45px; height: 45px; background: var(--white); color: var(--primary); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-right: 15px; }
@@ -22,7 +22,7 @@
         .info b { font-size: 14px; display: block; }
         .info i { font-size: 11px; opacity: 0.7; font-style: normal; }
         .pax-badge { font-weight: 700; font-size: 14px; color: var(--gold); }
-        .nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: var(--white); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); }
+        .nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: var(--white); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 20px 20px 0 0; }
         .nav a { text-decoration: none; color: #ccc; text-align: center; font-size: 10px; flex: 1; }
         .nav a.active { color: var(--primary); }
         .nav i { font-size: 20px; display: block; margin-bottom: 5px; }
@@ -33,29 +33,29 @@
 <div class="container">
     <div class="header">
         <h1 style="font-size: 24px; margin: 0;">Mahika Trans</h1>
-        <p style="font-size: 12px; opacity: 0.7; margin: 5px 0 0;">Ringkasan Manifes & Komisi</p>
+        <p style="font-size: 12px; opacity: 0.7;">Ringkasan Manifes & Komisi</p>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card">
-            <span>Komisi Bln Ini</span>
+            <span>Komisi Bulan Ini</span>
             <strong id="totalKms">Rp 0</strong>
         </div>
         <div class="stat-card">
             <span>Total Pax</span>
-            <strong id="totalPax">0 Orang</strong>
+            <strong id="totalPax">0</strong>
         </div>
     </div>
 
-    <div style="padding: 25px 20px 10px; font-weight: 700; opacity: 0.9;">5 Manifes Terakhir</div>
-    <div class="list-container" id="listManifes">
-        <p style="text-align: center; opacity: 0.5; font-size: 12px;">Menghubungkan ke Sheets...</p>
+    <div style="padding: 25px 20px 10px; font-weight: 700;">Manifes Terbaru</div>
+    <div id="listManifes" class="list-container">
+        <p style="text-align: center; opacity: 0.5;">Menghubungkan...</p>
     </div>
 </div>
 
 <div class="nav">
-    <a href="dash.html" class="active"><i class="fas fa-home"></i>Home</a>
-    <a href="komisi.html"><i class="fas fa-plus-circle"></i>Input</a>
+    <a href="index.html" class="active"><i class="fas fa-home"></i>Home</a>
+    <a href="input_komisi.html"><i class="fas fa-plus-circle"></i>Input</a>
     <a href="pendapatan.html"><i class="fas fa-chart-bar"></i>Laporan</a>
 </div>
 
@@ -66,48 +66,41 @@
         try {
             const res = await fetch(`${API}?action=getPendapatan`);
             const data = await res.json();
-            
-            // Ambil bulan sekarang (MM)
             const blnIni = ("0" + (new Date().getMonth() + 1)).slice(-2);
             
             let kms = 0, pax = 0, html = "";
 
-            // Urutkan data berdasarkan tanggal terbaru
-            data.sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
+            if (data && data.length > 0) {
+                // Statistik
+                data.forEach(item => {
+                    if (item.tanggal && item.tanggal.split("-")[1] === blnIni) {
+                        kms += parseInt(item.komisi) || 0;
+                        pax += parseInt(item.pax) || 0;
+                    }
+                });
 
-            data.forEach((item, index) => {
-                // Hitung statistik bulan ini
-                if(item.tanggal && item.tanggal.split("-")[1] === blnIni) {
-                    kms += parseInt(item.komisi) || 0;
-                    pax += parseInt(item.pax) || 0;
-                }
-
-                // Tampilkan 5 manifes teratas
-                if(index < 5) {
+                // List 5 Terbaru
+                data.sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal)).slice(0, 5).forEach(item => {
                     const d = new Date(item.tanggal);
-                    const tgl = d.getDate() || "-";
-                    const bln = d.toLocaleDateString('id-ID', {month:'short'}) || "-";
-                    
                     html += `
                         <div class="item-manifes">
-                            <div class="tgl-box"><b>${tgl}</b>${bln}</div>
+                            <div class="tgl-box"><b>${d.getDate() || '?'}</b>${d.toLocaleDateString('id-ID',{month:'short'})}</div>
                             <div class="info">
-                                <b>${item.armada || 'Tanpa Nama'}</b>
-                                <i>Komisi: Rp ${parseInt(item.komisi || 0).toLocaleString()}</i>
+                                <b>${item.armada}</b>
+                                <i>Komisi: Rp ${parseInt(item.komisi).toLocaleString()}</i>
                             </div>
-                            <div class="pax-badge">${item.pax || 0} Pax</div>
-                        </div>
-                    `;
-                }
-            });
+                            <div class="pax-badge">${item.pax}</div>
+                        </div>`;
+                });
 
-            document.getElementById('totalKms').innerText = "Rp " + kms.toLocaleString('id-ID');
-            document.getElementById('totalPax').innerText = pax + " Orang";
-            document.getElementById('listManifes').innerHTML = html || "<p style='text-align:center; font-size:12px;'>Belum ada data bulan ini.</p>";
-
+                document.getElementById('totalKms').innerText = "Rp " + kms.toLocaleString('id-ID');
+                document.getElementById('totalPax').innerText = pax + " Orang";
+                document.getElementById('listManifes').innerHTML = html;
+            } else {
+                document.getElementById('listManifes').innerHTML = "Belum ada data di Sheets.";
+            }
         } catch (e) {
-            console.error(e);
-            document.getElementById('listManifes').innerHTML = "<p style='text-align:center; color:#ff9999; font-size:12px;'>Gagal memuat data. Cek koneksi atau Deployment API.</p>";
+            document.getElementById('listManifes').innerHTML = "Gagal memuat. Periksa koneksi/Deployment API.";
         }
     }
     window.onload = loadDashboard;
