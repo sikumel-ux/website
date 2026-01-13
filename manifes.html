@@ -74,7 +74,7 @@
         <div class="header-card">
             <i class="fas fa-users-viewfinder"></i>
             <h2>Manifes Penumpang</h2>
-            <p id="countPsg"><i class="fas fa-circle-notchx fa-spinx"></i> Memuat data...</p>
+            <p id="countPsg"><i class="fas fa-circle-notch fa-spin"></i> Memuat data...</p>
         </div>
     </div>
 
@@ -147,7 +147,7 @@
                             </div>`;
                     });
                     
-                    document.getElementById("countPsg").innerHTML = `<i class="fas fa-user-check"></i> ${dataFilter.length} Penumpang Aktif`;
+                    document.getElementById("countPsg").innerHTML = `${dataFilter.length} Penumpang`;
                 }
             } catch (e) { 
                 document.getElementById("countPsg").innerText = "Gagal memuat data."; 
