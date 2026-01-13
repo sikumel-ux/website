@@ -10,9 +10,20 @@
         :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
         body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; }
         
-        .header-section { padding: 50px 25px 30px; text-align: center; }
-        .header-section h2 { margin: 0; font-weight: 700; }
-        #countPsg { opacity: 0.8; font-size: 14px; margin-top: 5px; }
+        /* HEADER CARD */
+        .header-section { padding: 40px 20px 20px; }
+        .header-card { 
+            background: rgba(255,255,255,0.1); 
+            backdrop-filter: blur(15px); 
+            border-radius: 25px; 
+            padding: 25px; 
+            text-align: center; 
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header-card i { font-size: 30px; color: var(--gold); margin-bottom: 10px; }
+        .header-card h2 { margin: 0; font-weight: 700; font-size: 22px; letter-spacing: 1px; }
+        #countPsg { opacity: 0.8; font-size: 13px; margin-top: 5px; }
 
         #manifesContainer { padding: 10px 20px 140px; }
         
@@ -32,8 +43,8 @@
         .info-psg small { display: block; margin-top: 3px; font-size: 11px; opacity: 0.8; }
 
         .btn-aksi { 
-            width: 40px; 
-            height: 40px; 
+            width: 42px; 
+            height: 42px; 
             border-radius: 12px; 
             background: rgba(255,255,255,0.05); 
             color: #fff; 
@@ -42,27 +53,17 @@
             align-items: center; 
             justify-content: center; 
             text-decoration: none; 
-            font-size: 16px; 
+            font-size: 18px; 
             transition: 0.3s;
         }
         .btn-aksi:active { background: rgba(255,255,255,0.2); transform: scale(0.9); }
 
         .nav-bottom { 
-            position: fixed; 
-            bottom: 20px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 90%; 
-            max-width: 400px; 
-            background: rgba(255, 255, 255, 0.95); 
-            display: flex; 
-            justify-content: space-around; 
-            padding: 15px 0; 
-            border-radius: 25px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            z-index: 100;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); 
+            display: flex; justify-content: space-around; padding: 15px 0; 
+            border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 100;
         }
-        
         .nav-bottom a { text-decoration: none; color: #999; font-size: 10px; text-align: center; font-weight: 600; }
         .nav-bottom a i { font-size: 18px; display: block; margin-bottom: 3px; }
         .nav-bottom a.active { color: var(--primary-blue); }
@@ -70,8 +71,11 @@
 </head>
 <body>
     <div class="header-section">
-        <h2>Manifes Penumpang</h2>
-        <p id="countPsg">Menghubungkan database...</p>
+        <div class="header-card">
+            <i class="fas fa-users-viewfinder"></i>
+            <h2>Manifes Penumpang</h2>
+            <p id="countPsg"><i class="fas fa-circle-notch fa-spin"></i> Memuat data...</p>
+        </div>
     </div>
 
     <div id="manifesContainer"></div>
@@ -88,80 +92,67 @@
 
         async function loadManifes() {
             try {
-                const res = await fetch(`${API}?action=readManifes`);
+                // Tambahkan anti-cache
+                const res = await fetch(`${API}?action=readManifes&t=${new Date().getTime()}`);
                 const result = await res.json();
                 const container = document.getElementById("manifesContainer");
                 container.innerHTML = "";
                 
                 if (result.status === "success") {
-                    // 1. Ambil Waktu Sekarang (Set jam 00:00:00)
-                    const hariIni = new Date();
-                    hariIni.setHours(0, 0, 0, 0);
+                    const skrg = new Date();
+                    skrg.setHours(0, 0, 0, 0);
 
-                    // 2. Filter: Hanya data hari ini dan mendatang
+                    // Filter hari ini dan mendatang
                     const dataFilter = result.data.filter(item => {
                         const tglTiket = new Date(item.tanggal);
                         tglTiket.setHours(0, 0, 0, 0);
-                        return tglTiket >= hariIni;
+                        return tglTiket >= skrg;
                     });
 
-                    // 3. Tampilkan Data (Urutan input terbaru di atas)
                     dataFilter.reverse().forEach(data => {
-                        // Format Tanggal (Dari ISO ke Lokal Indonesia)
-                        const d = new Date(data.tanggal);
-                        const tglRapi = d.toLocaleDateString('id-ID', { 
-                            day: '2-digit', 
-                            month: 'short', 
-                            year: 'numeric' 
-                        });
+                        // Fix Tanggal
+                        const tglRaw = data.tanggal.split("T")[0]; 
+                        const p = tglRaw.split("-");
+                        const d = new Date(p[0], p[1] - 1, p[2]);
+                        const tglRapi = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 
-                        // --- FIX NOMOR WHATSAPP ---
-                        // Ambil hanya angka, hilangkan spasi/tanda baca
-                        let cleanPhone = data.hp ? data.hp.toString().replace(/\D/g, '') : "";
-                        let finalPhone = "";
+                        // --- FIX WHATSAPP +62 OTOMATIS ---
+                        let hp = data.hp ? data.hp.toString().replace(/\D/g, '') : "";
+                        if (hp.startsWith('0')) hp = '62' + hp.slice(1);
+                        else if (hp.startsWith('8')) hp = '62' + hp;
+                        // Jika sudah 62, biarkan saja.
 
-                        if (cleanPhone.startsWith('62')) {
-                            finalPhone = cleanPhone;
-                        } else if (cleanPhone.startsWith('0')) {
-                            finalPhone = '62' + cleanPhone.slice(1);
-                        } else if (cleanPhone.startsWith('8')) {
-                            finalPhone = '62' + cleanPhone;
-                        } else {
-                            finalPhone = cleanPhone;
-                        }
-                        
-                        // Isi Pesan WhatsApp & URL Etiket
-                        const origin = window.location.origin;
-                        const urlEtiket = `${origin}/etiket.html?kode=${data.kode}`;
-                        const textWA = `Halo Kak *${data.nama}*, Berikut E-Tiket Mahika Trans Anda.%0A%0AKode: *${data.kode}*%0AJadwal: ${tglRapi} - ${data.jam}%0A%0ALink Tiket:%0A${urlEtiket}`;
+                        const noKursi = data.kursi || "-";
+                        const kodeBooking = data.kode || "TANPA-KODE";
+
+                        // FORMAT PESAN & LINK
+                        const urlEtiket = `${window.location.origin}/etiket.html?kode=${kodeBooking}`;
+                        const textWA = `Halo, kak *${data.nama}*..%0ABerikut adalah data pemesanan tiket Anda di Mahika Trans.%0A%0ATanggal: ${tglRapi}%0AJam: ${data.jam}%0ANama: ${data.nama}%0AArmada: ${data.armada}%0ATujuan: ${data.tujuan}%0ANo kursi: ${noKursi}%0A%0AKode Pemesanan: *${kodeBooking}*%0AEtiket Anda: ${urlEtiket}%0A%0A--------------------------%0A%0AHarap datang selambat-lambatnya 30 menit sebelum jam jadwal pemberangkatan.%0A%0ATerimakasih.`;
 
                         container.innerHTML += `
                             <div class="card-manifes">
                                 <div class="info-psg">
                                     <h4>${data.nama}</h4>
-                                    <small><i class="far fa-calendar"></i> ${tglRapi} • ${data.jam}</small>
+                                    <small><i class="far fa-calendar"></i> ${tglRapi} • ${data.jam} • Kursi: ${noKursi}</small>
                                     <small><i class="fas fa-bus"></i> ${data.armada} • ${data.tujuan}</small>
                                 </div>
                                 <div style="display:flex; gap:8px;">
-                                    <a href="https://wa.me/${finalPhone}?text=${textWA}" target="_blank" class="btn-aksi">
+                                    <a href="https://wa.me/${hp}?text=${textWA}" target="_blank" class="btn-aksi">
                                         <i class="fab fa-whatsapp"></i>
                                     </a>
-                                    <a href="etiket.html?kode=${data.kode}" class="btn-aksi">
+                                    <a href="etiket.html?kode=${kodeBooking}" class="btn-aksi">
                                         <i class="fas fa-ticket-alt"></i>
                                     </a>
                                 </div>
                             </div>`;
                     });
                     
-                    document.getElementById("countPsg").innerText = dataFilter.length + " Penumpang Aktif Hari Ini";
-                } else {
-                    document.getElementById("countPsg").innerText = "Belum ada jadwal hari ini.";
+                    document.getElementById("countPsg").innerHTML = `<i class="fas fa-user-check"></i> ${dataFilter.length} Penumpang Aktif`;
                 }
             } catch (e) { 
-                document.getElementById("countPsg").innerText = "Koneksi Bermasalah."; 
+                document.getElementById("countPsg").innerText = "Gagal memuat data."; 
             }
         }
-
         window.onload = loadManifes;
     </script>
 </body>
