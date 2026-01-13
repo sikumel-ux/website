@@ -1,0 +1,41 @@
+<div class="ticket-header" style="background:white; color:#065084; padding:20px; border-radius:20px 20px 0 0; border-bottom:2px dashed #ccc; text-align:center; position:relative;">
+    <i class="fas fa-ticket-alt" style="font-size:30px;"></i>
+    <h2 style="margin:5px 0;">BOOKING TIKET</h2>
+    <div style="position:absolute; bottom:-10px; left:-10px; width:20px; height:20px; background:#065084; border-radius:50%;"></div>
+    <div style="position:absolute; bottom:-10px; right:-10px; width:20px; height:20px; background:#065084; border-radius:50%;"></div>
+</div>
+
+<script>
+    const API = "https://script.google.com/macros/s/AKfycbwYjU8eEgrFHW9w6WsVPUw6H1GJOlXda_6Z-AhWmCBYRzAqCh2Rr8JO1WlDS3KH6YC9/exec";
+    document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btnSimpan');
+        btn.disabled = true;
+        btn.innerHTML = "Memproses...";
+
+        const data = {
+            action: 'saveBooking',
+            nama: document.getElementById('nama').value,
+            no_hp: document.getElementById('no_hp').value,
+            no_kursi: document.getElementById('no_kursi').value,
+            tanggal: document.getElementById('tanggal').value,
+            jam: document.getElementById('jam').value,
+            armada: document.getElementById('armada').value,
+            tujuan: document.getElementById('tujuan').value,
+            harga: document.getElementById('harga').value,
+            kode: "MHK" + Math.floor(1000 + Math.random() * 9000)
+        };
+
+        const p = new URLSearchParams(data);
+        await fetch(API, { method: 'POST', mode: 'no-cors', body: p });
+
+        // WhatsApp Logic
+        let hp = data.no_hp.replace(/\D/g, '');
+        if (hp.startsWith('0')) hp = '62' + hp.slice(1);
+        const urlEtiket = window.location.href.replace('input.html','etiket.html') + "?kode=" + data.kode;
+        const text = `Halo *${data.nama}*, Tiket Anda berhasil dipesan.%0AKode: *${data.kode}*%0ACek Tiket: ${urlEtiket}`;
+        
+        window.open(`https://wa.me/${hp}?text=${text}`, '_blank');
+        window.location.href = "manifes.html";
+    });
+</script>
