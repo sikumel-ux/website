@@ -5,105 +5,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Mahika Trans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #065084; --bg: #043a60; --white: #ffffff; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--white); margin: 0; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 450px; min-height: 100vh; background: radial-gradient(circle at top right, var(--bg), var(--primary)); padding-bottom: 100px; }
-        .header { padding: 40px 20px 20px; }
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; }
+        
+        /* Header & Stats */
+        .etiket-header { padding: 50px 25px 30px 25px; }
+        .etiket-header h1 { font-size: 14px; margin: 0; opacity: 0.7; font-weight: 300; }
+        .etiket-header h2 { font-size: 26px; margin: 5px 0 0 0; font-weight: 700; }
+
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .stat-card { background: var(--white); padding: 20px; border-radius: 20px; color: var(--primary); }
-        .stat-card span { font-size: 10px; font-weight: 700; color: #888; display: block; }
-        .stat-card strong { font-size: 16px; display: block; margin-top: 5px; }
-        .list-container { padding: 20px; }
-        .item-manifes { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; display: flex; align-items: center; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
-        .tgl-box { width: 45px; height: 45px; background: var(--white); color: var(--primary); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-right: 15px; }
-        .info { flex: 1; }
-        .info b { font-size: 14px; display: block; }
-        .info i { font-size: 11px; opacity: 0.7; font-style: normal; }
-        .pax-badge { font-weight: 700; font-size: 14px; color: var(--gold); }
-        .nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: var(--white); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 20px 20px 0 0; }
-        .nav a { text-decoration: none; color: #ccc; text-align: center; font-size: 10px; flex: 1; }
-        .nav a.active { color: var(--primary); }
-        .nav i { font-size: 20px; display: block; margin-bottom: 5px; }
+        .stat-card { background: var(--white); padding: 20px 15px; border-radius: 24px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); color: var(--primary-blue); }
+        .stat-card span { display: block; font-size: 9px; color: #666; font-weight: 700; text-transform: uppercase; }
+        .stat-card strong { font-size: 16px; font-weight: 700; }
+
+        .section-title { padding: 35px 25px 15px 25px; font-size: 16px; font-weight: 600; opacity: 0.9; }
+
+        /* List Style agar mirip manifes.html */
+        .antrean-list { padding: 0 20px 120px; }
+        .card-mini { 
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); 
+            border-radius: 20px; padding: 15px; margin-bottom: 12px; 
+            display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.1); 
+        }
+        .tgl-badge { 
+            width: 45px; height: 45px; background: var(--white); color: var(--primary-blue); 
+            border-radius: 12px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; font-size: 9px; font-weight: 700; margin-right: 15px; 
+        }
+        .info-mini { flex: 1; }
+        .info-mini b { font-size: 14px; color: var(--gold); display: block; }
+        .info-mini small { font-size: 11px; opacity: 0.8; }
+
+        /* Nav Bottom */
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; }
+        .nav-bottom a { text-decoration: none; color: #999; text-align: center; font-size: 10px; font-weight: 600; }
+        .nav-bottom a i { font-size: 18px; margin-bottom: 4px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1 style="font-size: 24px; margin: 0;">Mahika Trans</h1>
-        <p style="font-size: 12px; opacity: 0.7;">Ringkasan Manifes & Komisi</p>
-    </div>
+<div class="etiket-header">
+    <h1 id="greeting">Selamat Hari Ini,</h1>
+    <h2>Mahika Trans</h2>
+</div>
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <span>Komisi Bulan Ini</span>
-            <strong id="totalKms">Rp 0</strong>
-        </div>
-        <div class="stat-card">
-            <span>Total Pax</span>
-            <strong id="totalPax">0</strong>
-        </div>
+<div class="stats-grid">
+    <div class="stat-card">
+        <i class="fas fa-users" style="font-size: 14px; margin-bottom: 5px;"></i>
+        <span>PENUMPANG HARI INI</span>
+        <strong id="statPax">0 Orang</strong>
     </div>
-
-    <div style="padding: 25px 20px 10px; font-weight: 700;">Manifes Terbaru</div>
-    <div id="listManifes" class="list-container">
-        <p style="text-align: center; opacity: 0.5;">Menghubungkan...</p>
+    <div class="stat-card">
+        <i class="fas fa-calendar-check" style="font-size: 14px; margin-bottom: 5px;"></i>
+        <span>TOTAL AKTIF</span>
+        <strong id="statTotal">0 Data</strong>
     </div>
 </div>
 
-<div class="nav">
-    <a href="index.html" class="active"><i class="fas fa-home"></i>Home</a>
-    <a href="input_komisi.html"><i class="fas fa-plus-circle"></i>Input</a>
-    <a href="pendapatan.html"><i class="fas fa-chart-bar"></i>Laporan</a>
+<div class="section-title"><span>Keberangkatan Terdekat</span></div>
+
+<div id="antreanList" class="antrean-list">
+    <p style="text-align: center; opacity: 0.5; font-size: 12px; margin-top: 20px;">Memuat data manifes...</p>
+</div>
+
+<div class="nav-bottom">
+    <a href="index.html" class="active"><i class="fas fa-house"></i>Home</a>
+    <a href="input.html"><i class="fas fa-circle-plus"></i>Booking</a>
+    <a href="manifes.html"><i class="fas fa-file-lines"></i>Manifes</a>
+    <a href="pendapatan.html"><i class="fas fa-chart-pie"></i>Laporan</a>
 </div>
 
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbwqXhQ7Pcno7vvbXnGTDysQPt5zpGj9Hr6Jq-c8RlBIyXmPcysvLBzEIb0dmV13cApd/exec";
+    const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
+
+    // Salam Dinamis
+    const jam = new Date().getHours();
+    const salam = jam < 11 ? "Selamat Pagi" : jam < 15 ? "Selamat Siang" : jam < 19 ? "Selamat Sore" : "Selamat Malam";
+    document.getElementById('greeting').innerText = salam + ",";
 
     async function loadDashboard() {
         try {
-            const res = await fetch(`${API}?action=getPendapatan`);
-            const data = await res.json();
-            const blnIni = ("0" + (new Date().getMonth() + 1)).slice(-2);
-            
-            let kms = 0, pax = 0, html = "";
+            // Gunakan action=readManifes sesuai script suksesmu
+            const res = await fetch(`${API}?action=readManifes&t=${new Date().getTime()}`);
+            const result = await res.json();
+            const listContainer = document.getElementById("antreanList");
 
-            if (data && data.length > 0) {
-                // Statistik
-                data.forEach(item => {
-                    if (item.tanggal && item.tanggal.split("-")[1] === blnIni) {
-                        kms += parseInt(item.komisi) || 0;
-                        pax += parseInt(item.pax) || 0;
-                    }
+            if (result.status === "success") {
+                const skrg = new Date();
+                skrg.setHours(0, 0, 0, 0);
+
+                // 1. Filter data mulai hari ini ke depan (Aktif)
+                const dataAktif = result.data.filter(item => {
+                    const tglTiket = new Date(item.tanggal);
+                    tglTiket.setHours(0, 0, 0, 0);
+                    return tglTiket >= skrg;
                 });
 
-                // List 5 Terbaru
-                data.sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal)).slice(0, 5).forEach(item => {
-                    const d = new Date(item.tanggal);
-                    html += `
-                        <div class="item-manifes">
-                            <div class="tgl-box"><b>${d.getDate() || '?'}</b>${d.toLocaleDateString('id-ID',{month:'short'})}</div>
-                            <div class="info">
-                                <b>${item.armada}</b>
-                                <i>Komisi: Rp ${parseInt(item.komisi).toLocaleString()}</i>
+                // 2. Hitung Pax khusus hari ini saja
+                const paxHariIni = dataAktif.filter(item => {
+                    const tgl = new Date(item.tanggal);
+                    tgl.setHours(0, 0, 0, 0);
+                    return tgl.getTime() === skrg.getTime();
+                }).length;
+
+                // Update Stats
+                document.getElementById('statPax').innerText = paxHariIni + " Orang";
+                document.getElementById('statTotal').innerText = dataAktif.length + " Data";
+
+                // 3. Tampilkan 5 Data Terdekat (Urutkan dari yang paling baru diinput)
+                const tampilkan = dataAktif.reverse().slice(0, 8);
+
+                if (tampilkan.length > 0) {
+                    listContainer.innerHTML = tampilkan.map(item => {
+                        const tgl = new Date(item.tanggal);
+                        const tglRapi = tgl.getDate();
+                        const blnRapi = tgl.toLocaleDateString('id-ID', { month: 'short' });
+
+                        return `
+                            <div class="card-mini" onclick="location.href='manifes.html'">
+                                <div class="tgl-badge"><b>${tglRapi}</b>${blnRapi}</div>
+                                <div class="info-mini">
+                                    <b>${item.nama}</b>
+                                    <small>${item.armada} • ${item.jam} • Kursi ${item.kursi}</small>
+                                </div>
+                                <i class="fas fa-chevron-right" style="opacity:0.3; font-size:12px;"></i>
                             </div>
-                            <div class="pax-badge">${item.pax}</div>
-                        </div>`;
-                });
-
-                document.getElementById('totalKms').innerText = "Rp " + kms.toLocaleString('id-ID');
-                document.getElementById('totalPax').innerText = pax + " Orang";
-                document.getElementById('listManifes').innerHTML = html;
-            } else {
-                document.getElementById('listManifes').innerHTML = "Belum ada data di Sheets.";
+                        `;
+                    }).join('');
+                } else {
+                    listContainer.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:12px;'>Tidak ada jadwal keberangkatan.</p>";
+                }
             }
         } catch (e) {
-            document.getElementById('listManifes').innerHTML = "Gagal memuat. Periksa koneksi/Deployment API.";
+            listContainer.innerHTML = "<p style='text-align:center; color:#ff9999; font-size:12px;'>Gagal memuat data dashboard.</p>";
         }
     }
+
     window.onload = loadDashboard;
 </script>
+
 </body>
 </html>
