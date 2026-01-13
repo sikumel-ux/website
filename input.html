@@ -7,39 +7,60 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; display: flex; justify-content: center; color: var(--white); min-height: 100vh; }
-        
-        .etiket-container { width: 100%; max-width: 450px; padding-bottom: 120px; }
-        
-        /* HEADER GAYA ETIKET */
-        .header-section { padding: 40px 20px 20px; }
-        .ticket-style {
-            background: var(--white);
-            color: var(--primary-blue);
-            padding: 25px;
-            border-radius: 20px 20px 0 0;
-            text-align: center;
-            position: relative;
-            border-bottom: 2px dashed #ccc; /* Garis potong tiket */
-        }
-        .ticket-style i { font-size: 30px; margin-bottom: 10px; color: var(--primary-blue); }
-        .ticket-style h2 { margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        
-        /* Bulatan potong tiket di samping */
-        .ticket-style::before, .ticket-style::after {
-            content: ''; position: absolute; bottom: -10px; width: 20px; height: 20px; background: var(--primary-blue); border-radius: 50%;
-        }
-        .ticket-style::before { left: -10px; }
-        .ticket-style::after { right: -10px; }
+    
+        <style>
+    :root { 
+        --primary-blue: #065084; 
+        --bg-darker: #043a60; /* Kita pakai warna ini sebagai background utama */
+        --white: #ffffff; 
+        --gold: #FFD700; 
+    }
 
-        .card-form { 
-            background: var(--white); 
-            margin: 0 20px; 
-            padding: 25px 20px 35px; 
-            border-radius: 0 0 20px 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
-        }
+    body { 
+        font-family: 'Poppins', sans-serif; 
+        background-color: var(--bg-darker); /* Ganti dari radial-gradient ke solid color */
+        margin: 0; 
+        display: flex; 
+        justify-content: center; 
+        color: var(--white); 
+        min-height: 100vh; 
+    }
+    
+    .etiket-container { width: 100%; max-width: 450px; padding-bottom: 120px; }
+    
+    /* HEADER GAYA ETIKET */
+    .header-section { padding: 40px 20px 20px; }
+    .ticket-style {
+        background: var(--white);
+        color: var(--primary-blue);
+        padding: 25px;
+        border-radius: 20px 20px 0 0;
+        text-align: center;
+        position: relative;
+        border-bottom: 2px dashed #ccc;
+    }
+
+    /* Bulatan potong tiket - Sekarang warnanya sama persis dengan body */
+    .ticket-style::before, .ticket-style::after {
+        content: ''; 
+        position: absolute; 
+        bottom: -10px; 
+        width: 20px; 
+        height: 20px; 
+        background-color: var(--bg-darker); /* Ini kuncinya, harus sama dengan background body */
+        border-radius: 50%;
+    }
+    .ticket-style::before { left: -10px; }
+    .ticket-style::after { right: -10px; }
+
+    /* Sisa CSS lainnya tetap sama */
+    .card-form { 
+        background: var(--white); 
+        margin: 0 20px; 
+        padding: 25px 20px 35px; 
+        border-radius: 0 0 20px 20px; 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+    }
         
         label { display: block; font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 5px; margin-left: 5px; }
         input { 
