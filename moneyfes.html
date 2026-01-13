@@ -9,61 +9,17 @@
     <style>
         :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
         body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; }
-        
         .header-section { padding: 40px 20px 20px; }
-        .header-card { 
-            background: rgba(255,255,255,0.1); 
-            backdrop-filter: blur(15px); 
-            border-radius: 25px; 
-            padding: 25px; 
-            text-align: center; 
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .header-card h2 { margin: 0; font-weight: 700; font-size: 22px; letter-spacing: 1px; }
+        .header-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); border-radius: 25px; padding: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
+        .header-card h2 { margin: 0; font-weight: 700; font-size: 22px; }
         #countPsg { opacity: 0.8; font-size: 13px; margin-top: 5px; }
-
         #manifesContainer { padding: 10px 20px 140px; }
-        
-        .card-manifes { 
-            background: rgba(255,255,255,0.1); 
-            backdrop-filter: blur(10px); 
-            border-radius: 20px; 
-            padding: 18px; 
-            margin-bottom: 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border: 1px solid rgba(255,255,255,0.1); 
-        }
-
-        .info-psg h4 { margin: 0; color: var(--gold); text-transform: uppercase; font-size: 15px; letter-spacing: 0.5px; }
+        .card-manifes { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 18px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
+        .info-psg h4 { margin: 0; color: var(--gold); text-transform: uppercase; font-size: 15px; }
         .info-psg small { display: block; margin-top: 3px; font-size: 11px; opacity: 0.8; }
-
-        .btn-aksi { 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 12px; 
-            background: rgba(255,255,255,0.05); 
-            color: #fff; 
-            border: 1px solid rgba(255,255,255,0.2); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            text-decoration: none; 
-            font-size: 16px; 
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .btn-aksi:active { background: rgba(255,255,255,0.2); transform: scale(0.9); }
-        .btn-aksi i.fa-trash { color: #ff6b6b; } /* Pemanis dikit buat icon hapus */
-
-        .nav-bottom { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
-            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); 
-            display: flex; justify-content: space-around; padding: 15px 0; 
-            border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 100;
-        }
+        .btn-aksi { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 16px; transition: 0.3s; cursor: pointer; }
+        .btn-aksi:active { transform: scale(0.9); }
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 100; }
         .nav-bottom a { text-decoration: none; color: #999; font-size: 10px; text-align: center; font-weight: 600; }
         .nav-bottom a i { font-size: 18px; display: block; margin-bottom: 3px; }
         .nav-bottom a.active { color: var(--primary-blue); }
@@ -76,9 +32,7 @@
             <p id="countPsg">Sinkronisasi data...</p>
         </div>
     </div>
-
     <div id="manifesContainer"></div>
-
     <div class="nav-bottom">
         <a href="index.html"><i class="fas fa-house"></i>Home</a>
         <a href="input.html"><i class="fas fa-circle-plus"></i>Booking</a>
@@ -91,7 +45,6 @@
 
         async function loadManifes() {
             try {
-                // Anti-cache t=${timestamp}
                 const res = await fetch(`${API}?action=readManifes&t=${new Date().getTime()}`);
                 const result = await res.json();
                 const container = document.getElementById("manifesContainer");
@@ -101,7 +54,6 @@
                     const skrg = new Date();
                     skrg.setHours(0, 0, 0, 0);
 
-                    // Filter hanya data hari ini & masa depan
                     const dataFilter = result.data.filter(item => {
                         if (!item.tanggal) return false;
                         const tglTiket = new Date(item.tanggal);
@@ -110,21 +62,21 @@
                     });
 
                     dataFilter.reverse().forEach(data => {
-                        // Fix Tanggal agar tidak geser hari
+                        // Fix Tanggal
                         const tglString = data.tanggal.split("T")[0]; 
                         const p = tglString.split("-");
                         const d = new Date(p[0], p[1] - 1, p[2]);
                         const tglRapi = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 
-                        // Fix WhatsApp +62
+                        // Fix WhatsApp
                         let hp = data.hp ? data.hp.toString().replace(/\D/g, '') : "";
                         if (hp.startsWith('0')) hp = '62' + hp.slice(1);
                         else if (hp.startsWith('8')) hp = '62' + hp;
 
-                        // Link Etiket Relatif (Mencegah 404)
-                        const urlEtiket = `${window.location.origin}${window.location.pathname.replace('manifes.html', 'etiket.html')}?kode=${data.kode}`;
+                        // --- FIX LINK WHATSAPP (CARA PALING AMAN) ---
+                        const base_url = window.location.href.split('manifes.html')[0];
+                        const urlEtiket = base_url + "etiket.html?kode=" + data.kode;
                         
-                        // Pesan WA
                         const textWA = `Halo, kak *${data.nama}*..%0ABerikut adalah data pemesanan tiket Anda di Mahika Trans.%0A%0ATanggal: ${tglRapi}%0AJam: ${data.jam}%0ANama: ${data.nama}%0AArmada: ${data.armada}%0ATujuan: ${data.tujuan}%0ANo kursi: ${data.kursi}%0A%0AKode Pemesanan: *${data.kode}*%0AEtiket Anda: ${urlEtiket}%0A%0A--------------------------%0A%0AHarap datang selambat-lambatnya 30 menit sebelum jam jadwal pemberangkatan.%0A%0ATerimakasih.`;
 
                         container.innerHTML += `
@@ -135,55 +87,28 @@
                                     <small>${data.armada} • ${data.tujuan}</small>
                                 </div>
                                 <div style="display:flex; gap:8px;">
-                                    <a href="https://wa.me/${hp}?text=${textWA}" target="_blank" class="btn-aksi">
-                                        <i class="fab fa-whatsapp"></i>
-                                    </a>
-                                    <a href="etiket.html?kode=${data.kode}" class="btn-aksi">
-                                        <i class="fas fa-ticket-alt"></i>
-                                    </a>
-                                    <div onclick="hapusData('${data.kode}')" class="btn-aksi">
-                                        <i class="fas fa-trash"></i>
-                                    </div>
+                                    <a href="https://wa.me/${hp}?text=${textWA}" target="_blank" class="btn-aksi"><i class="fab fa-whatsapp"></i></a>
+                                    <a href="etiket.html?kode=${data.kode}" class="btn-aksi"><i class="fas fa-ticket-alt"></i></a>
+                                    <div onclick="hapusData('${data.kode}')" class="btn-aksi"><i class="fas fa-trash"></i></div>
                                 </div>
                             </div>`;
                     });
-                    
                     document.getElementById("countPsg").innerText = dataFilter.length + " Penumpang Aktif";
                 }
-            } catch (e) { 
-                document.getElementById("countPsg").innerText = "Gagal memuat data."; 
-            }
+            } catch (e) { document.getElementById("countPsg").innerText = "Gagal memuat."; }
         }
 
         async function hapusData(kode) {
-            if (confirm("Hapus data penumpang dengan kode " + kode + "?")) {
+            if (confirm("Hapus data " + kode + "?")) {
                 const card = document.getElementById(`card-${kode}`);
-                const icon = card.querySelector('.fa-trash');
-                
-                // Animasi Loading
-                icon.className = "fas fa-circle-notch fa-spin";
-                
                 try {
                     const res = await fetch(`${API}?action=deleteBooking&kode=${kode}`);
                     const result = await res.json();
-                    
                     if (result.status === "success") {
-                        card.style.opacity = "0";
-                        card.style.transform = "translateX(20px)";
-                        setTimeout(() => {
-                            card.remove();
-                            // Update counter
-                            const currentCount = parseInt(document.getElementById("countPsg").innerText);
-                            document.getElementById("countPsg").innerText = (currentCount - 1) + " Penumpang Aktif";
-                        }, 300);
-                    } else {
-                        alert("Gagal menghapus!");
-                        icon.className = "fas fa-trash";
+                        card.remove();
+                        location.reload(); // Refresh biar counter update
                     }
-                } catch (e) {
-                    alert("Koneksi Error!");
-                    icon.className = "fas fa-trash";
-                }
+                } catch (e) { alert("Error koneksi!"); }
             }
         }
 
