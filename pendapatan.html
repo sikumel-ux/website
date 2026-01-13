@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Komisi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { font-family: Arial; background: #043a60; color: white; margin: 0; padding: 20px; }
+        .header-total { background: #065084; padding: 20px; border-radius: 15px; text-align: center; border: 2px dashed #FFD700; margin-bottom: 20px; }
+        select { width: 100%; padding: 10px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; }
+        .card { background: white; color: #333; border-radius: 15px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #eee; padding: 12px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+<div class="header-total">
+    <small id="lblBulan">Total Komisi</small>
+    <h2 id="totalBesar" style="color:#FFD700; margin:5px 0;">Rp 0</h2>
+</div>
+
+<select id="bln"><option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option><option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option><option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select>
+
+<div class="card">
+    <table>
+        <thead><tr><th>Tanggal</th><th>Pax</th><th>Komisi</th></tr></thead>
+        <tbody id="bodyTabel"></tbody>
+    </table>
+</div>
+
+<script>
+    const API = "https://script.google.com/macros/s/AKfycbwYjU8eEgrFHW9w6WsVPUw6H1GJOlXda_6Z-AhWmCBYRzAqCh2Rr8JO1WlDS3KH6YC9/exec";
+    const blnNow = ("0" + (new Date().getMonth() + 1)).slice(-2);
+    document.getElementById('bln').value = blnNow;
+
+    async function load() {
+        const res = await fetch(API + "?action=getPendapatan");
+        const data = await res.json();
+        
+        const render = () => {
+            const b = document.getElementById('bln').value;
+            const bNama = document.getElementById('bln').options[document.getElementById('bln').selectedIndex].text;
+            let h = "", t = 0;
+            
+            data.filter(i => i.tanggal.split("-")[1] === b).forEach(i => {
+                h += `<tr><td>${i.tanggal.split("-")[2]}</td><td>${i.pax}</td><td>${parseInt(i.komisi).toLocaleString()}</td></tr>`;
+                t += parseInt(item.komisi);
+            });
+            
+            document.getElementById('bodyTabel').innerHTML = h;
+            document.getElementById('totalBesar').innerText = "Rp " + t.toLocaleString();
+            document.getElementById('lblBulan').innerText = "Total Komisi Bulan " + bNama;
+        }
+        document.getElementById('bln').onchange = render;
+        render();
+    }
+    window.onload = load;
+</script>
+</body>
+</html>
