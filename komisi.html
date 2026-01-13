@@ -5,177 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Komisi | Mahika Trans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --primary-blue: #065084; 
-            --bg-solid: #043a60; 
-            --white: #ffffff; 
-            --accent: #FFD700; 
-        }
-
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background-color: var(--bg-solid); 
-            margin: 0; 
-            color: var(--white); 
-            min-height: 100vh;
-        }
-
-        .container { padding: 20px; max-width: 500px; margin: auto; }
-
-        header { text-align: center; padding: 10px 0 20px; }
+        :root { --primary: #065084; --bg: #043a60; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg); margin: 0; color: var(--white); padding: 20px; }
+        .container { max-width: 450px; margin: auto; }
         
-        /* Header Dinamis Penjumlahan */
-        .header-total {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px dashed var(--accent);
-            margin-bottom: 20px;
+        /* Header Jumlah Komisi */
+        .header-box { 
+            background: rgba(255,255,255,0.1); border: 2px dashed var(--gold); 
+            border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 20px;
         }
-        .header-total span { display: block; font-size: 12px; opacity: 0.8; margin-bottom: 5px; }
-        .header-total h2 { margin: 0; color: var(--accent); font-size: 20px; }
+        .header-box span { font-size: 12px; opacity: 0.8; text-transform: uppercase; }
+        .header-box h2 { margin: 5px 0 0; color: var(--gold); font-size: 24px; letter-spacing: 1px; }
 
-        /* Filter Bulan */
-        .filter-section {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        select {
-            flex: 1;
-            padding: 10px;
-            border-radius: 10px;
-            border: none;
-            font-family: 'Poppins';
-            font-weight: 600;
-            background: var(--white);
-            color: var(--primary-blue);
+        select { 
+            width: 100%; padding: 12px; border-radius: 10px; border: none; 
+            margin-bottom: 15px; font-weight: 600; color: var(--primary);
         }
 
-        /* Tabel Minimalis */
-        .table-container {
-            background: var(--white);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
+        .table-card { background: var(--white); border-radius: 15px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         table { width: 100%; border-collapse: collapse; color: #333; font-size: 14px; }
-        thead { background: #f1f1f1; }
-        th { padding: 15px 10px; text-align: left; font-weight: 700; color: var(--primary-blue); border-bottom: 2px solid #ddd; }
+        th { background: #f1f1f1; padding: 15px 10px; text-align: left; color: var(--primary); }
         td { padding: 15px 10px; border-bottom: 1px solid #eee; }
         
-        .fab {
-            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
-            background-color: var(--accent); color: var(--primary-blue);
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.4); text-decoration: none; z-index: 1000;
+        .fab { 
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; 
+            background: var(--gold); color: var(--primary); border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; 
+            font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.4); text-decoration: none;
         }
-
-        .loading { text-align: center; padding: 20px; color: #888; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <div class="header-total">
-                <span id="labelBulan">Total Komisi Bulan ...</span>
-                <h2 id="totalKomisiHeader">Rp 0</h2>
-            </div>
-        </header>
-
-        <div class="filter-section">
-            <select id="filterBulan">
-                <option value="01">Januari</option>
-                <option value="02">Februari</option>
-                <option value="03">Maret</option>
-                <option value="04">April</option>
-                <option value="05">Mei</option>
-                <option value="06">Juni</option>
-                <option value="07">Juli</option>
-                <option value="08">Agustus</option>
-                <option value="09">September</option>
-                <option value="10">Oktober</option>
-                <option value="11">November</option>
-                <option value="12">Desember</option>
-            </select>
-        </div>
-
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tanggal</th>
-                        <th>Pax</th>
-                        <th>Komisi</th>
-                    </tr>
-                </thead>
-                <tbody id="dataBody">
-                    </tbody>
-            </table>
-            <div id="loader" class="loading">Memuat data...</div>
-        </div>
+<div class="container">
+    <div class="header-box">
+        <span id="labelBulan">Total Komisi</span>
+        <h2 id="totalDisplay">Rp 0</h2>
     </div>
 
-    <a href="input_komisi.html" class="fab">
-        <i class="fas fa-plus"></i>
-    </a>
+    <select id="filterBulan">
+        <option value="01">Januari</option><option value="02">Februari</option>
+        <option value="03">Maret</option><option value="04">April</option>
+        <option value="05">Mei</option><option value="06">Juni</option>
+        <option value="07">Juli</option><option value="08">Agustus</option>
+        <option value="09">September</option><option value="10">Oktober</option>
+        <option value="11">November</option><option value="12">Desember</option>
+    </select>
 
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
-        let allData = [];
+    <div class="table-card">
+        <table>
+            <thead><tr><th>Tanggal</th><th>Pax</th><th>Komisi</th></tr></thead>
+            <tbody id="dataBody"></tbody>
+        </table>
+    </div>
+</div>
 
-        // Set filter ke bulan sekarang saat pertama kali buka
-        const currentMonth = ("0" + (new Date().getMonth() + 1)).slice(-2);
-        document.getElementById('filterBulan').value = currentMonth;
+<a href="input_komisi.html" class="fab"><i class="fas fa-plus"></i></a>
 
-        async function loadData() {
-            try {
-                const response = await fetch(`${API_URL}?action=getPendapatan`);
-                allData = await response.json();
-                renderData();
-            } catch (err) {
-                document.getElementById('loader').innerHTML = "Gagal memuat data.";
-            }
-        }
+<script>
+    const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
+    
+    // Set bulan otomatis
+    const m = ("0" + (new Date().getMonth() + 1)).slice(-2);
+    document.getElementById('filterBulan').value = m;
 
-        function renderData() {
-            const bulanDipilih = document.getElementById('filterBulan').value;
-            const namaBulan = document.getElementById('filterBulan').options[document.getElementById('filterBulan').selectedIndex].text;
-            
-            const dataBody = document.getElementById('dataBody');
-            const totalH2 = document.getElementById('totalKomisiHeader');
-            const labelBulan = document.getElementById('labelBulan');
-            
-            let html = "";
-            let totalKomisi = 0;
+    async function fetchData() {
+        const resp = await fetch(`${API}?action=getPendapatan`);
+        const data = await resp.json();
+        
+        const render = () => {
+            const bul = document.getElementById('filterBulan').value;
+            const nmBul = document.getElementById('filterBulan').options[document.getElementById('filterBulan').selectedIndex].text;
+            let html = "", total = 0;
 
-            // Filter data berdasarkan bulan (asumsi format tanggal di sheet YYYY-MM-DD)
-            const filtered = allData.filter(row => {
-                const bulanData = row.tanggal.split("-")[1]; 
-                return bulanData === bulanDipilih;
-            });
+            data.filter(r => r.tanggal && r.tanggal.split("-")[1] === bul)
+                .sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal))
+                .forEach(r => {
+                    html += `<tr><td>${r.tanggal.split("-")[2]} ${nmBul.substring(0,3)}</td><td>${r.pax}</td><td>Rp ${parseInt(r.komisi).toLocaleString()}</td></tr>`;
+                    total += parseInt(r.komisi);
+                });
 
-            filtered.forEach(row => {
-                const tglIndo = row.tanggal.split("-")[2]; // Ambil tanggalnya saja biar ringkas
-                html += `<tr>
-                    <td>${tglIndo} ${namaBulan.substring(0,3)}</td>
-                    <td>${row.jumlah_penumpang}</td>
-                    <td>Rp ${parseInt(row.komisi).toLocaleString('id-ID')}</td>
-                </tr>`;
-                totalKomisi += parseInt(row.komisi);
-            });
+            document.getElementById('dataBody').innerHTML = html || "<tr><td colspan='3' style='text-align:center'>Tidak ada data</td></tr>";
+            document.getElementById('totalDisplay').innerText = "Rp " + total.toLocaleString();
+            document.getElementById('labelBulan').innerText = `Total Komisi ${nmBul}`;
+        };
 
-            dataBody.innerHTML = filtered.length ? html : "<tr><td colspan='3' style='text-align:center'>Tidak ada data</td></tr>";
-            totalH2.innerText = "Rp " + totalKomisi.toLocaleString('id-ID');
-            labelBulan.innerText = `Total Komisi Bulan ${namaBulan}`;
-            document.getElementById('loader').style.display = "none";
-        }
-
-        document.getElementById('filterBulan').addEventListener('change', renderData);
-        window.onload = loadData;
-    </script>
+        document.getElementById('filterBulan').onchange = render;
+        render();
+    }
+    window.onload = fetchData;
+</script>
 </body>
 </html>
