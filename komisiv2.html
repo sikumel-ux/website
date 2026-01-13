@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Pendapatan | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #065084;
+            --bg-darker: #043a60;
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.1);
+            --text-dim: rgba(255, 255, 255, 0.6);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background-color: var(--primary-blue);
+            background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue));
+            margin: 0; padding: 0; color: var(--white);
+            display: flex; justify-content: center; min-height: 100vh;
+        }
+
+        .etiket-container { width: 100%; max-width: 450px; padding-bottom: 120px; }
+
+        /* HEADER */
+        .header-section { padding: 50px 25px 30px 25px; }
+        .header-section h2 { margin: 0; font-weight: 700; font-size: 26px; }
+        .header-section p { margin: 5px 0 0 0; font-size: 13px; opacity: 0.7; }
+
+        .container { padding: 0 20px; }
+
+        /* SUMMARY BOX */
+        .summary-box { 
+            background: var(--white); color: var(--primary-blue);
+            padding: 25px; border-radius: 28px; text-align: center;
+            margin-bottom: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+        }
+        .summary-box small { opacity: 0.6; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .summary-box h2 { margin: 5px 0 0 0; font-size: 30px; font-weight: 800; }
+
+        /* CARD FORM */
+        .card { 
+            background: var(--glass); padding: 25px; border-radius: 24px; 
+            border: 1px solid rgba(255,255,255,0.08); margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        h3 { margin-top: 0; color: var(--white); font-size: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        h3 i { opacity: 0.7; }
+        
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 11px; color: var(--text-dim); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
+        
+        input { 
+            width: 100%; padding: 14px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; 
+            font-size: 14px; color: white; transition: 0.3s; 
+        }
+        input:focus { outline: none; border-color: var(--white); background: rgba(255,255,255,0.1); }
+        input::placeholder { color: rgba(255,255,255,0.3); }
+        
+        /* Input Month khusus agar match dengan tema */
+        input[type="month"]::-webkit-calendar-picker-indicator,
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; }
+
+        button { 
+            width: 100%; padding: 16px; background: var(--white); color: var(--primary-blue); 
+            border: none; border-radius: 18px; font-weight: 800; 
+            cursor: pointer; font-size: 15px; transition: 0.3s; margin-top: 10px;
+        }
+        button:active { transform: scale(0.98); opacity: 0.9; }
+        button:disabled { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); }
+        
+        /* TABLE RIWAYAT */
+        .table-res { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .table-res th { text-align: left; padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 10px; color: var(--text-dim); text-transform: uppercase; }
+        .table-res td { padding: 15px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; color: var(--white); }
+        .pax-badge { background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; }
+
+        /* NAV BOTTOM (SAMA DENGAN HALAMAN LAIN) */
+        .nav-bottom {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; 
+            background: rgba(255, 255, 255, 0.95);
+            display: flex; justify-content: space-around; 
+            padding: 15px 0; border-radius: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .nav-hidden { transform: translate(-50%, 150%) !important; opacity: 0; pointer-events: none; }
+
+        .nav-bottom a { text-decoration: none; color: #999; text-align: center; flex: 1; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+        .nav-bottom i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-bottom span { display: block; font-size: 10px; font-weight: 600; }
+
+        #loader { text-align: center; color: var(--text-dim); font-size: 12px; padding: 30px; }
+    </style>
+</head>
+<body>
+
+<div class="etiket-container">
+    <div class="header-section">
+        <p>Manajemen Komisi</p>
+        <h2>Pendapatan</h2>
+    </div>
+
+    <div class="container">
+        <div class="summary-box">
+            <small>Estimasi Komisi Bulan Ini</small>
+            <h2 id="grandTotal">Rp 0</h2>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-plus-circle"></i> Input Baru</h3>
+            <form id="pendapatanForm">
+                <div class="form-group">
+                    <label>Tanggal Keberangkatan</label>
+                    <input type="date" id="tgl" required>
+                </div>
+                <div class="form-group">
+                    <label>Nama Armada</label>
+                    <input type="text" id="armada" placeholder="Contoh: Murni Jaya" required>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Kursi (Contoh: 1-5 atau 1,2,5)</label>
+                    <input type="text" id="kursiInput" placeholder="Contoh: 1-5 (artinya 5 orang)" required>
+                </div>
+                <div class="form-group">
+                    <label>Komisi Per Kursi (Rp)</label>
+                    <input type="number" id="komisi" value="20000" required>
+                </div>
+                <button type="submit" id="btnSimpan">Simpan Transaksi</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                <h3 style="margin-bottom:0"><i class="fas fa-history"></i> Riwayat</h3>
+                <input type="month" id="filterBulan" style="width: auto; padding: 8px; font-size: 12px;">
+            </div>
+            <div id="loader">Memuat data...</div>
+            <table class="table-res" id="tabelData" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>TGL</th>
+                        <th>ARMADA</th>
+                        <th>PAX</th>
+                        <th style="text-align:right">TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody id="listPendapatan"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="cpm.html"><i class="fas fa-house"></i><span>Home</span></a>
+    <a href="input.html" class="active"><i class="fas fa-circle-plus"></i><span>Booking</span></a>
+    <a href="manifes.html"><i class="fas fa-file-lines"></i><span>Manifes</span></a>
+    <a href="pendapatan.html"><i class="fas fa-chart-pie"></i><span>Laporan</span></a>
+</div>
+
+<script>
+const API_ID = "AKfycbxq5ydGBjkZ6C04N2BTAn68efdbmAzG4THGYMvf7VqIi0Z6VOzW1C9E5Mq3KZpkZpQrzA";
+const API_URL = `https://script.google.com/macros/s/${API_ID}/exec`;
+
+const skrg = new Date();
+const blnIni = skrg.getFullYear() + "-" + ("0" + (skrg.getMonth() + 1)).slice(-2);
+document.getElementById('filterBulan').value = blnIni;
+document.getElementById('tgl').valueAsDate = new Date();
+
+function hitungPax(str) {
+    str = str.replace(/\s/g, ''); 
+    if (str.includes('-')) {
+        const range = str.split('-');
+        const awal = parseInt(range[0]);
+        const akhir = parseInt(range[1]);
+        if (!isNaN(awal) && !isNaN(akhir)) return Math.abs(akhir - awal) + 1;
+    } else if (str.includes(',')) {
+        return str.split(',').filter(x => x !== "").length;
+    }
+    return isNaN(parseInt(str)) ? 0 : 1;
+}
+
+document.getElementById('pendapatanForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btnSimpan');
+    const kursiVal = document.getElementById('kursiInput').value;
+    const pax = hitungPax(kursiVal);
+    const komisi = parseInt(document.getElementById('komisi').value);
+
+    btn.disabled = true;
+    btn.innerText = "Mengirim data...";
+
+    const data = {
+        type: 'pendapatan',
+        tanggal: document.getElementById('tgl').value,
+        armada: document.getElementById('armada').value,
+        jml_penumpang: pax,
+        komisi: komisi,
+        total: pax * komisi
+    };
+
+    try {
+        await fetch(API_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(data)
+        });
+        
+        alert(`Sukses! Tersimpan dengan ${pax} penumpang.`);
+        loadData();
+        document.getElementById('pendapatanForm').reset();
+        document.getElementById('tgl').valueAsDate = new Date();
+        btn.disabled = false;
+        btn.innerText = "Simpan Transaksi";
+    } catch (err) {
+        alert("Gagal koneksi server.");
+        btn.disabled = false;
+        btn.innerText = "Simpan Transaksi";
+    }
+});
+
+async function loadData() {
+    const loader = document.getElementById('loader');
+    const tabel = document.getElementById('tabelData');
+    const list = document.getElementById('listPendapatan');
+    const grandTotalLabel = document.getElementById('grandTotal');
+    const bln = document.getElementById('filterBulan').value;
+
+    loader.innerText = "Sinkronisasi...";
+    loader.style.display = "block";
+    tabel.style.display = "none";
+
+    try {
+        const res = await fetch(`${API_URL}?p=getPendapatan&bulan=${bln}`);
+        const data = await res.json();
+        
+        let html = '';
+        let totalBulan = 0;
+        
+        if (data.length === 0) {
+            loader.innerText = "Tidak ada riwayat di bulan ini.";
+        } else {
+            data.reverse().forEach(row => {
+                const tglObj = new Date(row[0]);
+                const tglTampil = tglObj.getDate();
+                const nominal = row[4] || 0;
+                totalBulan += nominal;
+                
+                html += `<tr>
+                    <td><b>${tglTampil}</b></td>
+                    <td>${row[1]}</td>
+                    <td><span class="pax-badge">${row[2]} Pax</span></td>
+                    <td style="text-align:right"><b>${nominal.toLocaleString('id-ID')}</b></td>
+                </tr>`;
+            });
+            list.innerHTML = html;
+            loader.style.display = "none";
+            tabel.style.display = "table";
+        }
+        grandTotalLabel.innerText = "Rp " + totalBulan.toLocaleString('id-ID');
+    } catch (err) {
+        loader.innerText = "Gagal memuat data.";
+    }
+}
+
+// Fitur Ketuk Layar Sembunyikan Menu
+document.addEventListener('click', function(event) {
+    const nav = document.querySelector('.nav-bottom');
+    if (!nav.contains(event.target)) {
+        nav.classList.toggle('nav-hidden');
+    }
+});
+
+document.getElementById('filterBulan').addEventListener('change', loadData);
+loadData();
+</script>
+</body>
+</html>
