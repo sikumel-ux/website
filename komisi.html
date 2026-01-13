@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Pendapatan | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary-blue: #065084; 
+            --bg-solid: #043a60; 
+            --white: #ffffff; 
+            --accent: #FFD700; 
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg-solid); 
+            margin: 0; 
+            color: var(--white); 
+            min-height: 100vh;
+        }
+
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+
+        header { text-align: center; padding: 20px 0; }
+        header h2 { margin: 0; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Card Ringkasan */
+        .summary-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        .summary-item span { display: block; font-size: 10px; opacity: 0.8; }
+        .summary-item strong { font-size: 16px; color: var(--accent); }
+
+        /* Style Tabel */
+        .table-container {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        table { width: 100%; border-collapse: collapse; color: #333; font-size: 13px; }
+        thead { background: #eee; }
+        th { padding: 12px; text-align: left; font-weight: 700; color: var(--primary-blue); }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+        
+        /* Floating Action Button (FAB) */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--accent);
+            color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            text-decoration: none;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+        .fab:active { transform: scale(0.9); }
+
+        /* Loading Animation */
+        .loading { text-align: center; padding: 20px; color: var(--white); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h2>Laporan Pendapatan</h2>
+            <p style="font-size: 12px; opacity: 0.7;">Mahika Trans Management</p>
+        </header>
+
+        <div class="summary-card">
+            <div class="summary-item">
+                <span>Total Penumpang</span>
+                <strong id="totalPenumpang">0</strong>
+            </div>
+            <div class="summary-item">
+                <span>Total Komisi</span>
+                <strong id="totalKomisi">Rp 0</strong>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="tabelPendapatan">
+                <thead>
+                    <tr>
+                        <th>Tgl</th>
+                        <th>Armada</th>
+                        <th>Kms</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="dataBody">
+                    </tbody>
+            </table>
+            <div id="loader" class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Memuat data...
+            </div>
+        </div>
+    </div>
+
+    <a href="input.html" class="fab">
+        <i class="fas fa-plus"></i>
+    </a>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
+
+        async function ambilData() {
+            try {
+                // Menambahkan parameter action agar Apps Script tahu kita minta data
+                const response = await fetch(`${API_URL}?action=getPendapatan`);
+                const data = await response.json();
+                
+                const dataBody = document.getElementById('dataBody');
+                const loader = document.getElementById('loader');
+                let html = "";
+                let tPenumpang = 0;
+                let tKomisi = 0;
+
+                data.forEach(row => {
+                    html += `<tr>
+                        <td>${row.tanggal}</td>
+                        <td>${row.armada}</td>
+                        <td>${parseInt(row.komisi).toLocaleString()}</td>
+                        <td>${parseInt(row.total).toLocaleString()}</td>
+                    </tr>`;
+                    tPenumpang += parseInt(row.jumlah_penumpang);
+                    tKomisi += parseInt(row.komisi);
+                });
+
+                dataBody.innerHTML = html;
+                document.getElementById('totalPenumpang').innerText = tPenumpang;
+                document.getElementById('totalKomisi').innerText = "Rp " + tKomisi.toLocaleString();
+                loader.style.display = "none";
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loader').innerHTML = "Gagal memuat data.";
+            }
+        }
+
+        // Panggil fungsi saat halaman dibuka
+        window.onload = ambilData;
+    </script>
+</body>
+</html>
