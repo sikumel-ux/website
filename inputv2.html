@@ -1,41 +1,92 @@
-<div class="ticket-header" style="background:white; color:#065084; padding:20px; border-radius:20px 20px 0 0; border-bottom:2px dashed #ccc; text-align:center; position:relative;">
-    <i class="fas fa-ticket-alt" style="font-size:30px;"></i>
-    <h2 style="margin:5px 0;">BOOKING TIKET</h2>
-    <div style="position:absolute; bottom:-10px; left:-10px; width:20px; height:20px; background:#065084; border-radius:50%;"></div>
-    <div style="position:absolute; bottom:-10px; right:-10px; width:20px; height:20px; background:#065084; border-radius:50%;"></div>
-</div>
-
-<script>
-    const API = "https://script.google.com/macros/s/AKfycbwYjU8eEgrFHW9w6WsVPUw6H1GJOlXda_6Z-AhWmCBYRzAqCh2Rr8JO1WlDS3KH6YC9/exec";
-    document.getElementById('bookingForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('btnSimpan');
-        btn.disabled = true;
-        btn.innerHTML = "Memproses...";
-
-        const data = {
-            action: 'saveBooking',
-            nama: document.getElementById('nama').value,
-            no_hp: document.getElementById('no_hp').value,
-            no_kursi: document.getElementById('no_kursi').value,
-            tanggal: document.getElementById('tanggal').value,
-            jam: document.getElementById('jam').value,
-            armada: document.getElementById('armada').value,
-            tujuan: document.getElementById('tujuan').value,
-            harga: document.getElementById('harga').value,
-            kode: "MHK" + Math.floor(1000 + Math.random() * 9000)
-        };
-
-        const p = new URLSearchParams(data);
-        await fetch(API, { method: 'POST', mode: 'no-cors', body: p });
-
-        // WhatsApp Logic
-        let hp = data.no_hp.replace(/\D/g, '');
-        if (hp.startsWith('0')) hp = '62' + hp.slice(1);
-        const urlEtiket = window.location.href.replace('input.html','etiket.html') + "?kode=" + data.kode;
-        const text = `Halo *${data.nama}*, Tiket Anda berhasil dipesan.%0AKode: *${data.kode}*%0ACek Tiket: ${urlEtiket}`;
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking | Mahika Trans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --blue: #065084; --gold: #FFD700; --bg: #f4f7f9; }
+        body { font-family: 'Poppins', sans-serif; background: var(--blue); margin: 0; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 450px; padding: 20px; }
         
-        window.open(`https://wa.me/${hp}?text=${text}`, '_blank');
-        window.location.href = "manifes.html";
-    });
-</script>
+        /* Gaya Etiket Header */
+        .ticket-head { background: white; padding: 30px; border-radius: 20px 20px 0 0; text-align: center; border-bottom: 2px dashed #ccc; position: relative; }
+        .ticket-head i { font-size: 40px; color: var(--blue); }
+        .ticket-head h2 { margin: 10px 0 0; color: var(--blue); letter-spacing: 2px; }
+        .circle-l, .circle-r { position: absolute; bottom: -10px; width: 20px; height: 20px; background: var(--blue); border-radius: 50%; }
+        .circle-l { left: -10px; } .circle-r { right: -10px; }
+
+        .form-box { background: white; padding: 25px; border-radius: 0 0 20px 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; display: block; margin: 10px 0 5px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: 'Poppins'; }
+        button { width: 100%; padding: 15px; background: var(--blue); color: white; border: none; border-radius: 12px; font-weight: 700; margin-top: 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ticket-head">
+            <i class="fas fa-ticket-alt"></i>
+            <h2>BOOKING</h2>
+            <div class="circle-l"></div><div class="circle-r"></div>
+        </div>
+        <div class="form-box">
+            <form id="bookingForm">
+                <label>Nama Penumpang</label>
+                <input type="text" id="nama" required>
+                <div style="display:flex; gap:10px">
+                    <div style="flex:2"><label>WhatsApp</label><input type="tel" id="no_hp" value="08" required></div>
+                    <div style="flex:1"><label>Kursi</label><input type="text" id="no_kursi" placeholder="A1" required></div>
+                </div>
+                <label>Armada</label>
+                <input type="text" id="armada" required>
+                <label>Tujuan</label>
+                <input type="text" id="tujuan" required>
+                <div style="display:flex; gap:10px">
+                    <div style="flex:1"><label>Tanggal</label><input type="date" id="tanggal" required></div>
+                    <div style="flex:1"><label>Jam</label><input type="text" id="jam" value="19:00" required></div>
+                </div>
+                <label>Harga</label>
+                <input type="number" id="harga" value="150000" required>
+                <button type="submit" id="btnSimpan">SIMPAN & KIRIM WA</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
+        
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSimpan');
+            btn.innerHTML = "Loading..."; btn.disabled = true;
+
+            const kode = "MHK" + Math.floor(1000 + Math.random() * 9000);
+            const data = {
+                action: 'saveBooking',
+                nama: document.getElementById('nama').value,
+                no_hp: document.getElementById('no_hp').value,
+                no_kursi: document.getElementById('no_kursi').value,
+                tanggal: document.getElementById('tanggal').value,
+                jam: document.getElementById('jam').value,
+                armada: document.getElementById('armada').value,
+                tujuan: document.getElementById('tujuan').value,
+                harga: document.getElementById('harga').value,
+                kode: kode
+            };
+
+            await fetch(API, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(data) });
+
+            // WA Logic
+            let hp = data.no_hp.replace(/\D/g, '');
+            if(hp.startsWith('0')) hp = '62' + hp.slice(1);
+            const url = window.location.href.replace('input.html','etiket.html') + "?kode=" + kode;
+            const text = `Halo *${data.nama}*, Tiket Mahika Trans Anda:%0AKode: *${kode}*%0ACek Tiket: ${url}`;
+            
+            window.open(`https://wa.me/${hp}?text=${text}`, '_blank');
+            window.location.href = "manifes.html";
+        });
+    </script>
+</body>
+</html>
