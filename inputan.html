@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Tiket | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; display: flex; justify-content: center; color: var(--white); min-height: 100vh; }
+        
+        .etiket-container { width: 100%; max-width: 450px; padding-bottom: 120px; }
+        
+        /* HEADER MODERN */
+        .header-section { padding: 40px 20px 60px; text-align: center; }
+        .header-card { 
+            background: rgba(255,255,255,0.1); 
+            backdrop-filter: blur(15px); 
+            border-radius: 25px; 
+            padding: 25px; 
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header-card i { font-size: 35px; color: var(--gold); margin-bottom: 10px; }
+        .header-card h2 { margin: 0; font-weight: 700; font-size: 22px; }
+        .header-card p { margin: 5px 0 0; font-size: 12px; opacity: 0.8; }
+
+        .card-form { background: var(--white); margin: -40px 20px 20px 20px; padding: 30px 20px; border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        
+        label { display: block; font-size: 10px; font-weight: 700; color: var(--primary-blue); text-transform: uppercase; margin-bottom: 8px; margin-left: 5px; }
+        input { width: 100%; padding: 14px 18px; border: 1.5px solid #eee; border-radius: 15px; font-family: 'Poppins'; margin-bottom: 15px; box-sizing: border-box; color: #333; outline: none; transition: 0.3s; font-size: 14px; }
+        input:focus { border-color: var(--primary-blue); background: #f8f9fa; }
+        
+        .row { display: flex; gap: 12px; }
+        
+        button { 
+            width: 100%; padding: 18px; background: var(--primary-blue); color: white; border: none; 
+            border-radius: 18px; font-weight: 700; cursor: pointer; transition: 0.3s; 
+            font-size: 16px; box-shadow: 0 8px 20px rgba(6, 80, 132, 0.3);
+        }
+        button:active { transform: scale(0.95); }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* NAVBAR */
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; }
+        .nav-bottom a { text-decoration: none; color: #999; text-align: center; font-size: 10px; font-weight: 600; }
+        .nav-bottom a i { font-size: 18px; margin-bottom: 4px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+    <div class="etiket-container">
+        <div class="header-section">
+            <div class="header-card">
+                <i class="fas fa-bus-alt"></i>
+                <h2>Booking Tiket</h2>
+                <p>Mahika Trans - Perjalanan Aman & Nyaman</p>
+            </div>
+        </div>
+
+        <div class="card-form">
+            <form id="bookingForm">
+                <label>Nama Penumpang</label>
+                <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
+                
+                <div class="row">
+                    <div style="flex:2;"><label>No HP (WhatsApp)</label><input type="tel" id="no_hp" value="08" required></div>
+                    <div style="flex:1;"><label>Kursi</label><input type="text" id="no_kursi" placeholder="1A" required></div>
+                </div>
+
+                <label>Armada</label>
+                <input type="text" id="armada" placeholder="Mahika Trans Utama" required>
+                
+                <label>Kota Tujuan</label>
+                <input type="text" id="tujuan" placeholder="Contoh: Jakarta / Cikarang" required>
+                
+                <div class="row">
+                    <div style="flex:1;"><label>Tanggal</label><input type="date" id="tanggal" required></div>
+                    <div style="flex:1;"><label>Jam</label><input type="text" id="jam" placeholder="08:00" required></div>
+                </div>
+
+                <label>Harga (Rp)</label>
+                <input type="number" id="harga" placeholder="150000" required>
+                
+                <button type="submit" id="btnSimpan"><i class="fas fa-paper-plane"></i> Proses & Kirim Tiket</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="nav-bottom">
+        <a href="index.html"><i class="fas fa-house"></i>Home</a>
+        <a href="input.html" class="active"><i class="fas fa-circle-plus"></i>Booking</a>
+        <a href="manifes.html"><i class="fas fa-file-lines"></i>Manifes</a>
+        <a href="pendapatan.html"><i class="fas fa-chart-bar"></i>Laporan</a>
+    </div>
+
+    <script>
+        const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
+        
+        document.getElementById('tanggal').valueAsDate = new Date();
+
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSimpan');
+            
+            // Data dari form
+            const nama = document.getElementById('nama').value;
+            const hpRaw = document.getElementById('no_hp').value;
+            const kursi = document.getElementById('no_kursi').value;
+            const tgl = document.getElementById('tanggal').value;
+            const jam = document.getElementById('jam').value;
+            const armada = document.getElementById('armada').value;
+            const tujuan = document.getElementById('tujuan').value;
+            
+            // Generate Kode
+            const kode = "MHK" + Math.floor(1000 + Math.random() * 9000);
+            
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Menyimpan...";
+            btn.disabled = true;
+
+            // Setup Data untuk Google Sheets
+            const p = new URLSearchParams();
+            p.append('action', 'saveBooking');
+            p.append('tanggal', tgl);
+            p.append('jam', jam);
+            p.append('nama', nama);
+            p.append('no_hp', hpRaw);
+            p.append('armada', armada);
+            p.append('tujuan', tujuan);
+            p.append('no_kursi', kursi);
+            p.append('harga', document.getElementById('harga').value);
+            p.append('kode', kode);
+
+            try {
+                // 1. Kirim ke Google Sheets
+                await fetch(API, { method: 'POST', mode: 'no-cors', body: p });
+                
+                // 2. Logic WhatsApp Otomatis
+                let hpFix = hpRaw.replace(/\D/g, '');
+                if (hpFix.startsWith('0')) hpFix = '62' + hpFix.slice(1);
+                else if (hpFix.startsWith('8')) hpFix = '62' + hpFix;
+
+                const d = new Date(tgl);
+                const tglRapi = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+                const urlEtiket = `${window.location.origin}/etiket.html?kode=${kode}`;
+
+                const textWA = `Halo, kak *${nama}*..%0ABerikut adalah data pemesanan tiket Anda di Mahika Trans.%0A%0ATanggal: ${tglRapi}%0AJam: ${jam}%0ANama: ${nama}%0AArmada: ${armada}%0ATujuan: ${tujuan}%0ANo kursi: ${kursi}%0A%0AKode Pemesanan: *${kode}*%0AEtiket Anda: ${urlEtiket}%0A%0A--------------------------%0A%0AHarap datang selambat-lambatnya 30 menit sebelum jam jadwal pemberangkatan.%0A%0ATerimakasih.`;
+
+                // 3. Eksekusi: Buka WA lalu pindah ke halaman cetak
+                window.open(`https://wa.me/${hpFix}?text=${textWA}`, '_blank');
+                
+                setTimeout(() => { 
+                    window.location.href = "etiket.html?kode=" + kode; 
+                }, 500);
+
+            } catch (err) { 
+                alert("Koneksi Error!"); 
+                btn.disabled = false; 
+                btn.innerHTML = "<i class='fas fa-paper-plane'></i> Proses & Kirim Tiket"; 
+            }
+        });
+    </script>
+</body>
+</html>
