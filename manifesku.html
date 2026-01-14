@@ -1,55 +1,143 @@
-var SHEET_NAME = "penumpang";
-
-function doGet(e) {
-  var action = e.parameter.action;
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SHEET_NAME);
-  
-  // Jika tab belum ada, buat otomatis
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(["Tanggal", "Jam", "Nama", "No HP", "Armada", "Tujuan", "No Kursi", "Harga", "Kode"]);
-  }
-
-  // Ambil Data
-  if (action === 'readManifes') {
-    var data = sheet.getDataRange().getValues();
-    var result = [];
-    
-    // Mulai dari baris ke-2 (index 1)
-    for (var i = 1; i < data.length; i++) {
-      if(!data[i][8]) continue; // Jika Kode di Kolom I (index 8) kosong, skip
-      
-      result.push({
-        tanggal: data[i][0], // A
-        jam:     data[i][1], // B
-        nama:    data[i][2], // C
-        hp:      data[i][3], // D
-        armada:  data[i][4], // E
-        tujuan:  data[i][5], // F
-        kursi:   data[i][6], // G
-        kode:    data[i][8]  // I
-      });
-    }
-    return kembalikanJSON({ status: "success", data: result });
-  }
-
-  // Hapus Data
-  if (action === 'deleteBooking') {
-    var kode = e.parameter.kode;
-    var data = sheet.getDataRange().getValues();
-    for (var i = 0; i < data.length; i++) {
-      if (data[i][8] == kode) {
-        sheet.deleteRow(i + 1);
-        return kembalikanJSON({ status: "success" });
-      }
-    }
-    return kembalikanJSON({ status: "error" });
-  }
-}
-
-function kembalikanJSON(objek) {
-  return ContentService.createTextOutput(JSON.stringify(objek))
-    .setMimeType(ContentService.MimeType.JSON);
-}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifes | Mahika Trans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; }
         
+        .header-section { padding: 40px 20px 20px; }
+        .header-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); border-radius: 25px; padding: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
+        .header-card h2 { margin: 0; font-weight: 700; font-size: 20px; letter-spacing: 1px; }
+        #countPsg { opacity: 0.8; font-size: 13px; margin-top: 5px; }
+
+        #manifesContainer { padding: 10px 20px 140px; }
+        
+        .card-manifes { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .info-psg h4 { margin: 0; color: var(--gold); text-transform: uppercase; font-size: 15px; letter-spacing: 0.5px; }
+        .info-psg p { margin: 4px 0 0; font-size: 12px; opacity: 0.9; line-height: 1.4; }
+        .badge-kursi { background: var(--white); color: var(--primary-blue); font-size: 10px; padding: 2px 8px; border-radius: 8px; font-weight: 700; margin-left: 5px; vertical-align: middle; }
+
+        .btn-group { display: flex; gap: 8px; }
+        .btn-aksi { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 16px; transition: 0.3s; cursor: pointer; }
+        .btn-aksi:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
+        .btn-wa { color: #25D366; }
+        .btn-trash { color: #ff4d4d; }
+
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; }
+        .nav-bottom a { text-decoration: none; color: #999; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
+        .nav-bottom a i { font-size: 18px; margin-bottom: 4px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <div class="header-card">
+            <h2>MANIFES PENUMPANG</h2>
+            <p id="countPsg">Menghubungkan Database...</p>
+        </div>
+    </div>
+
+    <div id="manifesContainer"></div>
+
+    <div class="nav-bottom">
+        <a href="dash.html"><i class="fas fa-house"></i>Home</a>
+        <a href="input.html"><i class="fas fa-circle-plus"></i>Input</a>
+        <a href="pendapatanv2.html"><i class="fas fa-wallet"></i>Komisi</a>
+        <a href="manifes.html" class="active"><i class="fas fa-file-lines"></i>Manifes</a>
+    </div>
+
+    <script>
+        // Masukkan API kamu di sini
+        const API = "https://script.google.com/macros/s/AKfycbwqXhQ7Pcno7vvbXnGTDysQPt5zpGj9Hr6Jq-c8RlBIyXmPcysvLBzEIb0dmV13cApd/exec";
+
+        async function loadManifes() {
+            const container = document.getElementById("manifesContainer");
+            const statusText = document.getElementById("countPsg");
+
+            try {
+                // Tambahkan nocache agar data selalu fresh dari Google Sheets
+                const response = await fetch(`${API}?action=readManifes&t=${new Date().getTime()}`);
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    container.innerHTML = "";
+                    const data = result.data;
+
+                    if (!data || data.length === 0) {
+                        container.innerHTML = "<p style='text-align:center; opacity:0.5; margin-top:50px;'>Tidak ada data penumpang aktif.</p>";
+                        statusText.innerText = "0 Penumpang Terdaftar";
+                        return;
+                    }
+
+                    // Urutkan dari yang terbaru (paling bawah di Sheets jadi paling atas di Web)
+                    data.reverse().forEach(item => {
+                        // Hilangkan format jam yang aneh jika ada (ambil HH:mm)
+                        const jamRapi = item.jam ? item.jam.toString().substring(0, 5) : "--:--";
+                        
+                        // Link WhatsApp
+                        let noWA = item.hp ? item.hp.toString().replace(/\D/g, '') : "";
+                        if (noWA.startsWith('0')) noWA = '62' + noWA.slice(1);
+
+                        container.innerHTML += `
+                            <div class="card-manifes" id="card-${item.kode}">
+                                <div class="info-psg">
+                                    <h4>${item.nama} <span class="badge-kursi">${item.kursi || '-'}</span></h4>
+                                    <p><i class="fas fa-calendar-day"></i> ${item.tanggal ? new Date(item.tanggal).toLocaleDateString('id-ID', {day:'2-digit', month:'short'}) : ''} • ${jamRapi}</p>
+                                    <p><i class="fas fa-map-marker-alt"></i> ${item.armada} • ${item.tujuan}</p>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="https://wa.me/${noWA}" target="_blank" class="btn-aksi btn-wa"><i class="fab fa-whatsapp"></i></a>
+                                    <div onclick="hapusData('${item.kode}')" class="btn-aksi btn-trash" id="btn-${item.kode}">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+                    statusText.innerText = data.length + " Penumpang Terdaftar";
+                }
+            } catch (e) {
+                console.error(e);
+                statusText.innerText = "Gagal Memuat Database.";
+            }
+        }
+
+        async function hapusData(kode) {
+            if (confirm("Hapus data ini secara permanen?")) {
+                const btnIcon = document.querySelector(`#btn-${kode} i`);
+                btnIcon.className = "fas fa-spinner fa-spin";
+                
+                try {
+                    const response = await fetch(`${API}?action=deleteBooking&kode=${kode}`);
+                    const res = await response.json();
+                    
+                    if (res.status === "success") {
+                        const card = document.getElementById(`card-${kode}`);
+                        card.style.transition = "0.3s";
+                        card.style.opacity = "0";
+                        card.style.transform = "scale(0.9)";
+                        setTimeout(() => {
+                            card.remove();
+                            loadManifes(); // Refresh counter
+                        }, 300);
+                    } else {
+                        alert("Gagal menghapus data di server.");
+                        btnIcon.className = "fas fa-trash";
+                    }
+                } catch (e) {
+                    // Seringkali aksi berhasil tapi browser menganggap error karena CORS
+                    // Kita refresh saja untuk memastikan
+                    location.reload();
+                }
+            }
+        }
+
+        window.onload = loadManifes;
+    </script>
+</body>
+</html>
