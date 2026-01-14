@@ -10,15 +10,16 @@
         :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
         body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; }
         
-        /* Header & Stats */
+        /* Header Section */
         .header-dash { padding: 50px 25px 30px 25px; }
         .header-dash h1 { font-size: 14px; margin: 0; opacity: 0.7; font-weight: 300; }
         .header-dash h2 { font-size: 26px; margin: 5px 0 0 0; font-weight: 700; }
 
+        /* Stats Cards */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
         .stat-card { background: var(--white); padding: 20px 15px; border-radius: 24px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); color: var(--primary-blue); }
-        .stat-card span { display: block; font-size: 9px; color: #666; font-weight: 700; text-transform: uppercase; }
-        .stat-card strong { font-size: 16px; font-weight: 700; }
+        .stat-card span { display: block; font-size: 9px; color: #666; font-weight: 700; text-transform: uppercase; margin-top: 5px; }
+        .stat-card strong { font-size: 16px; font-weight: 700; display: block; margin-top: 2px; }
 
         .section-title { padding: 35px 25px 15px 25px; font-size: 16px; font-weight: 600; opacity: 0.9; }
 
@@ -36,9 +37,9 @@
         }
         .info-mini { flex: 1; }
         .info-mini b { font-size: 14px; color: var(--gold); display: block; }
-        .info-mini small { font-size: 11px; opacity: 0.8; }
+        .info-mini small { font-size: 11px; opacity: 0.8; display: block; margin-top: 2px; }
 
-        /* Navigation Bottom Baru */
+        /* Bottom Navigation */
         .nav-bottom { 
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
             width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); 
@@ -59,21 +60,21 @@
 
 <div class="stats-grid">
     <div class="stat-card">
-        <i class="fas fa-users" style="font-size: 14px; margin-bottom: 5px;"></i>
+        <i class="fas fa-users"></i>
         <span>PENUMPANG HARI INI</span>
         <strong id="statPax">0 Orang</strong>
     </div>
     <div class="stat-card">
-        <i class="fas fa-calendar-alt" style="font-size: 14px; margin-bottom: 5px;"></i>
+        <i class="fas fa-calendar-check"></i>
         <span>TOTAL AKTIF</span>
         <strong id="statTotal">0 Data</strong>
     </div>
 </div>
 
-<div class="section-title"><span>Manifes Terbaru</span></div>
+<div class="section-title"><span>Jadwal Terdekat</span></div>
 
 <div id="antreanList" class="antrean-list">
-    <p style="text-align: center; opacity: 0.5; font-size: 12px; margin-top: 20px;">Menyambung ke server...</p>
+    <p style="text-align: center; opacity: 0.5; font-size: 12px; margin-top: 20px;">Memuat data...</p>
 </div>
 
 <div class="nav-bottom">
@@ -86,7 +87,7 @@
 <script>
     const API = "https://script.google.com/macros/s/AKfycbx9JsUb0saYvFnH8vpCn2JZu_AzdrXXXmQIcGfMW0dsTvPndFQC_CtKyLhMx_6Kjd_IEg/exec";
 
-    // Salam Berdasarkan Jam
+    // Greeting Berdasarkan Waktu
     const jam = new Date().getHours();
     const salam = jam < 11 ? "Selamat Pagi" : jam < 15 ? "Selamat Siang" : jam < 19 ? "Selamat Sore" : "Selamat Malam";
     document.getElementById('greeting').innerText = salam + ",";
@@ -101,14 +102,14 @@
                 const skrg = new Date();
                 skrg.setHours(0, 0, 0, 0);
 
-                // Filter Data Aktif
+                // Filter Data yang belum berangkat (Hari ini & Masa Depan)
                 const dataAktif = result.data.filter(item => {
                     const tgl = new Date(item.tanggal);
                     tgl.setHours(0, 0, 0, 0);
                     return tgl >= skrg;
                 });
 
-                // Hitung Pax Hari Ini
+                // Hitung Pax Hari Ini Saja
                 const hariIni = dataAktif.filter(item => {
                     const tgl = new Date(item.tanggal);
                     tgl.setHours(0, 0, 0, 0);
@@ -118,33 +119,37 @@
                 document.getElementById('statPax').innerText = hariIni + " Orang";
                 document.getElementById('statTotal').innerText = dataAktif.length + " Data";
 
-                // List 5 Teratas
+                // List 5 Data Terbaru diinput (Urutan Balik)
                 const listData = dataAktif.reverse().slice(0, 5);
+                
                 if (listData.length > 0) {
                     list.innerHTML = listData.map(item => {
                         const d = new Date(item.tanggal);
+                        const tglRapi = d.getDate();
+                        const blnRapi = d.toLocaleDateString('id-ID', { month: 'short' });
+                        
                         return `
                             <div class="card-mini">
-                                <div class="tgl-badge"><b>${d.getDate()}</b>${d.toLocaleDateString('id-ID',{month:'short'})}</div>
+                                <div class="tgl-badge"><b>${tglRapi}</b>${blnRapi}</div>
                                 <div class="info-mini">
                                     <b>${item.nama}</b>
-                                    <small>${item.armada} • ${item.jam} • Kursi ${item.kursi}</small>
+                                    <small>${item.armada} • ${item.jam} • ${item.tujuan}</small>
                                 </div>
                             </div>
                         `;
                     }).join('');
                 } else {
-                    list.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:12px;'>Belum ada manifes.</p>";
+                    list.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:12px;'>Belum ada manifes aktif.</p>";
                 }
             }
         } catch (e) {
-            list.innerHTML = "<p style='text-align:center; font-size:12px;'>Koneksi gagal.</p>";
+            document.getElementById("antreanList").innerHTML = "<p style='text-align:center; font-size:12px;'>Gagal terhubung ke server.</p>";
         }
     }
 
     function logout() {
-        if(confirm("Apakah Anda ingin keluar?")) {
-            window.location.href = "index.html"; // Arahkan ke login page
+        if(confirm("Keluar dari aplikasi?")) {
+            window.location.href = "index.html";
         }
     }
 
