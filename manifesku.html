@@ -9,17 +9,31 @@
     <style>
         :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
         body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; }
+        
+        /* Header */
         .header-section { padding: 40px 20px 20px; }
         .header-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); border-radius: 25px; padding: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
         .header-card h2 { margin: 0; font-weight: 700; font-size: 22px; }
         #countPsg { opacity: 0.8; font-size: 13px; margin-top: 5px; }
+
+        /* Container List */
         #manifesContainer { padding: 10px 20px 140px; }
+        
+        /* Card Style */
         .card-manifes { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 18px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
-        .info-psg h4 { margin: 0; color: var(--gold); text-transform: uppercase; font-size: 15px; }
+        .info-psg { flex: 1; }
+        .info-psg h4 { margin: 0; color: var(--gold); text-transform: uppercase; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .badge-pax { background: var(--white); color: var(--primary-blue); font-size: 10px; padding: 2px 8px; border-radius: 8px; font-weight: 700; }
         .info-psg small { display: block; margin-top: 3px; font-size: 11px; opacity: 0.8; }
+
+        /* Action Buttons */
+        .btn-group { display: flex; gap: 8px; }
         .btn-aksi { width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 14px; transition: 0.3s; cursor: pointer; }
         .btn-aksi:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
-        
+        .btn-wa { color: #25D366; }
+        .btn-trash { color: #ff4d4d; }
+
+        /* Navigation */
         .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; }
         .nav-bottom a { text-decoration: none; color: #999; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
         .nav-bottom a i { font-size: 18px; margin-bottom: 4px; display: block; }
@@ -27,17 +41,19 @@
     </style>
 </head>
 <body>
+
     <div class="header-section">
         <div class="header-card">
             <h2>Manifes Penumpang</h2>
             <p id="countPsg">Memuat data...</p>
         </div>
     </div>
+
     <div id="manifesContainer"></div>
 
     <div class="nav-bottom">
         <a href="dash.html"><i class="fas fa-house"></i>Home</a>
-        <a href="input.html"><i class="fas fa-circle-plus"></i>Booking</a>
+        <a href="input.html"><i class="fas fa-circle-plus"></i>Input</a>
         <a href="pendapatanv2.html"><i class="fas fa-wallet"></i>Komisi</a>
         <a href="manifes.html" class="active"><i class="fas fa-file-lines"></i>Manifes</a>
     </div>
@@ -56,49 +72,59 @@
                     const skrg = new Date();
                     skrg.setHours(0, 0, 0, 0);
 
+                    // Filter data dari tab penumpang (hanya yang belum berangkat/hari ini)
                     const dataFilter = result.data.filter(item => {
                         const tglTiket = new Date(item.tanggal);
                         tglTiket.setHours(0, 0, 0, 0);
                         return tglTiket >= skrg;
                     });
 
+                    if (dataFilter.length === 0) {
+                        container.innerHTML = "<p style='text-align:center; opacity:0.5;'>Belum ada data penumpang.</p>";
+                        document.getElementById("countPsg").innerText = "0 Penumpang Aktif";
+                        return;
+                    }
+
                     dataFilter.reverse().forEach(data => {
-                        const tglRaw = data.tanggal.split("T")[0]; 
-                        const p = tglRaw.split("-");
-                        const d = new Date(p[0], p[1] - 1, p[2]);
+                        const d = new Date(data.tanggal);
                         const tglRapi = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 
-                        // Logika No HP untuk WhatsApp
+                        // Hitung pax berdasarkan koma di input kursi
+                        const jmlPax = data.kursi ? data.kursi.split(',').filter(x => x.trim() !== "").length : 1;
+
+                        // Link WhatsApp
                         let hp = data.hp ? data.hp.toString().replace(/\D/g, '') : "";
                         if (hp.startsWith('0')) hp = '62' + hp.slice(1);
                         else if (hp.startsWith('8')) hp = '62' + hp;
 
                         const urlEtiket = `${window.location.origin}/etiket.html?kode=${data.kode}`;
-                        const textWA = `Halo, kak *${data.nama}*..%0ABerikut adalah data pemesanan tiket Anda di Mahika Trans.%0A%0ATanggal: ${tglRapi}%0AJam: ${data.jam}%0ANama: ${data.nama}%0AArmada: ${data.armada}%0ATujuan: ${data.tujuan}%0A%0AKode Pemesanan: *${data.kode}*%0AEtiket Anda: ${urlEtiket}%0A%0A--------------------------%0A%0AHarap datang selambat-lambatnya 30 menit sebelum jam jadwal pemberangkatan.%0A%0ATerimakasih.`;
+                        const textWA = `Halo kak *${data.nama}*..%0ABerikut data tiket Mahika Trans Anda:%0A%0ATgl: ${tglRapi}%0AJam: ${data.jam}%0AArmada: ${data.armada}%0ATujuan: ${data.tujuan}%0AKursi: ${data.kursi}%0A%0AKode Booking: *${data.kode}*%0AEtiket: ${urlEtiket}`;
 
                         container.innerHTML += `
                             <div class="card-manifes" id="card-${data.kode}">
                                 <div class="info-psg">
-                                    <h4>${data.nama}</h4>
+                                    <h4>${data.nama} <span class="badge-pax">${jmlPax} Pax</span></h4>
                                     <small>${tglRapi} • ${data.jam}</small>
-                                    <small>${data.armada} • ${data.tujuan}</small>
+                                    <small>${data.armada} • ${data.tujuan} • Kursi: ${data.kursi}</small>
                                 </div>
-                                <div style="display:flex; gap:6px;">
-                                    <a href="https://wa.me/${hp}?text=${textWA}" target="_blank" class="btn-aksi"><i class="fab fa-whatsapp"></i></a>
+                                <div class="btn-group">
+                                    <a href="https://wa.me/${hp}?text=${textWA}" target="_blank" class="btn-aksi btn-wa"><i class="fab fa-whatsapp"></i></a>
                                     <a href="etiket.html?kode=${data.kode}" class="btn-aksi"><i class="fas fa-ticket-alt"></i></a>
-                                    <div onclick="hapusData('${data.kode}')" class="btn-aksi" id="btn-${data.kode}"><i class="fas fa-trash"></i></div>
+                                    <div onclick="hapusData('${data.kode}')" class="btn-aksi btn-trash" id="btn-${data.kode}"><i class="fas fa-trash"></i></div>
                                 </div>
                             </div>`;
                     });
-                    document.getElementById("countPsg").innerText = dataFilter.length + " Penumpang Aktif";
+                    document.getElementById("countPsg").innerText = dataFilter.length + " Booking Aktif";
                 }
-            } catch (e) { document.getElementById("countPsg").innerText = "Gagal memuat."; }
+            } catch (e) { 
+                document.getElementById("countPsg").innerText = "Gagal memuat."; 
+            }
         }
 
         async function hapusData(kode) {
-            if (confirm("Hapus data penumpang ini?")) {
-                const btnIcon = document.querySelector(`#btn-${kode} i`);
-                btnIcon.className = "fas fa-spinner fa-spin";
+            if (confirm("Hapus data penumpang ini dari database?")) {
+                const icon = document.querySelector(`#btn-${kode} i`);
+                icon.className = "fas fa-spinner fa-spin";
                 
                 try {
                     const response = await fetch(`${API}?action=deleteBooking&kode=${kode}`);
@@ -106,21 +132,19 @@
                     
                     if (res.status === "success") {
                         const card = document.getElementById(`card-${kode}`);
-                        card.style.transition = "0.4s";
                         card.style.opacity = "0";
-                        card.style.transform = "scale(0.8)";
+                        card.style.transform = "scale(0.9)";
                         setTimeout(() => {
                             card.remove();
-                            const current = parseInt(document.getElementById("countPsg").innerText);
-                            document.getElementById("countPsg").innerText = (current - 1) + " Penumpang Aktif";
+                            loadManifes(); // Refresh counter
                         }, 400);
                     } else {
                         alert("Gagal menghapus.");
-                        btnIcon.className = "fas fa-trash";
+                        icon.className = "fas fa-trash";
                     }
                 } catch (e) {
-                    alert("Data berhasil diproses/dihapus (Cek refresh).");
-                    loadManifes(); // Refresh data otomatis jika error koneksi tapi aksi sukses
+                    alert("Data berhasil diproses. Silakan refresh.");
+                    location.reload();
                 }
             }
         }
@@ -129,3 +153,4 @@
     </script>
 </body>
 </html>
+
