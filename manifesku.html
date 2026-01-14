@@ -4,106 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manifes | Mahika Trans</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; }
-        .header-section { padding: 40px 20px 20px; }
-        .header-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); border-radius: 25px; padding: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
-        .header-card h2 { margin: 0; font-weight: 700; font-size: 22px; }
-        #countPsg { opacity: 0.8; font-size: 13px; margin-top: 5px; }
-        #manifesContainer { padding: 10px 20px 140px; }
-        .card-manifes { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 18px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
-        .info-psg h4 { margin: 0; color: var(--gold); text-transform: uppercase; font-size: 15px; }
-        .badge-pax { background: var(--white); color: var(--primary-blue); font-size: 10px; padding: 2px 8px; border-radius: 8px; margin-left: 5px; }
-        .info-psg small { display: block; margin-top: 3px; font-size: 11px; opacity: 0.8; }
-        .btn-group { display: flex; gap: 8px; }
-        .btn-aksi { width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 14px; cursor: pointer; }
-        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; }
-        .nav-bottom a { text-decoration: none; color: #999; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
-        .nav-bottom a i { font-size: 18px; margin-bottom: 4px; display: block; }
+        :root { --primary-blue: #065084; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #043a60; margin: 0; color: var(--white); min-height: 100vh; }
+        .header-section { padding: 30px 20px; text-align: center; }
+        .header-card { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.2); }
+        #manifesContainer { padding: 0 20px 120px; }
+        .card-manifes { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
+        .info-psg h4 { margin: 0; color: var(--gold); font-size: 14px; text-transform: uppercase; }
+        .info-psg p { margin: 2px 0; font-size: 11px; opacity: 0.9; }
+        .badge-kursi { background: var(--white); color: #000; padding: 2px 6px; border-radius: 5px; font-weight: bold; font-size: 10px; }
+        .btn-aksi { width: 35px; height: 35px; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; display: flex; align-items: center; justify-content: center; text-decoration: none; cursor: pointer; border:none; }
+        .nav-bottom { position: fixed; bottom: 15px; left: 5%; width: 90%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .nav-bottom a { text-decoration: none; color: #999; font-size: 10px; text-align: center; }
         .nav-bottom a.active { color: var(--primary-blue); }
     </style>
 </head>
 <body>
-    <div class="header-section">
-        <div class="header-card">
-            <h2>Manifes Penumpang</h2>
-            <p id="countPsg">Menghubungkan ke database...</p>
-        </div>
+
+<div class="header-section">
+    <div class="header-card">
+        <h2 style="margin:0; font-size:18px;">Manifes Penumpang</h2>
+        <p id="countPsg" style="font-size:12px; margin:5px 0 0;">Memuat...</p>
     </div>
-    <div id="manifesContainer"></div>
-    <div class="nav-bottom">
-        <a href="dash.html"><i class="fas fa-house"></i>Home</a>
-        <a href="input.html"><i class="fas fa-circle-plus"></i>Input</a>
-        <a href="pendapatanv2.html"><i class="fas fa-wallet"></i>Komisi</a>
-        <a href="manifes.html" class="active"><i class="fas fa-file-lines"></i>Manifes</a>
-    </div>
+</div>
 
-    <script>
-        // PAKAI API TERBARU KAMU
-        const API = "https://script.google.com/macros/s/AKfycbwqXhQ7Pcno7vvbXnGTDysQPt5zpGj9Hr6Jq-c8RlBIyXmPcysvLBzEIb0dmV13cApd/exec";
+<div id="manifesContainer"></div>
 
-        async function loadManifes() {
-            try {
-                const res = await fetch(`${API}?action=readManifes&t=${new Date().getTime()}`);
-                const result = await res.json();
-                const container = document.getElementById("manifesContainer");
-                
-                if (result.status === "success") {
-                    container.innerHTML = "";
-                    const skrg = new Date().setHours(0,0,0,0);
+<div class="nav-bottom">
+    <a href="dash.html"><i class="fas fa-home"></i><br>Home</a>
+    <a href="input.html"><i class="fas fa-plus-circle"></i><br>Input</a>
+    <a href="manifes.html" class="active"><i class="fas fa-list"></i><br>Manifes</a>
+</div>
 
-                    const dataFilter = result.data.filter(item => new Date(item.tanggal).setHours(0,0,0,0) >= skrg);
+<script>
+    const API = "https://script.google.com/macros/s/AKfycbwqXhQ7Pcno7vvbXnGTDysQPt5zpGj9Hr6Jq-c8RlBIyXmPcysvLBzEIb0dmV13cApd/exec";
 
-                    if(dataFilter.length === 0) {
-                        container.innerHTML = "<p style='text-align:center; opacity:0.5;'>Tidak ada manifes aktif.</p>";
-                        document.getElementById("countPsg").innerText = "0 Penumpang";
-                        return;
-                    }
+    async function loadManifes() {
+        try {
+            const res = await fetch(`${API}?action=readManifes&t=${new Date().getTime()}`);
+            const result = await res.json();
+            const container = document.getElementById("manifesContainer");
+            
+            if (result.status === "success") {
+                container.innerHTML = "";
+                const data = result.data;
 
-                    dataFilter.reverse().forEach(data => {
-                        const d = new Date(data.tanggal);
-                        const tglRapi = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
-                        const jmlPax = data.kursi ? data.kursi.split(',').filter(x => x.trim() !== "").length : 1;
-
-                        let hp = data.hp ? data.hp.toString().replace(/\D/g, '') : "";
-                        if (hp.startsWith('0')) hp = '62' + hp.slice(1);
-                        else if (hp.startsWith('8')) hp = '62' + hp;
-
-                        container.innerHTML += `
-                            <div class="card-manifes" id="card-${data.kode}">
-                                <div class="info-psg">
-                                    <h4>${data.nama} <span class="badge-pax">${jmlPax} Pax</span></h4>
-                                    <small>${tglRapi} • ${data.jam}</small>
-                                    <small>${data.armada} • ${data.tujuan} • Kursi: ${data.kursi}</small>
-                                </div>
-                                <div class="btn-group">
-                                    <a href="https://wa.me/${hp}" target="_blank" class="btn-aksi" style="color:#25D366;"><i class="fab fa-whatsapp"></i></a>
-                                    <div onclick="hapusData('${data.kode}')" class="btn-aksi" id="btn-${data.kode}" style="color:#ff4d4d;"><i class="fas fa-trash"></i></div>
-                                </div>
-                            </div>`;
-                    });
-                    document.getElementById("countPsg").innerText = dataFilter.length + " Booking Aktif";
+                if (data.length === 0) {
+                    container.innerHTML = "<p style='text-align:center;'>Kosong.</p>";
+                    return;
                 }
-            } catch (e) { document.getElementById("countPsg").innerText = "Gagal memuat. Periksa koneksi/API."; }
-        }
 
-        async function hapusData(kode) {
-            if (confirm("Hapus data ini?")) {
-                const icon = document.querySelector(`#btn-${kode} i`);
-                icon.className = "fas fa-spinner fa-spin";
-                try {
-                    const res = await fetch(`${API}?action=deleteBooking&kode=${kode}`).then(r => r.json());
-                    if (res.status === "success") {
-                        document.getElementById(`card-${kode}`).remove();
-                        loadManifes();
-                    }
-                } catch (e) { location.reload(); }
+                data.reverse().forEach(item => {
+                    // Format Tanggal Rapi
+                    const tgl = new Date(item.tanggal).toLocaleDateString('id-ID', {day:'2-digit', month:'short'});
+                    
+                    container.innerHTML += `
+                        <div class="card-manifes" id="card-${item.kode}">
+                            <div class="info-psg">
+                                <h4>${item.nama} <span class="badge-kursi">${item.kursi}</span></h4>
+                                <p><i class="fas fa-calendar"></i> ${tgl} | <i class="fas fa-clock"></i> ${item.jam}</p>
+                                <p><i class="fas fa-bus"></i> ${item.armada} → ${item.tujuan}</p>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <a href="https://wa.me/${item.hp}" target="_blank" class="btn-aksi" style="color:#25D366;"><i class="fab fa-whatsapp"></i></a>
+                                <button onclick="hapus('${item.kode}')" class="btn-aksi" id="btn-${item.kode}" style="color:#ff4d4d;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>`;
+                });
+                document.getElementById("countPsg").innerText = data.length + " Penumpang Terdaftar";
             }
+        } catch (e) {
+            document.getElementById("countPsg").innerText = "Gagal Memuat Database.";
         }
-        window.onload = loadManifes;
-    </script>
+    }
+
+    async function hapus(kode) {
+        if (confirm("Hapus data ini?")) {
+            document.querySelector(`#btn-${kode} i`).className = "fas fa-spinner fa-spin";
+            try {
+                const r = await fetch(`${API}?action=deleteBooking&kode=${kode}`).then(res => res.json());
+                if(r.status === "success") {
+                    document.getElementById(`card-${kode}`).remove();
+                }
+            } catch (e) { location.reload(); }
+        }
+    }
+
+    window.onload = loadManifes;
+</script>
+
 </body>
 </html>
